@@ -70,7 +70,7 @@ const Navbar = () => {
           <li><Link to="/ExpertsTips">Experts & Tips</Link></li>
           <li><Link to="/AboutUs">About Us</Link></li>
           <li><Link to="/InstagramClone">Social World</Link></li>
-          {!user && <li><Link to="/signup">Sign Upoo</Link></li>}
+          {!user && <li><Link to="/signup">Sign Up</Link></li>}
         </ul>
 
         {/* Right Menu (Search, Notifications, Profile, Cart) */}
