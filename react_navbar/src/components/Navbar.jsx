@@ -68,7 +68,7 @@ const Navbar = () => {
           <li><Link to="/Food">Food</Link></li>
 
           <li><Link to="/ExpertsTips">Experts & Tips</Link></li>
-          <li><Link to="/AboutUs">About Usgbkki</Link></li>
+          <li><Link to="/AboutUs">About Us</Link></li>
           <li><Link to="/InstagramClone">Social World</Link></li>
           {!user && <li><Link to="/signup">Sign Up</Link></li>}
         </ul>
