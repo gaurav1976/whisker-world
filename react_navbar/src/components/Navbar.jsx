@@ -63,8 +63,8 @@ const Navbar = () => {
         {/* Navigation Menu */}
         <ul className="nav-menu">
           <li><Link to="/">Home</Link></li>
-          <li><Link to="/Explore">Explore</Link></li>
-          <li><Link to="/Communities">Communitiesss</Link></li>
+          <li><Link to="/Explore">Exploreeeee</Link></li>
+          <li><Link to="/Communities">Communities</Link></li>
           <li><Link to="/Food">Food</Link></li>
 
           <li><Link to="/ExpertsTips">Experts & Tips</Link></li>
