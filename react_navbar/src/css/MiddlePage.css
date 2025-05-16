@@ -1,0 +1,45 @@
+.middlepage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 120vh;
+    background: #f5f5f5;
+    text-align: center;
+    position: relative;
+}
+
+.middlepage-img {
+    position: relative;
+    display: inline-block;
+}
+
+.middlepage-img img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.image-text {
+    position: absolute;
+    top: 50%;
+    left: 23%;
+    
+    transform: translate(-50%, -50%);
+    text-align: center;
+    
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 500px;
+}
+
+.image-text h1 {
+    color: #ec8383;
+    text-shadow:2px  2px 0 black; /* Creates an outline effect */
+}
+.image-text h5 {
+    color: #ffffff;
+    
+}

@@ -1,0 +1,168 @@
+.add-pet {
+    padding: 20px 0;
+    min-height: 100vh;
+    background: #f5f7fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.add-pet-container {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 30px;
+    background: #fff;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+}
+
+.add-pet-container h2 {
+    color: #e91111;
+    font-size: 28px;
+    margin-bottom: 25px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.pet-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-group label {
+    font-size: 14px;
+    color: #555;
+    font-weight: 500;
+}
+
+.pet-form input,
+.pet-form textarea,
+.pet-form select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #e1e5eb;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.3s;
+    background-color: #f9fafc;
+}
+
+.pet-form input:focus,
+.pet-form textarea:focus {
+    outline: none;
+    border-color: #e91111;
+    box-shadow: 0 0 0 2px rgba(233, 17, 17, 0.1);
+}
+
+.pet-form textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.image-upload {
+    margin: 15px 0;
+}
+
+.image-upload label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #555;
+    font-weight: 500;
+}
+
+.image-upload input[type="file"] {
+    display: none;
+}
+
+.custom-file-upload {
+    display: inline-block;
+    padding: 10px 15px;
+    background: #f0f2f5;
+    border: 1px dashed #c1c7d0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+    width: 100%;
+}
+
+.custom-file-upload:hover {
+    background: #e8eaed;
+    border-color: #a5adb8;
+}
+
+.image-preview {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.image-preview img {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+
+.pet-form button {
+    background: #e91111;
+    color: white;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.pet-form button:hover {
+    background: #c80c0c;
+    transform: translateY(-1px);
+}
+
+.pet-form button:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.error-message {
+    color: #d32f2f;
+    background: #fce8e8;
+    padding: 10px 15px;
+    border-radius: 6px;
+    font-size: 14px;
+    margin-bottom: 15px;
+    border-left: 4px solid #d32f2f;
+}
+
+.success-message {
+    color: #388e3c;
+    background: #ebf5eb;
+    padding: 10px 15px;
+    border-radius: 6px;
+    font-size: 14px;
+    margin-bottom: 15px;
+    border-left: 4px solid #388e3c;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .add-pet-container {
+        margin: 20px;
+        padding: 20px;
+    }
+    
+    .add-pet-container h2 {
+        font-size: 24px;
+    }
+}

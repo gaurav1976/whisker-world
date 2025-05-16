@@ -1,0 +1,93 @@
+ /* cart page// */
+
+ .cart {
+    width: 80%;
+    margin: 40px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.cart h2 {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.cart-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.cart-table thead {
+    background: #f7f7f7;
+    font-weight: bold;
+}
+
+.cart-table th, 
+.cart-table td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.cart-item img {
+    width: 60px;
+    border-radius: 5px;
+}
+
+.quantity-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.quantity-btn {
+    background: #ebaacc;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.cart-summary {
+    margin-top: 20px;
+    text-align: right;
+}
+
+.cart-summary h4 {
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.checkout-btnn {
+    display: block;
+    width: 200px;
+    padding: 10px;
+    background: black;
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-top: 10px;
+}
+
+.checkout-btnn:hover {
+    background: #333;
+}
+
+.coupon-code {
+    text-align: right;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.free-shipping {
+    color: green;
+    font-size: 14px;
+    text-align: right;
+    margin-top: 5px;
+}

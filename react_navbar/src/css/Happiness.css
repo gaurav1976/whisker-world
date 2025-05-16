@@ -1,0 +1,47 @@
+.happiness-container {
+    width: 100%;
+    min-height: 100vh; /* ✅ Allow scrolling */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    overflow: auto; /* ✅ Enable scrolling if needed */
+    /* font-family: 'Comic Sans MS', cursive, sans-serif;  */
+    
+}
+
+.text-content {
+    max-width: 600px;
+    text-align: center;
+    
+}
+
+.text-content h1 {
+    font-size: 2rem;
+    color: #333;
+}
+
+.text-content p {
+    font-size: 1.2rem;
+    color: #555;
+    line-height: 1.5;
+}
+.happiness-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 20px;
+    background-color: #f8f9fa;
+    background-color: #ebaacc;
+}
+
+.text-content {
+    max-width: 500px;
+}
+
+.mobile-img img {
+    max-width: 250px;
+    height: auto;
+    border-radius: 10px;
+}
