@@ -1,43 +1,39 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect, useRef, useContext } from "react";
 import { FaSearch, FaBell, FaUser, FaShoppingCart } from "react-icons/fa";
-import useAuth from "../hooks/useAuth"; // Import authentication hook
-import "../css/navbar.css"; // Ensure CSS file is correctly linked
+import useAuth from "../hooks/useAuth";
+import "../css/navbar.css";
 import { CartContext } from "../CartContext";
 
-
 const Navbar = () => {
-  const { user, logout } = useAuth(); // Get user and logout function
+  const { user, logout } = useAuth();
   const [profileOpen, setProfileOpen] = useState(false);
-  const [updatedUser, setUpdatedUser] = useState(user); // Maintain updated user state
-  const profileRef = useRef(null); // Use ref to handle clicks outside
-  const { cart } = useContext(CartContext); // Add this line to get cart data
+  const [updatedUser, setUpdatedUser] = useState(user);
+  const profileRef = useRef(null);
+  const { cart } = useContext(CartContext);
 
   // Fetch updated user details when localStorage changes
   useEffect(() => {
     const storedUser = localStorage.getItem("loggedInUser");
     if (storedUser) {
-      setUpdatedUser(JSON.parse(storedUser)); // Update state when user logs in
+      setUpdatedUser(JSON.parse(storedUser));
     }
-  }, [localStorage.getItem("loggedInUser")]); // Trigger re-fetch when user logs in
+  }, [localStorage.getItem("loggedInUser")]);
 
   const handleLogin = (userData) => {
     if (userData) {
-      localStorage.setItem("loggedInUser", JSON.stringify(userData)); // Ensure image is stored
-      setUpdatedUser(userData); // Update state with new user
+      localStorage.setItem("loggedInUser", JSON.stringify(userData));
+      setUpdatedUser(userData);
     }
   };
 
-
-  // Function to handle logout
   const handleLogout = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("loggedInUser"); // Ensure to remove user data
-    setUpdatedUser(null); // Reset user state
+    localStorage.removeItem("loggedInUser");
+    setUpdatedUser(null);
     alert("Logged out successfully!");
     window.location.href = "/login";
   };
-
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -62,14 +58,22 @@ const Navbar = () => {
 
         {/* Navigation Menu */}
         <ul className="nav-menu">
+          {/* Always visible (for everyone) */}
           <li><Link to="/">Home</Link></li>
-          <li><Link to="/Explore">Explore</Link></li>
-          <li><Link to="/Communities">Communities</Link></li>
-          <li><Link to="/Food">Food</Link></li>
-
-          <li><Link to="/ExpertsTips">Experts & Tips</Link></li>
           <li><Link to="/AboutUs">About Us</Link></li>
-          <li><Link to="/InstagramClone">Social World</Link></li>
+
+          {/* Only visible when logged in */}
+          {user && (
+            <>
+              <li><Link to="/Explore">Explore</Link></li>
+              <li><Link to="/Communities">Communities</Link></li>
+              <li><Link to="/Food">Food</Link></li>
+              <li><Link to="/ExpertsTips">Experts & Tips</Link></li>
+              <li><Link to="/InstagramClone">Social World</Link></li>
+            </>
+          )}
+
+          {/* Sign Up (only visible when NOT logged in) */}
           {!user && <li><Link to="/signup">Sign Up</Link></li>}
         </ul>
 
@@ -81,27 +85,28 @@ const Navbar = () => {
             <FaSearch className="icon search-icon" />
           </div>
 
-          {/* Notifications Icon */}
-          <FaBell className="icon notification-icon" />
+          {/* Notifications Icon (only when logged in) */}
+          {user && <FaBell className="icon notification-icon" />}
 
-          {/* Shopping Cart Icon */}
-          <Link to="/cart" className="cart-link">
-            <div className="cart-icon-container">
-              <FaShoppingCart className="icon cart-icon" />
-              {cart.length > 0 && (
-                <span className="cart-count-badge">{cart.length}</span>
-              )}
-            </div>
-          </Link>
+          {/* Shopping Cart Icon (only when logged in) */}
+          {user && (
+            <Link to="/cart" className="cart-link">
+              <div className="cart-icon-container">
+                <FaShoppingCart className="icon cart-icon" />
+                {cart.length > 0 && (
+                  <span className="cart-count-badge">{cart.length}</span>
+                )}
+              </div>
+            </Link>
+          )}
 
-
-          {/* Profile Dropdown */}
+          {/* Profile Dropdown (if logged in) or Login Button (if not logged in) */}
           {user ? (
             <div className="profile-menu" ref={profileRef}>
               <div
                 className="user-info"
                 onClick={(e) => {
-                  e.stopPropagation(); // Prevent event from closing immediately
+                  e.stopPropagation();
                   setProfileOpen((prev) => !prev);
                 }}
               >
@@ -115,15 +120,12 @@ const Navbar = () => {
                     borderRadius: "50%",
                     objectFit: "cover"
                   }}
-                  onError={(e) => e.target.src = "https://via.placeholder.com/100"} // Handle broken images
+                  onError={(e) => e.target.src = "https://via.placeholder.com/100"}
                 />
-
                 <span className="user-name">{user?.name || "User"}</span>
-
               </div>
 
               {/* Dropdown Menu */}
-              {/* {profileOpen && ( */}
               <div className="dropdown-menu dropdown_menu">
                 <p className="dropdown-header">Hello, {user?.name || "User"} 👋</p>
                 <Link className="dropdown-item" to="/Profile">
@@ -145,14 +147,12 @@ const Navbar = () => {
                   Logout
                 </button>
               </div>
-              {/* )} */}
             </div>
           ) : (
             <Link to="/login">
               <button className="login-button">Login</button>
             </Link>
           )}
-
         </div>
       </nav>
     </header>

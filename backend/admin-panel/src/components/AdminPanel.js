@@ -211,12 +211,16 @@ const AdminPanel = () => {
         <button className="sidebar-button" onClick={() => setActiveTab("Users")}>
           <FaUsers className="icon" /> Users
         </button>
+        <button className="sidebar-button" onClick={() => setActiveTab("Adminuser")}>
+          <FaBox className="icon" /> Admin User
+        </button>
         <button className="sidebar-button" onClick={() => setActiveTab("Blogs")}>
           <FaBlog className="icon" /> Blogs
         </button>
         <button className="sidebar-button" onClick={() => setActiveTab("Products")}>
           <FaBox className="icon" /> Products
         </button>
+        
       </div>
 
       <div className="main-content">

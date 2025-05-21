@@ -35,7 +35,9 @@ const userSchema = new mongoose.Schema({
   name: String,
   email: { type: String, unique: true },
   password: String,
+  role: { type: String, enum: ["user", "admin"], default: "user" }, // <-- Role field
   createdAt: { type: Date, default: Date.now },
+  isAdmin: { type: Boolean, default: false }
 });
 
 const User = mongoose.model("User", userSchema);
@@ -96,6 +98,30 @@ app.post("/register", async (req, res) => {
   }
 });
 
+// ✅ ADMIN SIGNUP
+app.post("/admin/signup", async (req, res) => {
+  const { name, email, password } = req.body;
+  if (!name || !email || !password) {
+    return res.status(400).json({ error: "All fields are required!" });
+  }
+
+  try {
+    const existingAdmin = await User.findOne({ email });
+    if (existingAdmin) {
+      return res.status(400).json({ error: "Admin email already exists!" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newAdmin = new User({ name, email, password: hashedPassword, role: "admin" });
+
+    await newAdmin.save();
+    res.status(201).json({ message: "Admin registered successfully!" });
+  } catch (error) {
+    res.status(500).json({ error: "Error signing up admin", details: error.message });
+  }
+});
+
+
 // ✅ USER LOGIN
 app.post("/login", async (req, res) => {
   try {
@@ -122,6 +148,37 @@ app.post("/login", async (req, res) => {
     res.status(500).json({ error: "Login failed. Please try again." });
   }
 });
+
+// ✅ ADMIN LOGIN
+app.post("/admin/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const admin = await User.findOne({ email, role: "admin" });
+    if (!admin) {
+      return res.status(400).json({ error: "Admin not found!" });
+    }
+
+    const isMatch = await bcrypt.compare(password, admin.password);
+    if (!isMatch) {
+      return res.status(400).json({ error: "Invalid credentials!" });
+    }
+
+    const token = jwt.sign({ id: admin._id, role: admin.role }, "your_secret_key", {
+      expiresIn: "1h",
+    });
+
+    res.status(200).json({
+      message: "Admin login successful!",
+      token,
+      admin: { name: admin.name, email: admin.email, role: admin.role },
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Admin login failed", details: error.message });
+  }
+});
+
+
 
 // ✅ Get All Users (Admin Panel)
 app.get("/users", async (req, res) => {

@@ -4,8 +4,12 @@ import "../css/signup.css";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
-    name: "",
+    username: "",
+    name: "", // This is the Full Name
     email: "",
+    phone: "",
+    location: "",
+    dob: "",
     password: "",
     confirmPassword: "",
   });
@@ -21,43 +25,60 @@ const Signup = () => {
     e.preventDefault();
     setError("");
 
-    if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
-        setError("All fields are required!");
-        return;
+    // Check required fields
+    if (!formData.username || !formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
+      setError("Fields marked with * are required!");
+      return;
     }
 
     if (formData.password !== formData.confirmPassword) {
-        setError("Passwords do not match!");
-        return;
+      setError("Passwords do not match!");
+      return;
     }
 
     try {
-        const response = await fetch("http://localhost:5000/register", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                name: formData.name,
-                email: formData.email,
-                password: formData.password,
-            }),
-        });
+      const response = await fetch("http://localhost:5000/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: formData.username,
+          name: formData.name, // Full Name sent to backend
+          email: formData.email,
+          phone: formData.phone || "",
+          location: formData.location || "",
+          dob: formData.dob || "",
+          password: formData.password,
+        }),
+      });
 
-        const data = await response.json();
+      const data = await response.json();
 
-        if (!response.ok) {
-            setError(data.error || "Signup failed. Please try again.");
-            return;
-        }
+      if (!response.ok) {
+        setError(data.error || "Signup failed. Please try again.");
+        return;
+      }
 
-        alert("Signup Successful! 🎉 Redirecting to login...");
-        setTimeout(() => {
-            window.location.href = "/login";
-        }, 2000);
+      // Store user data in localStorage (including Full Name)
+      const userData = {
+        username: formData.username,
+        name: formData.name, // This is Full Name
+        fullname: formData.name, // Also store as fullname for compatibility
+        email: formData.email,
+        phone: formData.phone,
+        location: formData.location,
+        dob: formData.dob,
+        image: "",
+      };
+      localStorage.setItem("loggedInUser", JSON.stringify(userData));
+
+      alert("Signup Successful! 🎉 Redirecting to login...");
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 2000);
     } catch (error) {
-        setError("Something went wrong. Please try again.");
+      setError("Something went wrong. Please try again.");
     }
-};
-
+  };
 
   return (
     <div className="signup-container">
@@ -67,22 +88,42 @@ const Signup = () => {
 
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>Full Name</label>
+          <label>Username *</label>
+          <input type="text" name="username" value={formData.username} onChange={handleChange} required />
+        </div>
+
+        <div className="form-group">
+          <label>Full Name *</label>
           <input type="text" name="name" value={formData.name} onChange={handleChange} required />
         </div>
 
         <div className="form-group">
-          <label>Email</label>
+          <label>Email *</label>
           <input type="email" name="email" value={formData.email} onChange={handleChange} required />
         </div>
 
         <div className="form-group">
-          <label>Password</label>
+          <label>Phone Number</label>
+          <input type="tel" name="phone" value={formData.phone} onChange={handleChange} />
+        </div>
+
+        <div className="form-group">
+          <label>Location</label>
+          <input type="text" name="location" value={formData.location} onChange={handleChange} />
+        </div>
+
+        <div className="form-group">
+          <label>Date of Birth</label>
+          <input type="date" name="dob" value={formData.dob} onChange={handleChange} />
+        </div>
+
+        <div className="form-group">
+          <label>Password *</label>
           <input type="password" name="password" value={formData.password} onChange={handleChange} required />
         </div>
 
         <div className="form-group">
-          <label>Confirm Password</label>
+          <label>Confirm Password *</label>
           <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} required />
         </div>
 
