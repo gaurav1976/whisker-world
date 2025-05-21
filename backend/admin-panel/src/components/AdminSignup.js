@@ -1,14 +1,17 @@
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate, Link } from "react-router-dom";  // <-- added Link import
+import { useNavigate, Link } from "react-router-dom";
 import "../css/AdminSignup.css";
 
 function AdminSignup() {
   const [formData, setFormData] = useState({ 
     name: "", 
     email: "", 
-    password: "" 
+    password: "",
+    role: "junioradmin", // Default role
+    secretKey: "" // For super admin registration
   });
+  
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -32,6 +35,13 @@ function AdminSignup() {
       newErrors.password = "Password is required";
     } else if (formData.password.length < 8) {
       newErrors.password = "Password must be at least 8 characters";
+    }
+    if (!formData.role) {
+      newErrors.role = "Role is required";
+    }
+    // Validate secret key only for super admin
+    if (formData.role === "superadmin" && !formData.secretKey.trim()) {
+      newErrors.secretKey = "Super admin secret key is required";
     }
     return newErrors;
   };
@@ -58,7 +68,7 @@ function AdminSignup() {
       
       if (res.status === 201) {
         alert("Admin registration successful!");
-        navigate("/admin/login"); // Redirect to login after successful signup
+        navigate("/admin/login");
       }
     } catch (err) {
       const errorMsg = err.response?.data?.error || 
@@ -109,6 +119,36 @@ function AdminSignup() {
           />
           {errors.password && <span className="error-text">{errors.password}</span>}
         </div>
+
+        <div className="form-group">
+          <label>Role</label>
+          <select 
+            name="role" 
+            value={formData.role}
+            onChange={handleChange}
+            className={errors.role ? "error" : ""}
+          >
+            <option value="superadmin">Super Admin</option>
+            <option value="admin">Admin</option>
+            <option value="junioradmin">Junior Admin</option>
+          </select>
+          {errors.role && <span className="error-text">{errors.role}</span>}
+        </div>
+
+        {formData.role === "superadmin" && (
+          <div className="form-group">
+            <label>Super Admin Secret Key</label>
+            <input
+              type="password"
+              name="secretKey"
+              value={formData.secretKey}
+              onChange={handleChange}
+              className={errors.secretKey ? "error" : ""}
+              placeholder="Enter super admin secret key"
+            />
+            {errors.secretKey && <span className="error-text">{errors.secretKey}</span>}
+          </div>
+        )}
 
         <button type="submit" disabled={isLoading}>
           {isLoading ? "Processing..." : "Sign Up"}
