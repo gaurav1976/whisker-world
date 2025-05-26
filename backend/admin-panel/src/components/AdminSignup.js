@@ -8,19 +8,33 @@ function AdminSignup() {
     name: "", 
     email: "", 
     password: "",
-    role: "junioradmin", // Default role
-    secretKey: "" // For super admin registration
+    role: "junioradmin",
+    secretKey: ""
   });
-  
+
   const [errors, setErrors] = useState({});
+  const [apiError, setApiError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
+  // Define valid roles and their permissions
+  const validRoles = [
+    { value: "superadmin", label: "Super Admin" },
+    { value: "admin", label: "Admin" },
+    { value: "junioradmin", label: "Junior Admin" }
+  ];
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    if (errors[e.target.name]) {
-      setErrors({ ...errors, [e.target.name]: "" });
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: "" }));
     }
+    if (apiError) setApiError("");
   };
 
   const validate = () => {
@@ -36,10 +50,9 @@ function AdminSignup() {
     } else if (formData.password.length < 8) {
       newErrors.password = "Password must be at least 8 characters";
     }
-    if (!formData.role) {
-      newErrors.role = "Role is required";
+    if (!validRoles.some(role => role.value === formData.role)) {
+      newErrors.role = "Invalid role selected";
     }
-    // Validate secret key only for super admin
     if (formData.role === "superadmin" && !formData.secretKey.trim()) {
       newErrors.secretKey = "Super admin secret key is required";
     }
@@ -56,25 +69,24 @@ function AdminSignup() {
 
     setIsLoading(true);
     try {
-      const res = await axios.post(
-        "http://localhost:5000/admin/signup", 
-        formData,
-        {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
-      );
+      // Only include secretKey if role is superadmin
+      const payload = formData.role === "superadmin" ? 
+        formData : 
+        { ...formData, secretKey: undefined };
       
+      const res = await axios.post("http://localhost:5000/admin/signup", payload, {
+        headers: { "Content-Type": "application/json" }
+      });
+
       if (res.status === 201) {
         alert("Admin registration successful!");
         navigate("/admin/login");
       }
     } catch (err) {
       const errorMsg = err.response?.data?.error || 
-                     err.response?.data?.message || 
-                     "Registration failed. Please try again.";
-      alert(errorMsg);
+                       err.response?.data?.message || 
+                       "Registration failed. Please try again.";
+      setApiError(errorMsg);
     } finally {
       setIsLoading(false);
     }
@@ -128,9 +140,11 @@ function AdminSignup() {
             onChange={handleChange}
             className={errors.role ? "error" : ""}
           >
-            <option value="superadmin">Super Admin</option>
-            <option value="admin">Admin</option>
-            <option value="junioradmin">Junior Admin</option>
+            {validRoles.map(role => (
+              <option key={role.value} value={role.value}>
+                {role.label}
+              </option>
+            ))}
           </select>
           {errors.role && <span className="error-text">{errors.role}</span>}
         </div>
@@ -149,6 +163,8 @@ function AdminSignup() {
             {errors.secretKey && <span className="error-text">{errors.secretKey}</span>}
           </div>
         )}
+
+        {apiError && <div className="error-text api-error">{apiError}</div>}
 
         <button type="submit" disabled={isLoading}>
           {isLoading ? "Processing..." : "Sign Up"}

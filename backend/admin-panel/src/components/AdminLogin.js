@@ -6,17 +6,21 @@ import "../css/AdminLogin.css";
 function AdminLogin() {
   const [formData, setFormData] = useState({
     email: "",
-    password: ""
+    password: "",
   });
   const [errors, setErrors] = useState({});
+  const [apiError, setApiError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    if (errors[e.target.name]) {
-      setErrors({ ...errors, [e.target.name]: "" });
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: "" }));
     }
+    if (apiError) setApiError("");
   };
 
   const validate = () => {
@@ -26,9 +30,13 @@ function AdminLogin() {
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "Invalid email format";
     }
+
     if (!formData.password) {
       newErrors.password = "Password is required";
+    } else if (formData.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters";
     }
+
     return newErrors;
   };
 
@@ -45,23 +53,26 @@ function AdminLogin() {
       const res = await axios.post(
         "http://localhost:5000/admin/login",
         formData,
-        {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
+        { headers: { "Content-Type": "application/json" } }
       );
 
-      if (res.data.token) {
+      if (res.data.token && res.data.admin) {
+        // Store token and admin data
         localStorage.setItem("adminToken", res.data.token);
         localStorage.setItem("adminUser", JSON.stringify(res.data.admin));
-        alert("Login successful!");
-        navigate("/admin/panel");
+        
+        // Redirect based on role
+        if (res.data.admin.role === "superadmin") {
+          navigate("/admin/dashboard");
+        } else {
+          navigate("/admin/panel");
+        }
       }
     } catch (err) {
       const errorMsg = err.response?.data?.error ||
-        "Login failed. Please check your credentials.";
-      alert(errorMsg);
+                     err.response?.data?.message ||
+                     "Login failed. Please check your credentials.";
+      setApiError(errorMsg);
     } finally {
       setIsLoading(false);
     }
@@ -70,6 +81,9 @@ function AdminLogin() {
   return (
     <div className="auth-container">
       <h2>Admin Login</h2>
+
+      {apiError && <div className="error-text api-error">{apiError}</div>}
+
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>Email</label>
@@ -102,10 +116,9 @@ function AdminLogin() {
         </button>
       </form>
 
-      <h6>
-        New to ADMIN PANEL?{" "}
-        <Link to="/admin/signup">Create an Account</Link>
-      </h6>
+      <p className="auth-footer">
+        New to ADMIN PANEL? <Link to="/admin/signup">Create an Account</Link>
+      </p>
     </div>
   );
 }
