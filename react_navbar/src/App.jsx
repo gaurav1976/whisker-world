@@ -16,7 +16,7 @@ import Dashboard from "./components/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AddPet from "./components/AddPet";
 import PetProfile from "./components/PetProfile";
-import PostPage from "./components/Postpage";
+import PostPage from "./components/PostPage";
 import Profile from "./components/Profile"; // No curly braces
 import Checkout from "./components/Checkout";
 import PaymentMethodSection from "./components/PaymentMethodSection";
