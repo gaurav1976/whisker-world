@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect, useRef, useContext } from "react";
 import { FaSearch, FaBell, FaUser, FaShoppingCart } from "react-icons/fa";
 import useAuth from "../hooks/useAuth";
-import "../css/Navbar.css";
+import "../css/navbar.css";
 import { CartContext } from "../CartContext";
 
 const Navbar = () => {
