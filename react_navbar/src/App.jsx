@@ -22,7 +22,7 @@ import Checkout from "./components/Checkout";
 import PaymentMethodSection from "./components/PaymentMethodSection";
 import InstaProfilePage from "./components/InstaProfilePage";
 import InstagramClone from "./components/InstagramClone";
-import AboutUs from "./components/Aboutus";
+import AboutUs from "./components/AboutUs";
 import ExpertsTips from "./components/ExpertsTips";
 // Layout component with MiddlePage after Navbar
 const Layout = ({ children }) => {
