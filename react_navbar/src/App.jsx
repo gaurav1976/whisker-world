@@ -92,7 +92,7 @@ const App = () => {
 
           
           <Route
-            path="/signup"
+            path="/Signup"
             element={
               <>
                 <Navbar />

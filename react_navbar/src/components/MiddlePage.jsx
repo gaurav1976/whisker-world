@@ -1,5 +1,5 @@
 import React from "react";
-import "../css/middlepage.css"; // Ensure you have the corresponding CSS file
+import "../css/MiddlePage.css"; // Ensure you have the corresponding CSS file
 
 const MiddlePage = () => {
   return (

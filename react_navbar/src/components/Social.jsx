@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import "../css/social.css";
+import "../css/Social.css";
 const Social = () => {
     return (
         <div className="social">

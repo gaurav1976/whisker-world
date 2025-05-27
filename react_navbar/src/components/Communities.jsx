@@ -1,5 +1,5 @@
 import React from "react";
-import "../css/communities.css"; // Make sure the CSS file is in the correct path
+import "../css/Communities.css"; // Make sure the CSS file is in the correct path
 
 const Communities = () => {
   // Sample community data

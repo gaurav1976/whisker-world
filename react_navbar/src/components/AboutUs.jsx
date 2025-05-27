@@ -6,7 +6,7 @@ import {
 } from "react-icons/fa";
 import { GiDogBowl, GiDogHouse, GiSittingDog } from "react-icons/gi";
 import { IoMdPaw } from "react-icons/io";
-import "../css/aboutus.css";
+import "../css/AboutUs.css";
 
 const AboutUs = () => {
   // Animation variants

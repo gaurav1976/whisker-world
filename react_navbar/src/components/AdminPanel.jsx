@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FaUsers, FaBlog, FaFood, FaBars } from "react-icons/fa";
-import "../css/adminpanel.css"; // Ensure CSS file is correctly linked
+import "../css/AdminPanel.css"; // Ensure CSS file is correctly linked
 
 const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState("Dashboard");
