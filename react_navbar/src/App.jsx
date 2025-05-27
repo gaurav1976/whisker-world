@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Login from "./components/Login";
-import MiddlePage from "./components/middlepage";
+import MiddlePage from "./components/Middlepage";
 import Happiness from "./components/Happiness";
 import Food from "./components/Food";
 import Slider from "./components/Slider";
@@ -29,7 +29,7 @@ const Layout = ({ children }) => {
   return (
     <>
       <Navbar />
-      <MiddlePage /> {/* ✅ MiddlePage comes right after Navbar */}
+      <MiddlePage /> 
       {children}
       <Slider />
       <Footer />
@@ -42,7 +42,7 @@ const App = () => {
     <CartProvider>
       <BrowserRouter>
         <Routes>
-          {/* Pages with Layout (Navbar + MiddlePage + Slider + Footer) */}
+          
           <Route path="/" element={<Layout><Happiness /></Layout>} />
           <Route path="/happiness" element={<Layout><Happiness /></Layout>} />
 
@@ -90,7 +90,7 @@ const App = () => {
             }
           />
 
-          {/* Authentication Pages (No MiddlePage, No Slider) */}
+          
           <Route
             path="/signup"
             element={
