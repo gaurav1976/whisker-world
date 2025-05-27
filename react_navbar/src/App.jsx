@@ -10,7 +10,7 @@ import Footer from "./components/Footer";
 import Explore from "./components/Explore";
 import Signup from "./components/Signup";
 import Communities from "./components/Communities";
-import Cart from "./components/cart";
+import Cart from "./components/Cart";
 import { CartProvider } from "./CartContext";
 import Dashboard from "./components/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -136,7 +136,7 @@ const App = () => {
           />
 
           <Route
-            path="/cart"
+            path="/Cart"
             element={
               <>
                 <Navbar />
