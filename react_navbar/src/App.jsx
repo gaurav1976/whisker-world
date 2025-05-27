@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Login from "./components/Login";
-import MiddlePage from "./components/Middlepage";
+import MiddlePage from "./components/MiddlePage";
 import Happiness from "./components/Happiness";
 import Food from "./components/Food";
 import Slider from "./components/Slider";
