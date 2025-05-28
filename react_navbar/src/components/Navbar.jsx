@@ -2,9 +2,8 @@ import { Link } from "react-router-dom";
 import { useState, useEffect, useRef, useContext } from "react";
 import { FaSearch, FaBell, FaUser, FaShoppingCart } from "react-icons/fa";
 import useAuth from "../hooks/useAuth";
-
 import { CartContext } from "../CartContext";
-
+import "../css/Navbar.css";
 const Navbar = () => {
   const { user, logout } = useAuth();
   const [profileOpen, setProfileOpen] = useState(false);
