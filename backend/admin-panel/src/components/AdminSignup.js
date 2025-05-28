@@ -97,7 +97,7 @@ function AdminSignup() {
       <h2>Admin Signup</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>Nameeee</label>
+          <label>Name</label>
           <input 
             type="text" 
             name="name" 
