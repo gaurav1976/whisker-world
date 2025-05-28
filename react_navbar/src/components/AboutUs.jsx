@@ -68,7 +68,7 @@ const AboutUs = () => {
             </div>
           </div>
           <img 
-            src="/public/img/Safe-Travel.jpg" 
+            src="/public/img/6963167.jpg" 
             alt="Diverse group of happy dogs and owners in a park" 
             className="hero-image" 
             loading="lazy"
@@ -99,7 +99,7 @@ const AboutUs = () => {
         </motion.div>
         <motion.div className="story-image" variants={item}>
           <img 
-            src="/public/img/side.jpg" 
+            src="/public/img/6963167.jpg" 
             alt="Whisker World founders with their dogs" 
             loading="lazy"
           />
