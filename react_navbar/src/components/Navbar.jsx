@@ -58,7 +58,7 @@ const Navbar = () => {
         {/* Navigation Menu */}
         <ul className="nav-menu">
           {/* Always visible (for everyone) */}
-          <li><Link to="/">Homeeeeeee</Link></li>
+          <li><Link to="/">Home</Link></li>
           <li><Link to="/AboutUs">About Us</Link></li>
 
           {/* Only visible when logged in */}
