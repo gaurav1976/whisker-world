@@ -9,7 +9,7 @@ const PetProfile = ({ userId }) => {
     age: "",
     weight: "",
     description: "",
-    photo: "https://via.placeholder.com/120", // Default placeholder
+    photo: "", // Default placeholder
   });
 
   const [image, setImage] = useState(pet.photo);
@@ -20,7 +20,7 @@ const PetProfile = ({ userId }) => {
     const userPet = storedPets.find((p) => p.owner === (userId || "guest")) || null;
     if (userPet) {
       setPet(userPet);
-      setImage(userPet.photo || "https://via.placeholder.com/120");
+      setImage(userPet.photo || "");
     }
   }, [userId]);
 

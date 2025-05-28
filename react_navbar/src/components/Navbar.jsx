@@ -111,7 +111,7 @@ const Navbar = () => {
                 }}
               >
                 <img
-                  src={updatedUser?.image && updatedUser.image.trim() !== "" ? updatedUser.image : "https://via.placeholder.com/100"}
+                  src={updatedUser?.image && updatedUser.image.trim() !== "" ? updatedUser.image : "#"}
                   alt="Profile"
                   className="user-profile-pic"
                   style={{
@@ -120,7 +120,7 @@ const Navbar = () => {
                     borderRadius: "50%",
                     objectFit: "cover"
                   }}
-                  onError={(e) => e.target.src = "https://via.placeholder.com/100"}
+                  onError={(e) => e.target.src = "#"}
                 />
                 <span className="user-name">{user?.name || "User"}</span>
               </div>

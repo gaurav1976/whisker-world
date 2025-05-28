@@ -22,7 +22,7 @@ const Profile = () => {
     if (loggedInUser) {
       const userData = JSON.parse(loggedInUser);
       setUser(userData);
-      setImage(userData.image || "https://via.placeholder.com/120");
+      setImage(userData.image || "#");
     }
   }, []);
 

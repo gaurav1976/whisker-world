@@ -67,10 +67,10 @@ const PaymentMethodSection = ({ paymentMethod, setPaymentMethod }) => {
                   <small className="hint">e.g. name@oksbi, name@ybl, etc.</small>
                 </div>
                 <div className="popular-upi-apps">
-                  <img src="https://via.placeholder.com/40?text=GPay" alt="Google Pay" />
-                  <img src="https://via.placeholder.com/40?text=PhonePe" alt="PhonePe" />
-                  <img src="https://via.placeholder.com/40?text=Paytm" alt="Paytm" />
-                  <img src="https://via.placeholder.com/40?text=BHIM" alt="BHIM" />
+                  <img src="#=GPay" alt="Google Pay" />
+                  <img src="#=PhonePe" alt="PhonePe" />
+                  <img src="#=Paytm" alt="Paytm" />
+                  <img src="#=BHIM" alt="BHIM" />
                 </div>
               </div>
             )}
@@ -148,10 +148,10 @@ const PaymentMethodSection = ({ paymentMethod, setPaymentMethod }) => {
                   </div>
                 </div>
                 <div className="card-brands">
-                  <img src="https://via.placeholder.com/40?text=VISA" alt="Visa" />
-                  <img src="https://via.placeholder.com/40?text=MC" alt="Mastercard" />
-                  <img src="https://via.placeholder.com/40?text=Rupay" alt="Rupay" />
-                  <img src="https://via.placeholder.com/40?text=Amex" alt="American Express" />
+                  <img src="#=VISA" alt="Visa" />
+                  <img src="#=MC" alt="Mastercard" />
+                  <img src="#=Rupay" alt="Rupay" />
+                  <img src="#=Amex" alt="American Express" />
                 </div>
                 <label className="save-card">
                   <input
