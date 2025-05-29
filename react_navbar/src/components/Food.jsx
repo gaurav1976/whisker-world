@@ -26,18 +26,15 @@ const shuffleArray = (array) => {
 
     // Fetch food items from backend
     useEffect(() => {
-    const API_BASE = import.meta.env.VITE_API_BASE_URL;
-
-    fetch(`${API_BASE}/foods`)
-        .then((res) => res.json())
-        .then((data) => {
-            const shuffledData = shuffleArray(data);  // 🔀 shuffle here
-            setProducts(shuffledData);
-            setFilteredProducts(shuffledData); // Initialize filtered products with shuffled data
-        })
-        .catch((error) => console.error("Error fetching food items:", error));
-}, []);  // <-- Don't forget this!
-
+        fetch("http://localhost:5000/foods")
+            .then((res) => res.json())
+            .then((data) => {
+                const shuffledData = shuffleArray(data);  // 🔀 shuffle here
+                setProducts(shuffledData);
+                setFilteredProducts(shuffledData); // Initialize filtered products with shuffled data
+            })
+            .catch((error) => console.error("Error fetching food items:", error));
+    }, []);  // <-- Don't forget this!
     
     // Filter products whenever search query changes
     useEffect(() => {
