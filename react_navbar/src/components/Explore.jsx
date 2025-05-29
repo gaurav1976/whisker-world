@@ -20,7 +20,7 @@ const Explore = () => {
 
   // Fetch Blogs from API and shuffle
   useEffect(() => {
-    axios.get('${process.env.REACT_APP_API_BASE_URL}/blogs')
+    axios.get("http://localhost:5000/blogs")
       .then((response) => {
         const shuffled = shuffleArray(response.data);  // shuffle here ✅
         setBlogPosts(shuffled);
@@ -51,7 +51,7 @@ const Explore = () => {
             {/* Fix Image Display */}
             {post.image && (
               <img
-                src={post.image.startsWith("/uploads/") ? `${process.env.REACT_APP_API_BASE_URL}${post.image}` : post.image}
+                src={post.image.startsWith("/uploads/") ? `http://localhost:5000${post.image}` : post.image}
                 alt={post.title}
                 className="blog-image"
               />
