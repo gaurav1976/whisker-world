@@ -22,9 +22,9 @@ const Explore = () => {
   useEffect(() => {
   const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
-  axios.get(`${API_BASE}/blogs`)
+  axios.get(`${API_BASE}/explore`)
     .then((response) => {
-      const shuffled = shuffleArray(response.data);  // shuffle here ✅
+      const shuffled = shuffleArray(response.data);  // ✅ shuffle here
       setBlogPosts(shuffled);
     })
     .catch((error) => {
@@ -32,7 +32,6 @@ const Explore = () => {
     })
     .finally(() => setLoading(false));
 }, []);
-
 
   return (
     <>
@@ -52,18 +51,13 @@ const Explore = () => {
             <h2 className="blog-title">{post.title}</h2>
 
             {/* Fix Image Display */}
-{post.image && (
-  <img
-    src={
-      post.image.startsWith("/uploads/")
-        ? `${import.meta.env.VITE_API_BASE_URL}${post.image}`
-        : post.image
-    }
-    alt={post.title}
-    className="blog-image"
-  />
-)}
-
+            {post.image && (
+              <img
+                src={post.image.startsWith("/uploads/") ? `http://localhost:5000${post.image}` : post.image}
+                alt={post.title}
+                className="blog-image"
+              />
+            )}
 
             <div className="blog-meta">
               <span>By Admin</span> | 
