@@ -74,7 +74,8 @@ function AdminSignup() {
         formData : 
         { ...formData, secretKey: undefined };
       
-      const res = await axios.post("http://localhost:5000/admin/signup", payload, {
+      const API_BASE = import.meta.env.VITE_API_BASE_URL;
+const response = await fetch(`${API_BASE}/admin/signup`, {
         headers: { "Content-Type": "application/json" }
       });
 
