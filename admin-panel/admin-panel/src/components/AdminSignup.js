@@ -74,12 +74,13 @@ function AdminSignup() {
         formData : 
         { ...formData, secretKey: undefined };
       
-      const API_BASE = import.meta.env.VITE_API_BASE_URL;
-const response = await fetch(`${API_BASE}/admin/signup`, {
-        headers: { "Content-Type": "application/json" }
-      });
+      const response = await fetch(`${API_BASE}/admin/signup`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(payload)
+});
 
-      if (res.status === 201) {
+      if (response.status === 201) {
         alert("Admin registration successful!");
         navigate("/admin/login");
       }
