@@ -22,7 +22,7 @@ const Explore = () => {
   useEffect(() => {
   const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
-  axios.get(`${API_BASE}/api/blogs`)
+  axios.get(`${API_BASE}/blogs`)
     .then((response) => {
       const shuffled = shuffleArray(response.data);  // ✅ shuffle here
       setBlogPosts(shuffled);
