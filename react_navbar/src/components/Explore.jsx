@@ -20,16 +20,24 @@ const Explore = () => {
 
   // Fetch Blogs from API and shuffle
   useEffect(() => {
-    axios.get("http://localhost:5000/blogs")
-      .then((response) => {
-        const shuffled = shuffleArray(response.data);  // shuffle here ✅
-        setBlogPosts(shuffled);
-      })
-      .catch((error) => {
-        console.error("Error fetching blogs:", error);
-      })
-      .finally(() => setLoading(false));
-  }, []);
+  const fetchExplorePosts = async () => {
+    const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
+    try {
+      const response = await fetch(`${API_BASE}/explore`);
+      const data = await response.json();
+
+      const shuffled = shuffleArray(data);  // shuffle here ✅
+      setBlogPosts(shuffled);
+    } catch (error) {
+      console.error("Error fetching blogs:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchExplorePosts();
+}, []);
 
   return (
     <>
