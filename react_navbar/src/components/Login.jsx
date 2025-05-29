@@ -23,7 +23,8 @@ const Login = () => {
         }
 
         try {
-            const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/login`, {
+            const API_BASE = import.meta.env.VITE_API_BASE_URL;
+            const response = await fetch(`${API_BASE}/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),
