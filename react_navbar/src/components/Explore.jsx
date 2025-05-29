@@ -20,7 +20,7 @@ const Explore = () => {
 
   // Fetch Blogs from API and shuffle
   useEffect(() => {
-    axios.get("${process.env.REACT_APP_API_BASE_URL}/blogs")
+    axios.get('${process.env.REACT_APP_API_BASE_URL}/blogs')
       .then((response) => {
         const shuffled = shuffleArray(response.data);  // shuffle here ✅
         setBlogPosts(shuffled);
