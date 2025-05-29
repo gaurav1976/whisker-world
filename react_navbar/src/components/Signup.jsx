@@ -37,7 +37,9 @@ const Signup = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/register", {
+      const API_BASE = import.meta.env.VITE_API_BASE_URL;
+const response = await fetch(`${API_BASE}/register`, {
+
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
