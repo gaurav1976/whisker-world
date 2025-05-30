@@ -15,12 +15,13 @@ const app = express();
 app.use(express.json());
 app.use(cors({
   origin: [
-    "https://whisker-world.vercel.app", // Your production frontend
-    "http://localhost:3000"             // For local development
+    "https://whisker-world.vercel.app", // Your production fronten           
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
+
+app.options('*', cors()); // Enable preflight for all routes
 
 
 // ✅ Serve uploaded images statically
