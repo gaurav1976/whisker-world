@@ -21,7 +21,7 @@ const Explore = () => {
   // Fetch Blogs from API and shuffle
  useEffect(() => {
   const API_BASE = import.meta.env.VITE_API_BASE_URL;
-  axios.get(`${API_BASE}/blogs`)
+  axios.get(`${API_BASE}/explore`)
     .then((response) => {
       const shuffled = shuffleArray(response.data);
       setBlogPosts(shuffled);
