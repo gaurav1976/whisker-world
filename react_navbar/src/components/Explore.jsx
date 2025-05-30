@@ -51,13 +51,20 @@ const Explore = () => {
             <h2 className="blog-title">{post.title}</h2>
 
             {/* Fix Image Display */}
-            {post.image && (
-              <img
-                src={post.image.startsWith("/uploads/") ? `http://localhost:5000${post.image}` : post.image}
-                alt={post.title}
-                className="blog-image"
-              />
-            )}
+           const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
+{post.image && (
+  <img
+    src={
+      post.image.startsWith("/uploads/")
+        ? `${API_BASE}${post.image}`
+        : post.image
+    }
+    alt={post.title}
+    className="blog-image"
+  />
+)}
+
 
             <div className="blog-meta">
               <span>By Admin</span> | 
