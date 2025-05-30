@@ -1,23 +1,19 @@
 {
-  "rewrites": [
+  "routes": [
     {
-      "source": "/api/(.*)",
-      "destination": "https://whisker-world-qlpf.onrender.com/api/$1"
+      "src": "/Explore",
+      "dest": "/index.html",
+      "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "no-store"
+      }
     },
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "src": "/api/(.*)",
+      "dest": "https://whisker-world-qlpf.onrender.com/api/$1"
     }
   ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        }
-      ]
-    }
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
