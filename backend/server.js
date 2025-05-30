@@ -13,7 +13,13 @@ const Food = require("./models/Food"); // ✅ Import the Food model
 dotenv.config();
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: ["https://whisker-world-rhgh.vercel.app"], // Your Vercel frontend domain
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
+app.options('*', cors());
+
 
 // ✅ Serve uploaded images statically
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
