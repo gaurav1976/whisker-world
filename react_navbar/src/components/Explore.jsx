@@ -19,16 +19,16 @@ const Explore = () => {
   const [loading, setLoading] = useState(true);
 
   // Fetch Blogs from API and shuffle
-  useEffect(() => {
+ useEffect(() => {
   const API_BASE = import.meta.env.VITE_API_BASE_URL;
-
   axios.get(`${API_BASE}/blogs`)
     .then((response) => {
-      const shuffled = shuffleArray(response.data);  // ✅ shuffle here
+      const shuffled = shuffleArray(response.data);
       setBlogPosts(shuffled);
     })
     .catch((error) => {
       console.error("Error fetching blogs:", error);
+      // Set an error state to display to users
     })
     .finally(() => setLoading(false));
 }, []);
@@ -57,7 +57,7 @@ const Explore = () => {
   <img
     src={
       post.image.startsWith("/uploads/")
-        ? `${API_BASE}${post.image}`
+        ? `${import.meta.env.VITE_API_BASE_URL}${post.image}`
         : post.image
     }
     alt={post.title}

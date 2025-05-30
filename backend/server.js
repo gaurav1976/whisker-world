@@ -14,11 +14,13 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cors({
-  origin: ["https://whisker-world-rhgh.vercel.app"], // Your Vercel frontend domain
+  origin: [
+    "https://whisker-world.vercel.app", // Your production frontend
+    "http://localhost:3000"             // For local development
+  ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
-app.options('*', cors());
 
 
 // ✅ Serve uploaded images statically
