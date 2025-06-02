@@ -1,10 +1,10 @@
 import { useContext, useEffect, useState } from "react";
-import axios from "axios"; // Add this import
 import "../css/Food.css";
 import Navbar from "./Navbar";
 import { CartContext } from "../CartContext";
 import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import axios from "axios"; // ✅ FIXED
 
 const Food = () => {
     const { addToCart } = useContext(CartContext);
@@ -16,27 +16,27 @@ const Food = () => {
     const navigate = useNavigate();
 
     // Utility function to shuffle an array randomly
-    const shuffleArray = (array) => {
-        const shuffled = [...array];
-        for (let i = shuffled.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-        }
-        return shuffled;
-    };
+const shuffleArray = (array) => {
+    const shuffled = [...array];  // Create a copy of the array
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+};
 
     // Fetch food items from backend
-    useEffect(() => {
-        const API_BASE = import.meta.env.VITE_API_BASE_URL;
-        
-        axios.get(`${API_BASE}/foods`)
-            .then((res) => {
-                const shuffledData = shuffleArray(res.data);
-                setProducts(shuffledData);
-                setFilteredProducts(shuffledData);
-            })
-            .catch((error) => console.error("Error fetching food items:", error));
-    }, []);
+   useEffect(() => {
+  const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
+  axios.get(`${API_BASE}/foods`) // make sure it matches backend route
+    .then((res) => {
+      const shuffledData = shuffleArray(res.data);
+      setProducts(shuffledData);
+      setFilteredProducts(shuffledData);
+    })
+    .catch((error) => console.error("Error fetching food items:", error));
+}, []);
 
     // Filter products whenever search query changes
     useEffect(() => {
@@ -68,18 +68,21 @@ const Food = () => {
         if (page >= 1 && page <= totalPages) setCurrentPage(page);
     };
     
+
     // Generate pagination buttons with limits
     const getPaginationButtons = () => {
         const buttons = [];
-        const maxVisibleButtons = 5;
+        const maxVisibleButtons = 5; // Show maximum 5 page buttons at a time
         
         let startPage = Math.max(1, currentPage - Math.floor(maxVisibleButtons / 2));
         let endPage = Math.min(totalPages, startPage + maxVisibleButtons - 1);
         
+        // Adjust if we're at the end
         if (endPage - startPage + 1 < maxVisibleButtons) {
             startPage = Math.max(1, endPage - maxVisibleButtons + 1);
         }
         
+        // First page button
         if (startPage > 1) {
             buttons.push(
                 <button key={1} onClick={() => setPage(1)}>
@@ -91,6 +94,7 @@ const Food = () => {
             }
         }
         
+        // Page buttons
         for (let i = startPage; i <= endPage; i++) {
             buttons.push(
                 <button
@@ -103,6 +107,7 @@ const Food = () => {
             );
         }
         
+        // Last page button
         if (endPage < totalPages) {
             if (endPage < totalPages - 1) {
                 buttons.push(<span key="end-ellipsis">...</span>);
@@ -123,6 +128,7 @@ const Food = () => {
             <section className="product">
                 <div className="container py-5">
                     <div className="row py-5">
+                        {/* Enhanced Search Bar */}
                         <div className="searchbarfood">
                             <input
                                 type="text"
@@ -131,6 +137,7 @@ const Food = () => {
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
                             <FaSearch className="icon search-icon" />
+                            
                         </div>
                         <div className="headings-container">
                             <h1>What's Trending</h1>
@@ -148,25 +155,21 @@ const Food = () => {
                                     <div className="card border-100 bg-light mb-2">
                                         <div className="card-body">
                                             <img
-                                                src={`${import.meta.env.VITE_API_BASE_URL}${product.image}`}
+                                                src={`http://localhost:5000${product.image}`}
                                                 className="img-fluid"
-                                                alt={product?.name || 'Food item'}
-                                                onError={(e) => {
-                                                    e.target.onerror = null; 
-                                                    e.target.src = '/path/to/placeholder/image.png'
-                                                }}
+                                                alt={product.name}
                                             />
                                         </div>
                                     </div>
-                                    <h6 className="productname">{product?.name || 'Unknown Item'}</h6>
-                                    <p>₹{product?.price || '0.00'}</p>
+                                    <h6 className="productname">{product.name}</h6>
+                                    <p>₹{product.price}</p>
                                     <button
                                         className="food-btn"
                                         onClick={() => addToCart({
                                             id: product._id,
                                             name: product.name,
                                             price: parseFloat(product.price),
-                                            img: `${import.meta.env.VITE_API_BASE_URL}${product.image}`,
+                                            img: `http://localhost:5000${product.image}`,
                                             quantity: 1
                                         })}
                                     >
@@ -179,7 +182,7 @@ const Food = () => {
                                                 id: product._id,
                                                 name: product.name,
                                                 price: parseFloat(product.price),
-                                                img: `${import.meta.env.VITE_API_BASE_URL}${product.image}`,
+                                                img: `http://localhost:5000${product.image}`,
                                                 quantity: 1
                                             });
                                             navigate("/Checkout");
@@ -203,6 +206,7 @@ const Food = () => {
                             </div>
                         )}
 
+                        {/* Enhanced Pagination */}
                         {totalPages > 1 && (
                             <div className="pagination-container">
                                 <div className="pagination">
