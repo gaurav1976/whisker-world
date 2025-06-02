@@ -23,24 +23,20 @@ useEffect(() => {
   const fetchBlogs = async () => {
     try {
       const API_BASE = import.meta.env.VITE_API_BASE_URL;
-      const response = await axios.get(`${API_BASE}/blogs`);
+      const response = await axios.get(`${API_BASE}/blogs`, {
+        headers: {
+          'Content-Type': 'application/json',
+          // Include if your API requires authentication:
+          // 'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
       
-      // Handle both response formats (your API might return either)
-      const blogsData = response.data.data || response.data;
-      
-      if (!blogsData || !Array.isArray(blogsData)) {
-        throw new Error('Invalid blogs data format');
-      }
-
-      const shuffled = shuffleArray(blogsData);
-      setBlogPosts(shuffled);
-      setError(null); // Clear any previous errors
+      console.log('API Response:', response); // Inspect the response
+      setBlogPosts(shuffleArray(response.data));
     } catch (error) {
-      console.error("Error fetching blogs:", error);
-      setError(error.response?.data?.error || 
-               error.message || 
-               "Failed to load blogs. Please try again later.");
-      setBlogPosts([]); // Clear posts on error
+      console.error('Full error:', error);
+      console.error('Error response:', error.response);
+      setError(error.response?.data?.message || "Failed to load blogs");
     } finally {
       setLoading(false);
     }
