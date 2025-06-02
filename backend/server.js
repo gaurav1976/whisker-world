@@ -15,28 +15,28 @@ const app = express();
 app.use(express.json());
 const corsOptions = {
   origin: [
-    "https://whisker-world.vercel.app",
-    "http://localhost:3000",
-    "whisker-world-rhgh.vercel.app" // Add your actual frontend domain here
+    "https://whisker-world-rhgh.vercel.app", // Your frontend URL
+    "http://localhost:3000"                  // For local development
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"], // Added Authorization
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
+  optionsSuccessStatus: 200 // Some browsers have issues with 204
 };
 
+// Apply CORS middleware
 app.use(cors(corsOptions));
 
-// Handle preflight requests
-app.options("*", cors(corsOptions));
-// Handle preflight requests
-app.options("*", cors(corsOptions));
+// Explicitly handle OPTIONS requests for all routes
+app.options('*', cors(corsOptions));
 
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
+  res.header("Access-Control-Allow-Origin", "https://whisker-world-rhgh.vercel.app");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   res.header("Access-Control-Allow-Credentials", "true");
   next();
 });
-
 // ✅ Serve uploaded images statically
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 

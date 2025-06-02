@@ -42,18 +42,18 @@ const Signup = () => {
     }
 
     try {
-    const response = await fetch(`${API_BASE}/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: formData.name,
-        email: formData.email,
-        password: formData.password
-      }),
-      credentials: 'include' // Only if using cookies/sessions
-    });
+    const response = await fetch('https://whisker-world-qlpf.onrender.com/register', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    name: formData.name,
+    email: formData.email,
+    password: formData.password
+  }),
+  credentials: 'include' // Only if you're using cookies/sessions
+});
 
     if (!response.ok) {
       const errorData = await response.json();
