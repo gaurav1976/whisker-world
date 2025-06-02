@@ -282,7 +282,7 @@ app.get("/blogs", async (req, res) => {
     res.json(blogs);
   } catch (error) {
     res.status(500).json({ error: "Error fetching blogs", details: error.message });
-  }
+    }
 });
 
 // ✅ ADD NEW BLOG (with Image Upload)
