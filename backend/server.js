@@ -16,7 +16,7 @@ app.use(express.json());
 const corsOptions = {
   origin: [
     "https://whisker-world-rhgh.vercel.app", // Your frontend URL
-    "http://localhost:3000"                  // For local development
+    // "http://localhost:3000"                  // For local development
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
@@ -289,12 +289,13 @@ app.get("/foods", async (req, res) => {
 
 
 // ✅ GET ALL BLOGS
-app.get("/blogs", async (req, res) => {
+// Get all blogs for Explore page
+app.get("/explore", async (req, res) => {
   try {
     const blogs = await Blog.find();
     res.json(blogs);
   } catch (error) {
-    res.status(500).json({ error: "Error fetching blogs", details: error.message });
+    res.status(500).json({ error: "Error fetching blogs" });
   }
 });
 
