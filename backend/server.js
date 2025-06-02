@@ -18,14 +18,15 @@ const corsOptions = {
     "https://whisker-world.vercel.app", // your frontend
     "http://localhost:3000"             // for local dev
   ],
-  methods: ["GET", "POST", "OPTIONS"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type"],
-  credentials: true
+  credentials: true, // ✅ allow cookies or credentials
 };
 
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // Preflight response for all routes
 
+// Handle preflight requests
+app.options("*", cors(corsOptions));
 
 
 // ✅ Serve uploaded images statically

@@ -42,22 +42,20 @@ const Signup = () => {
     }
 
     try {
-      const API_BASE = import.meta.env.VITE_API_BASE_URL;
-
       const response = await fetch(`${API_BASE}/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include", // ✅ Required for CORS with cookies
-        body: JSON.stringify({
-          username: formData.username,
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone || "",
-          location: formData.location || "",
-          dob: formData.dob || "",
-          password: formData.password,
-        }),
-      });
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  credentials: "include", // 🔥 this must match backend CORS
+  body: JSON.stringify({
+    username: formData.username,
+    name: formData.name,
+    email: formData.email,
+    phone: formData.phone || "",
+    location: formData.location || "",
+    dob: formData.dob || "",
+    password: formData.password,
+  }),
+});
 
       const data = await response.json();
 
