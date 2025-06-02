@@ -25,18 +25,18 @@ const shuffleArray = (array) => {
 };
 
     // Fetch food items from backend
-    useEffect(() => {
+   useEffect(() => {
   const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
-  axios.get(`${API_BASE}/food`)
+  axios.get(`${API_BASE}/foods`) // make sure it matches backend route
     .then((res) => {
-      const shuffledData = shuffleArray(res.data);  // ✅ use res.data
+      const shuffledData = shuffleArray(res.data);
       setProducts(shuffledData);
       setFilteredProducts(shuffledData);
     })
     .catch((error) => console.error("Error fetching food items:", error));
-}, []); // <-- Don't forget this!
-    
+}, []);
+
     // Filter products whenever search query changes
     useEffect(() => {
         if (searchQuery.trim() === "") {
