@@ -13,16 +13,20 @@ const Food = require("./models/Food"); // ✅ Import the Food model
 dotenv.config();
 const app = express();
 app.use(express.json());
-app.use(cors({
+// Update your CORS configuration (server-side)
+const corsOptions = {
   origin: [
-    "https://whisker-world.vercel.app", // Your production fronten           
+    "https://whisker-world.vercel.app",
+    "http://localhost:3000",
+    "https://whisker-world-qlpf.onrender.com"
   ],
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  methods: ["POST", "GET", "OPTIONS"],
+  allowedHeaders: ["Content-Type"],
   credentials: true
-}));
+};
 
-app.options('*', cors()); // Enable preflight for all routes
-
+app.use(cors(corsOptions));
+app.options('*', cors());
 
 // ✅ Serve uploaded images statically
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -86,9 +90,10 @@ const upload = multer({ storage });
 
 // ✅ USER SIGNUP
 app.post("/register", async (req, res) => {
-  const { name, email, password } = req.body;
-  if (!name || !email || !password) {
-    return res.status(400).json({ error: "All fields are required!" });
+  const { username, name, email, phone, location, dob, password } = req.body;
+
+  if (!username || !name || !email || !password) {
+    return res.status(400).json({ error: "Required fields are missing!" });
   }
 
   try {
@@ -98,9 +103,18 @@ app.post("/register", async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ name, email, password: hashedPassword });
-    await newUser.save();
 
+    const newUser = new User({
+      username,
+      name,
+      email,
+      phone,
+      location,
+      dob,
+      password: hashedPassword,
+    });
+
+    await newUser.save();
     res.status(201).json({ message: "User registered successfully!" });
   } catch (error) {
     res.status(500).json({ error: "Error signing up", details: error.message });

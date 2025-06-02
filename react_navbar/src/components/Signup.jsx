@@ -37,28 +37,27 @@ const Signup = () => {
     }
 
     try {
-      const API_BASE = import.meta.env.VITE_API_BASE_URL;
-const response = await fetch(`${API_BASE}/register`, {
+  const API_BASE = import.meta.env.VITE_API_BASE_URL;
+  const response = await fetch(`${API_BASE}/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      username: formData.username,
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone || "",
+      location: formData.location || "",
+      dob: formData.dob || "",
+      password: formData.password,
+    }),
+  });
 
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username: formData.username,
-          name: formData.name, // Full Name sent to backend
-          email: formData.email,
-          phone: formData.phone || "",
-          location: formData.location || "",
-          dob: formData.dob || "",
-          password: formData.password,
-        }),
-      });
+  const data = await response.json();
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(data.error || "Signup failed. Please try again.");
-        return;
-      }
+  if (!response.ok) {
+    setError(data.error || "Signup failed. Please try again.");
+    return;
+  }
 
       // Store user data in localStorage (including Full Name)
       const userData = {
