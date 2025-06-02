@@ -19,31 +19,20 @@ const Explore = () => {
   const [loading, setLoading] = useState(true);
 
   // Fetch Blogs from API and shuffle
-useEffect(() => {
-  const fetchBlogs = async () => {
-    try {
-      const API_BASE = import.meta.env.VITE_API_BASE_URL;
-      const response = await axios.get(`${API_BASE}/blogs`, {
-        headers: {
-          'Content-Type': 'application/json',
-          // Include if your API requires authentication:
-          // 'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      
-      console.log('API Response:', response); // Inspect the response
-      setBlogPosts(shuffleArray(response.data));
-    } catch (error) {
-      console.error('Full error:', error);
-      console.error('Error response:', error.response);
-      setError(error.response?.data?.message || "Failed to load blogs");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  fetchBlogs();
+ useEffect(() => {
+  const API_BASE = import.meta.env.VITE_API_BASE_URL;
+  axios.get(`${API_BASE}/explore`)
+    .then((response) => {
+      const shuffled = shuffleArray(response.data);
+      setBlogPosts(shuffled);
+    })
+    .catch((error) => {
+      console.error("Error fetching blogs:", error);
+      // Set an error state to display to users
+    })
+    .finally(() => setLoading(false));
 }, []);
+
   return (
     <>
       <Navbar />

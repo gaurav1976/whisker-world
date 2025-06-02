@@ -13,18 +13,13 @@ const Food = require("./models/Food"); // ✅ Import the Food model
 dotenv.config();
 const app = express();
 app.use(express.json());
-const corsOptions = {
+app.use(cors({
   origin: [
-    "https://whisker-world.vercel.app", // Your Vercel frontend
-    "http://localhost:3000",            // Local development
-    "https://your-render-backend-url.onrender.com" // Your Render backend
+    "https://whisker-world.vercel.app", // Your production fronten           
   ],
-  methods: "GET,POST,PUT,DELETE,OPTIONS",
-  allowedHeaders: ["Content-Type", "Authorization"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
-};
-
-app.use(cors(corsOptions));
+}));
 
 app.options('*', cors()); // Enable preflight for all routes
 
@@ -283,61 +278,10 @@ app.get("/foods", async (req, res) => {
 // ✅ GET ALL BLOGS
 app.get("/blogs", async (req, res) => {
   try {
-    // Add pagination parameters (default values if not provided)
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-    const skip = (page - 1) * limit;
-
-    // Add sorting (newest first by default)
-    const sortField = req.query.sortBy || 'createdAt';
-    const sortOrder = req.query.sortOrder === 'asc' ? 1 : -1;
-
-    // Add basic filtering capability
-    const filter = {};
-    if (req.query.category) {
-      filter.category = req.query.category;
-    }
-
-    // Get total count for pagination metadata
-    const total = await Blog.countDocuments(filter);
-
-    // Fetch blogs with pagination, sorting, and filtering
-    const blogs = await Blog.find(filter)
-      .sort({ [sortField]: sortOrder })
-      .skip(skip)
-      .limit(limit)
-      .lean(); // Convert to plain JS objects
-
-    // Transform image URLs to absolute URLs if they're stored as relative paths
-    const blogsWithAbsoluteUrls = blogs.map(blog => {
-      if (blog.image && blog.image.startsWith('/uploads/')) {
-        return {
-          ...blog,
-          image: `${req.protocol}://${req.get('host')}${blog.image}`
-        };
-      }
-      return blog;
-    });
-
-    res.json({
-      success: true,
-      data: blogsWithAbsoluteUrls,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit)
-      }
-    });
-
+    const blogs = await Blog.find();
+    res.json(blogs);
   } catch (error) {
-    console.error('Error fetching blogs:', error);
-    res.status(500).json({ 
-      success: false,
-      error: "Internal Server Error",
-      message: "Could not fetch blogs",
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
-    });
+    res.status(500).json({ error: "Error fetching blogs", details: error.message });
   }
 });
 
