@@ -5,7 +5,7 @@ import "../css/Signup.css";
 const Signup = () => {
   const [formData, setFormData] = useState({
     username: "",
-    name: "", // This is the Full Name
+    name: "",
     email: "",
     phone: "",
     location: "",
@@ -25,8 +25,13 @@ const Signup = () => {
     e.preventDefault();
     setError("");
 
-    // Check required fields
-    if (!formData.username || !formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
+    if (
+      !formData.username ||
+      !formData.name ||
+      !formData.email ||
+      !formData.password ||
+      !formData.confirmPassword
+    ) {
       setError("Fields marked with * are required!");
       return;
     }
@@ -38,13 +43,14 @@ const Signup = () => {
 
     try {
       const API_BASE = import.meta.env.VITE_API_BASE_URL;
-const response = await fetch(`${API_BASE}/register`, {
 
+      const response = await fetch(`${API_BASE}/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include", // ✅ Required for CORS with cookies
         body: JSON.stringify({
           username: formData.username,
-          name: formData.name, // Full Name sent to backend
+          name: formData.name,
           email: formData.email,
           phone: formData.phone || "",
           location: formData.location || "",
@@ -60,11 +66,10 @@ const response = await fetch(`${API_BASE}/register`, {
         return;
       }
 
-      // Store user data in localStorage (including Full Name)
       const userData = {
         username: formData.username,
-        name: formData.name, // This is Full Name
-        fullname: formData.name, // Also store as fullname for compatibility
+        name: formData.name,
+        fullname: formData.name,
         email: formData.email,
         phone: formData.phone,
         location: formData.location,

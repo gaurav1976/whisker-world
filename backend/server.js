@@ -13,15 +13,19 @@ const Food = require("./models/Food"); // ✅ Import the Food model
 dotenv.config();
 const app = express();
 app.use(express.json());
-app.use(cors({
+const corsOptions = {
   origin: [
-    "https://whisker-world.vercel.app", // Your production fronten           
+    "https://whisker-world.vercel.app", // your frontend
+    "http://localhost:3000"             // for local dev
   ],
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type"],
   credentials: true
-}));
+};
 
-app.options('*', cors()); // Enable preflight for all routes
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // Preflight response for all routes
+
 
 
 // ✅ Serve uploaded images statically
