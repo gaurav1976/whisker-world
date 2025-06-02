@@ -4,6 +4,7 @@ import Navbar from "./Navbar";
 import { CartContext } from "../CartContext";
 import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import axios from "axios"; // ✅ FIXED
 
 const Food = () => {
     const { addToCart } = useContext(CartContext);
