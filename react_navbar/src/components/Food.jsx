@@ -26,15 +26,16 @@ const shuffleArray = (array) => {
 
     // Fetch food items from backend
     useEffect(() => {
-        fetch("http://localhost:5000/foods")
-            .then((res) => res.json())
-            .then((data) => {
-                const shuffledData = shuffleArray(data);  // 🔀 shuffle here
-                setProducts(shuffledData);
-                setFilteredProducts(shuffledData); // Initialize filtered products with shuffled data
-            })
-            .catch((error) => console.error("Error fetching food items:", error));
-    }, []);  // <-- Don't forget this!
+  const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
+  axios.get(`${API_BASE}/food`)
+    .then((res) => {
+      const shuffledData = shuffleArray(res.data);  // ✅ use res.data
+      setProducts(shuffledData);
+      setFilteredProducts(shuffledData);
+    })
+    .catch((error) => console.error("Error fetching food items:", error));
+}, []); // <-- Don't forget this!
     
     // Filter products whenever search query changes
     useEffect(() => {
