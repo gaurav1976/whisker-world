@@ -289,13 +289,12 @@ app.get("/foods", async (req, res) => {
 
 
 // ✅ GET ALL BLOGS
-// Get all blogs for Explore page
-app.get("/explore", async (req, res) => {
+app.get("/blogs", async (req, res) => {
   try {
     const blogs = await Blog.find();
     res.json(blogs);
   } catch (error) {
-    res.status(500).json({ error: "Error fetching blogs" });
+    res.status(500).json({ error: "Error fetching blogs", details: error.message });
   }
 });
 
