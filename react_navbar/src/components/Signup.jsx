@@ -44,19 +44,16 @@ const Signup = () => {
     try {
       const response = await fetch(`${API_BASE}/register`, {
   method: "POST",
-  headers: { "Content-Type": "application/json" },
-  credentials: "include", // 🔥 this must match backend CORS
+  headers: { 
+    "Content-Type": "application/json",
+  },
   body: JSON.stringify({
-    username: formData.username,
-    name: formData.name,
+    name: formData.name, // Your backend expects 'name' not 'username'
     email: formData.email,
-    phone: formData.phone || "",
-    location: formData.location || "",
-    dob: formData.dob || "",
     password: formData.password,
+    // Remove other fields that aren't in your User schema
   }),
 });
-
       const data = await response.json();
 
       if (!response.ok) {
