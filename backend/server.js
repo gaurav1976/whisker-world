@@ -31,6 +31,11 @@ app.options("*", cors(corsOptions));
 // Handle preflight requests
 app.options("*", cors(corsOptions));
 
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
 
 // ✅ Serve uploaded images statically
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));

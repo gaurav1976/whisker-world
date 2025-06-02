@@ -42,25 +42,23 @@ const Signup = () => {
     }
 
     try {
-      const response = await fetch(`${API_BASE}/register`, {
-  method: "POST",
-  headers: { 
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({
-    name: formData.name, // Your backend expects 'name' not 'username'
-    email: formData.email,
-    password: formData.password,
-    // Remove other fields that aren't in your User schema
-  }),
-});
-      const data = await response.json();
+    const response = await fetch(`${API_BASE}/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password
+      }),
+      credentials: 'include' // Only if using cookies/sessions
+    });
 
-      if (!response.ok) {
-        setError(data.error || "Signup failed. Please try again.");
-        return;
-      }
-
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Registration failed");
+    }
       const userData = {
         username: formData.username,
         name: formData.name,
