@@ -19,20 +19,35 @@ const Explore = () => {
   const [loading, setLoading] = useState(true);
 
   // Fetch Blogs from API and shuffle
- useEffect(() => {
-  const API_BASE = import.meta.env.VITE_API_BASE_URL;
-  axios.get(`${API_BASE}/explore`)
-    .then((response) => {
-      const shuffled = shuffleArray(response.data);
-      setBlogPosts(shuffled);
-    })
-    .catch((error) => {
-      console.error("Error fetching blogs:", error);
-      // Set an error state to display to users
-    })
-    .finally(() => setLoading(false));
-}, []);
+useEffect(() => {
+  const fetchBlogs = async () => {
+    try {
+      const API_BASE = import.meta.env.VITE_API_BASE_URL;
+      const response = await axios.get(`${API_BASE}/blogs`);
+      
+      // Handle both response formats (your API might return either)
+      const blogsData = response.data.data || response.data;
+      
+      if (!blogsData || !Array.isArray(blogsData)) {
+        throw new Error('Invalid blogs data format');
+      }
 
+      const shuffled = shuffleArray(blogsData);
+      setBlogPosts(shuffled);
+      setError(null); // Clear any previous errors
+    } catch (error) {
+      console.error("Error fetching blogs:", error);
+      setError(error.response?.data?.error || 
+               error.message || 
+               "Failed to load blogs. Please try again later.");
+      setBlogPosts([]); // Clear posts on error
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchBlogs();
+}, []);
   return (
     <>
       <Navbar />
