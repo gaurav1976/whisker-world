@@ -20,7 +20,7 @@ const Explore = () => {
 
   // Fetch Blogs from API and shuffle
  useEffect(() => {
-  const API_BASE = import.meta.env.VITE_API_BASE_URL;
+  // const API_BASE = import.meta.env.VITE_API_BASE_URL;
   console.log("hii",API_BASE);
   axios.get(`${API_BASE}/explore`)
     .then((response) => {
