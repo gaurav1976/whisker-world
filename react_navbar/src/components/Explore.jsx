@@ -56,7 +56,7 @@ const Explore = () => {
   <img
     src={
       post.image.startsWith("/uploads/")
-        ? `${import.meta.env.VITE_API_BASE_URL}${post.image}`
+        ? `${web}${post.image}`
         : post.image
     }
     alt={post.title}
