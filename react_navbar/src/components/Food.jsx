@@ -4,7 +4,7 @@ import Navbar from "./Navbar";
 import { CartContext } from "../CartContext";
 import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; // ✅ FIXED
+import axios from "axios";
 
 const Food = () => {
     const { addToCart } = useContext(CartContext);
@@ -15,30 +15,27 @@ const Food = () => {
     const itemsPerPage = 12;
     const navigate = useNavigate();
 
-    // Utility function to shuffle an array randomly
-const shuffleArray = (array) => {
-    const shuffled = [...array];  // Create a copy of the array
-    for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
-};
+    const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
-    // Fetch food items from backend
-   useEffect(() => {
-  const API_BASE = import.meta.env.VITE_API_BASE_URL;
+    const shuffleArray = (array) => {
+        const shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    };
 
-  axios.get(`${API_BASE}/foods`) // make sure it matches backend route
-    .then((res) => {
-      const shuffledData = shuffleArray(res.data);
-      setProducts(shuffledData);
-      setFilteredProducts(shuffledData);
-    })
-    .catch((error) => console.error("Error fetching food items:", error));
-}, []);
+    useEffect(() => {
+        axios.get(`${API_BASE}/foods`)
+            .then((res) => {
+                const shuffledData = shuffleArray(res.data);
+                setProducts(shuffledData);
+                setFilteredProducts(shuffledData);
+            })
+            .catch((error) => console.error("Error fetching food items:", error));
+    }, [API_BASE]);
 
-    // Filter products whenever search query changes
     useEffect(() => {
         if (searchQuery.trim() === "") {
             setFilteredProducts(products);
@@ -48,16 +45,14 @@ const shuffleArray = (array) => {
             );
             setFilteredProducts(filtered);
         }
-        setCurrentPage(1); // Reset to first page when search changes
+        setCurrentPage(1);
     }, [searchQuery, products]);
 
-    // Calculate total pages based on filtered products
     const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const visibleProducts = filteredProducts.slice(startIndex, endIndex);
 
-    // Pagination handlers
     const goToNextPage = () => {
         if (currentPage < totalPages) setCurrentPage(currentPage + 1);
     };
@@ -67,34 +62,27 @@ const shuffleArray = (array) => {
     const setPage = (page) => {
         if (page >= 1 && page <= totalPages) setCurrentPage(page);
     };
-    
 
-    // Generate pagination buttons with limits
     const getPaginationButtons = () => {
         const buttons = [];
-        const maxVisibleButtons = 5; // Show maximum 5 page buttons at a time
-        
+        const maxVisibleButtons = 5;
+
         let startPage = Math.max(1, currentPage - Math.floor(maxVisibleButtons / 2));
         let endPage = Math.min(totalPages, startPage + maxVisibleButtons - 1);
-        
-        // Adjust if we're at the end
+
         if (endPage - startPage + 1 < maxVisibleButtons) {
             startPage = Math.max(1, endPage - maxVisibleButtons + 1);
         }
-        
-        // First page button
+
         if (startPage > 1) {
             buttons.push(
-                <button key={1} onClick={() => setPage(1)}>
-                    1
-                </button>
+                <button key={1} onClick={() => setPage(1)}>1</button>
             );
             if (startPage > 2) {
                 buttons.push(<span key="start-ellipsis">...</span>);
             }
         }
-        
-        // Page buttons
+
         for (let i = startPage; i <= endPage; i++) {
             buttons.push(
                 <button
@@ -106,8 +94,7 @@ const shuffleArray = (array) => {
                 </button>
             );
         }
-        
-        // Last page button
+
         if (endPage < totalPages) {
             if (endPage < totalPages - 1) {
                 buttons.push(<span key="end-ellipsis">...</span>);
@@ -118,7 +105,7 @@ const shuffleArray = (array) => {
                 </button>
             );
         }
-        
+
         return buttons;
     };
 
@@ -128,7 +115,6 @@ const shuffleArray = (array) => {
             <section className="product">
                 <div className="container py-5">
                     <div className="row py-5">
-                        {/* Enhanced Search Bar */}
                         <div className="searchbarfood">
                             <input
                                 type="text"
@@ -137,7 +123,6 @@ const shuffleArray = (array) => {
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
                             <FaSearch className="icon search-icon" />
-                            
                         </div>
                         <div className="headings-container">
                             <h1>What's Trending</h1>
@@ -155,7 +140,7 @@ const shuffleArray = (array) => {
                                     <div className="card border-100 bg-light mb-2">
                                         <div className="card-body">
                                             <img
-                                                src={`http://localhost:5000${product.image}`}
+                                                src={`${API_BASE}${product.image}`}
                                                 className="img-fluid"
                                                 alt={product.name}
                                             />
@@ -169,7 +154,7 @@ const shuffleArray = (array) => {
                                             id: product._id,
                                             name: product.name,
                                             price: parseFloat(product.price),
-                                            img: `http://localhost:5000${product.image}`,
+                                            img: `${API_BASE}${product.image}`,
                                             quantity: 1
                                         })}
                                     >
@@ -182,7 +167,7 @@ const shuffleArray = (array) => {
                                                 id: product._id,
                                                 name: product.name,
                                                 price: parseFloat(product.price),
-                                                img: `http://localhost:5000${product.image}`,
+                                                img: `${API_BASE}${product.image}`,
                                                 quantity: 1
                                             });
                                             navigate("/Checkout");
@@ -206,7 +191,6 @@ const shuffleArray = (array) => {
                             </div>
                         )}
 
-                        {/* Enhanced Pagination */}
                         {totalPages > 1 && (
                             <div className="pagination-container">
                                 <div className="pagination">
