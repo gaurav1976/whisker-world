@@ -52,9 +52,6 @@ const Explore = () => {
           <div className="explore-container" key={post._id}>
             <h2 className="blog-title">{post.title}</h2>
 
-            {/* Fix Image Display */}
-           const API_BASE = import.meta.env.VITE_API_BASE_URL;
-
 {post.image && (
   <img
     src={
