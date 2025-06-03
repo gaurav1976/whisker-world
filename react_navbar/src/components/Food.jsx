@@ -33,20 +33,26 @@ const Food = () => {
             try {
                 setLoading(true);
                 setError(null);
-                const response = await axios.get(`${API_BASE}/foods`);
-                console.log("API Response:", response.data); // Debug log
                 
-                // Ensure response.data is an array
-                if (!Array.isArray(response.data)) {
-                    throw new Error("Invalid data format received from API");
-                }
+                // Clean API base URL and construct endpoint
+                const cleanApiBase = API_BASE.endsWith('/') ? API_BASE.slice(0, -1) : API_BASE;
+                const apiUrl = `${cleanApiBase}/foods`;
+                
+                const response = await axios.get(apiUrl);
+                
+                // Process image URLs
+                const processedData = response.data.map(item => ({
+                    ...item,
+                    image: item.image.startsWith('http') ? item.image 
+                           : `${cleanApiBase}${item.image.startsWith('/') ? '' : '/'}${item.image}`
+                }));
 
-                const shuffledData = shuffleArray(response.data);
+                const shuffledData = shuffleArray(processedData);
                 setProducts(shuffledData);
                 setFilteredProducts(shuffledData);
             } catch (error) {
                 console.error("Error fetching food items:", error);
-                setError(error.message || "Failed to load food items");
+                setError(error.response?.data?.message || "Failed to load food items. Please try again later.");
             } finally {
                 setLoading(false);
             }
@@ -55,7 +61,82 @@ const Food = () => {
         fetchFoodItems();
     }, [API_BASE]);
 
-    // ... rest of your existing code (filtering, pagination functions)
+    useEffect(() => {
+        if (searchQuery.trim() === "") {
+            setFilteredProducts(products);
+        } else {
+            const filtered = products.filter((product) =>
+                product?.name?.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+            setFilteredProducts(filtered);
+        }
+        setCurrentPage(1);
+    }, [searchQuery, products]);
+
+    // Pagination calculations
+    const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const visibleProducts = filteredProducts.slice(startIndex, endIndex);
+
+    // Pagination controls
+    const goToNextPage = () => {
+        if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+    };
+    const goToPrevPage = () => {
+        if (currentPage > 1) setCurrentPage(currentPage - 1);
+    };
+    const setPage = (page) => {
+        if (page >= 1 && page <= totalPages) setCurrentPage(page);
+    };
+
+    const getPaginationButtons = () => {
+        const buttons = [];
+        const maxVisibleButtons = 5;
+
+        let startPage = Math.max(1, currentPage - Math.floor(maxVisibleButtons / 2));
+        let endPage = Math.min(totalPages, startPage + maxVisibleButtons - 1);
+
+        if (endPage - startPage + 1 < maxVisibleButtons) {
+            startPage = Math.max(1, endPage - maxVisibleButtons + 1);
+        }
+
+        if (startPage > 1) {
+            buttons.push(
+                <button key={1} onClick={() => setPage(1)} className="pagination-btn">
+                    1
+                </button>
+            );
+            if (startPage > 2) {
+                buttons.push(<span key="start-ellipsis" className="pagination-ellipsis">...</span>);
+            }
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            buttons.push(
+                <button
+                    key={i}
+                    className={`pagination-btn ${currentPage === i ? "active" : ""}`}
+                    onClick={() => setPage(i)}
+                >
+                    {i}
+                </button>
+            );
+        }
+
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) {
+                buttons.push(<span key="end-ellipsis" className="pagination-ellipsis">...</span>);
+            }
+            buttons.push(
+                <button key={totalPages} onClick={() => setPage(totalPages)} className="pagination-btn">
+                    {totalPages}
+                </button>
+            );
+        }
+
+        return buttons;
+    };
 
     return (
         <>
@@ -69,12 +150,13 @@ const Food = () => {
                                 placeholder="Search foods..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
+                                className="search-input"
                             />
-                            <FaSearch className="icon search-icon" />
+                            <FaSearch className="search-icon" />
                         </div>
                         <div className="headings-container">
                             <h1>What's Trending</h1>
-                            <h6 style={{ color: "red" }}>
+                            <h6 className="products-count">
                                 {filteredProducts.length} products found
                                 {searchQuery && ` for "${searchQuery}"`}
                             </h6>
@@ -82,106 +164,117 @@ const Food = () => {
                     </div>
 
                     {loading ? (
-                        <div className="text-center py-5">
-                            <div className="spinner-border text-primary" role="status">
-                                <span className="visually-hidden">Loading...</span>
-                            </div>
+                        <div className="loading-spinner">
+                            <div className="spinner"></div>
+                            <p>Loading delicious foods...</p>
                         </div>
                     ) : error ? (
-                        <div className="alert alert-danger">
-                            Error: {error}. Please try again later.
+                        <div className="error-message">
+                            <p>{error}</p>
+                            <button 
+                                onClick={() => window.location.reload()}
+                                className="retry-btn"
+                            >
+                                Retry
+                            </button>
                         </div>
                     ) : (
-                        <div className="row">
-                            {visibleProducts.length > 0 ? (
-                                visibleProducts.map((product) => (
-                                    <div key={product._id} className="col-lg-3 text-center mb-4">
-                                        <div className="card border-100 bg-light h-100">
-                                            <div className="card-body d-flex flex-column">
-                                                <img
-                                                    src={product.image} // Use image URL directly from backend
-                                                    className="img-fluid mx-auto"
-                                                    alt={product.name}
-                                                    style={{ maxHeight: '200px', objectFit: 'contain' }}
-                                                    onError={(e) => {
-                                                        e.target.src = 'path/to/placeholder-image.png';
-                                                    }}
-                                                />
-                                                <div className="mt-auto">
-                                                    <h6 className="productname mt-2">{product.name}</h6>
-                                                    <p className="mb-2">₹{product.price}</p>
-                                                    <button
-                                                        className="food-btn me-2"
-                                                        onClick={() => addToCart({
-                                                            id: product._id,
-                                                            name: product.name,
-                                                            price: parseFloat(product.price),
-                                                            img: product.image,
-                                                            quantity: 1
-                                                        })}
-                                                    >
-                                                        Add To Cart
-                                                    </button>
-                                                    <button
-                                                        className="food-btn"
-                                                        onClick={() => {
-                                                            addToCart({
+                        <>
+                            <div className="row">
+                                {visibleProducts.length > 0 ? (
+                                    visibleProducts.map((product) => (
+                                        <div key={product._id} className="col-lg-3 col-md-4 col-sm-6 mb-4">
+                                            <div className="food-card">
+                                                <div className="card-image-container">
+                                                    <img
+                                                        src={product.image}
+                                                        alt={product.name}
+                                                        className="food-image"
+                                                        onError={(e) => {
+                                                            e.target.src = '/images/food-placeholder.png';
+                                                            e.target.alt = 'Image not available';
+                                                        }}
+                                                    />
+                                                </div>
+                                                <div className="food-details">
+                                                    <h3 className="food-name">{product.name}</h3>
+                                                    <p className="food-price">₹{product.price}</p>
+                                                    <div className="food-actions">
+                                                        <button
+                                                            className="add-to-cart-btn"
+                                                            onClick={() => addToCart({
                                                                 id: product._id,
                                                                 name: product.name,
                                                                 price: parseFloat(product.price),
                                                                 img: product.image,
                                                                 quantity: 1
-                                                            });
-                                                            navigate("/Checkout");
-                                                        }}
-                                                    >
-                                                        Buy Now
-                                                    </button>
+                                                            })}
+                                                        >
+                                                            Add To Cart
+                                                        </button>
+                                                        <button
+                                                            className="buy-now-btn"
+                                                            onClick={() => {
+                                                                addToCart({
+                                                                    id: product._id,
+                                                                    name: product.name,
+                                                                    price: parseFloat(product.price),
+                                                                    img: product.image,
+                                                                    quantity: 1
+                                                                });
+                                                                navigate("/Checkout");
+                                                            }}
+                                                        >
+                                                            Buy Now
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+                                    ))
+                                ) : (
+                                    <div className="no-products">
+                                        <p>No products found matching your search.</p>
+                                        {searchQuery && (
+                                            <button 
+                                                className="clear-search-btn"
+                                                onClick={() => setSearchQuery("")}
+                                            >
+                                                Clear search
+                                            </button>
+                                        )}
                                     </div>
-                                ))
-                            ) : (
-                                <div className="col-12 text-center py-5">
-                                    <p>No products found matching your search.</p>
-                                    {searchQuery && (
+                                )}
+                            </div>
+
+                            {!loading && !error && totalPages > 1 && (
+                                <div className="pagination-container">
+                                    <div className="pagination-controls">
                                         <button 
-                                            className="btn btn-link"
-                                            onClick={() => setSearchQuery("")}
+                                            onClick={goToPrevPage} 
+                                            disabled={currentPage === 1}
+                                            className="pagination-nav"
                                         >
-                                            Clear search
+                                            &laquo; Previous
                                         </button>
-                                    )}
+                                        <div className="pagination-buttons">
+                                            {getPaginationButtons()}
+                                        </div>
+                                        <button 
+                                            onClick={goToNextPage} 
+                                            disabled={currentPage === totalPages}
+                                            className="pagination-nav"
+                                        >
+                                            Next &raquo;
+                                        </button>
+                                    </div>
+                                    <div className="pagination-info">
+                                        Page {currentPage} of {totalPages} • 
+                                        Showing {startIndex + 1}-{Math.min(endIndex, filteredProducts.length)} of {filteredProducts.length} items
+                                    </div>
                                 </div>
                             )}
-                        </div>
-                    )}
-
-                    {!loading && !error && totalPages > 1 && (
-                        <div className="pagination-container mt-4">
-                            <div className="pagination">
-                                <button 
-                                    onClick={goToPrevPage} 
-                                    disabled={currentPage === 1}
-                                    className="btn btn-outline-primary"
-                                >
-                                    &laquo; Previous
-                                </button>
-                                {getPaginationButtons()}
-                                <button 
-                                    onClick={goToNextPage} 
-                                    disabled={currentPage === totalPages}
-                                    className="btn btn-outline-primary"
-                                >
-                                    Next &raquo;
-                                </button>
-                            </div>
-                            <div className="page-info mt-2">
-                                Page {currentPage} of {totalPages} | 
-                                Showing {startIndex + 1}-{Math.min(endIndex, filteredProducts.length)} of {filteredProducts.length} items
-                            </div>
-                        </div>
+                        </>
                     )}
                 </div>
             </section>
