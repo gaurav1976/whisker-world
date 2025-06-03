@@ -36,7 +36,7 @@ const shuffleArray = (array) => {
       setFilteredProducts(shuffledData);
     })
     .catch((error) => console.error("Error fetching food items:", error));
-}, []);
+}, []); 
 
     // Filter products whenever search query changes
     useEffect(() => {
@@ -155,7 +155,7 @@ const shuffleArray = (array) => {
                                     <div className="card border-100 bg-light mb-2">
                                         <div className="card-body">
                                             <img
-                                                src={`http://localhost:5000${product.image}`}
+                                                src={`${API_BASE}${product.image}`}
                                                 className="img-fluid"
                                                 alt={product.name}
                                             />
@@ -169,7 +169,7 @@ const shuffleArray = (array) => {
                                             id: product._id,
                                             name: product.name,
                                             price: parseFloat(product.price),
-                                            img: `http://localhost:5000${product.image}`,
+                                            img: `${API_BASE}${product.image}`,
                                             quantity: 1
                                         })}
                                     >
@@ -182,7 +182,7 @@ const shuffleArray = (array) => {
                                                 id: product._id,
                                                 name: product.name,
                                                 price: parseFloat(product.price),
-                                                img: `http://localhost:5000${product.image}`,
+                                                img: `${API_BASE}${product.image}`,
                                                 quantity: 1
                                             });
                                             navigate("/Checkout");
