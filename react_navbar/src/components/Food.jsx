@@ -4,7 +4,7 @@ import Navbar from "./Navbar";
 import { CartContext } from "../CartContext";
 import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "axios"; // ✅ FIXED
 
 const Food = () => {
     const { addToCart } = useContext(CartContext);
@@ -12,55 +12,33 @@ const Food = () => {
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
     const itemsPerPage = 12;
     const navigate = useNavigate();
 
-    const API_BASE = import.meta.env.VITE_API_BASE_URL;
+    // Utility function to shuffle an array randomly
+const shuffleArray = (array) => {
+    const shuffled = [...array];  // Create a copy of the array
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+};
 
-    const shuffleArray = (array) => {
-        const shuffled = [...array];
-        for (let i = shuffled.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-        }
-        return shuffled;
-    };
+    // Fetch food items from backend
+   useEffect(() => {
+  const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
-    useEffect(() => {
-        const fetchFoodItems = async () => {
-            try {
-                setLoading(true);
-                setError(null);
-                
-                // Clean API base URL and construct endpoint
-                const cleanApiBase = API_BASE.endsWith('/') ? API_BASE.slice(0, -1) : API_BASE;
-                const apiUrl = `${cleanApiBase}/foods`;
-                
-                const response = await axios.get(apiUrl);
-                
-                // Process image URLs
-                const processedData = response.data.map(item => ({
-                    ...item,
-                    image: item.image.startsWith('http') ? item.image 
-                           : `${cleanApiBase}${item.image.startsWith('/') ? '' : '/'}${item.image}`
-                }));
+  axios.get(`${API_BASE}/foods`) // make sure it matches backend route
+    .then((res) => {
+      const shuffledData = shuffleArray(res.data);
+      setProducts(shuffledData);
+      setFilteredProducts(shuffledData);
+    })
+    .catch((error) => console.error("Error fetching food items:", error));
+}, []);
 
-                const shuffledData = shuffleArray(processedData);
-                setProducts(shuffledData);
-                setFilteredProducts(shuffledData);
-            } catch (error) {
-                console.error("Error fetching food items:", error);
-                setError(error.response?.data?.message || "Failed to load food items. Please try again later.");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchFoodItems();
-    }, [API_BASE]);
-
+    // Filter products whenever search query changes
     useEffect(() => {
         if (searchQuery.trim() === "") {
             setFilteredProducts(products);
@@ -70,16 +48,16 @@ const Food = () => {
             );
             setFilteredProducts(filtered);
         }
-        setCurrentPage(1);
+        setCurrentPage(1); // Reset to first page when search changes
     }, [searchQuery, products]);
 
-    // Pagination calculations
+    // Calculate total pages based on filtered products
     const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const visibleProducts = filteredProducts.slice(startIndex, endIndex);
 
-    // Pagination controls
+    // Pagination handlers
     const goToNextPage = () => {
         if (currentPage < totalPages) setCurrentPage(currentPage + 1);
     };
@@ -89,52 +67,58 @@ const Food = () => {
     const setPage = (page) => {
         if (page >= 1 && page <= totalPages) setCurrentPage(page);
     };
+    
 
+    // Generate pagination buttons with limits
     const getPaginationButtons = () => {
         const buttons = [];
-        const maxVisibleButtons = 5;
-
+        const maxVisibleButtons = 5; // Show maximum 5 page buttons at a time
+        
         let startPage = Math.max(1, currentPage - Math.floor(maxVisibleButtons / 2));
         let endPage = Math.min(totalPages, startPage + maxVisibleButtons - 1);
-
+        
+        // Adjust if we're at the end
         if (endPage - startPage + 1 < maxVisibleButtons) {
             startPage = Math.max(1, endPage - maxVisibleButtons + 1);
         }
-
+        
+        // First page button
         if (startPage > 1) {
             buttons.push(
-                <button key={1} onClick={() => setPage(1)} className="pagination-btn">
+                <button key={1} onClick={() => setPage(1)}>
                     1
                 </button>
             );
             if (startPage > 2) {
-                buttons.push(<span key="start-ellipsis" className="pagination-ellipsis">...</span>);
+                buttons.push(<span key="start-ellipsis">...</span>);
             }
         }
-
+        
+        // Page buttons
         for (let i = startPage; i <= endPage; i++) {
             buttons.push(
                 <button
                     key={i}
-                    className={`pagination-btn ${currentPage === i ? "active" : ""}`}
+                    className={currentPage === i ? "active" : ""}
                     onClick={() => setPage(i)}
                 >
                     {i}
                 </button>
             );
         }
-
+        
+        // Last page button
         if (endPage < totalPages) {
             if (endPage < totalPages - 1) {
-                buttons.push(<span key="end-ellipsis" className="pagination-ellipsis">...</span>);
+                buttons.push(<span key="end-ellipsis">...</span>);
             }
             buttons.push(
-                <button key={totalPages} onClick={() => setPage(totalPages)} className="pagination-btn">
+                <button key={totalPages} onClick={() => setPage(totalPages)}>
                     {totalPages}
                 </button>
             );
         }
-
+        
         return buttons;
     };
 
@@ -144,138 +128,109 @@ const Food = () => {
             <section className="product">
                 <div className="container py-5">
                     <div className="row py-5">
+                        {/* Enhanced Search Bar */}
                         <div className="searchbarfood">
                             <input
                                 type="text"
                                 placeholder="Search foods..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="search-input"
                             />
-                            <FaSearch className="search-icon" />
+                            <FaSearch className="icon search-icon" />
+                            
                         </div>
                         <div className="headings-container">
                             <h1>What's Trending</h1>
-                            <h6 className="products-count">
+                            <h6 style={{ color: "red" }}>
                                 {filteredProducts.length} products found
                                 {searchQuery && ` for "${searchQuery}"`}
                             </h6>
                         </div>
                     </div>
 
-                    {loading ? (
-                        <div className="loading-spinner">
-                            <div className="spinner"></div>
-                            <p>Loading delicious foods...</p>
-                        </div>
-                    ) : error ? (
-                        <div className="error-message">
-                            <p>{error}</p>
-                            <button 
-                                onClick={() => window.location.reload()}
-                                className="retry-btn"
-                            >
-                                Retry
-                            </button>
-                        </div>
-                    ) : (
-                        <>
-                            <div className="row">
-                                {visibleProducts.length > 0 ? (
-                                    visibleProducts.map((product) => (
-                                        <div key={product._id} className="col-lg-3 col-md-4 col-sm-6 mb-4">
-                                            <div className="food-card">
-                                                <div className="card-image-container">
-                                                    <img
-                                                        src={product.image}
-                                                        alt={product.name}
-                                                        className="food-image"
-                                                        onError={(e) => {
-                                                            e.target.src = '/images/food-placeholder.png';
-                                                            e.target.alt = 'Image not available';
-                                                        }}
-                                                    />
-                                                </div>
-                                                <div className="food-details">
-                                                    <h3 className="food-name">{product.name}</h3>
-                                                    <p className="food-price">₹{product.price}</p>
-                                                    <div className="food-actions">
-                                                        <button
-                                                            className="add-to-cart-btn"
-                                                            onClick={() => addToCart({
-                                                                id: product._id,
-                                                                name: product.name,
-                                                                price: parseFloat(product.price),
-                                                                img: product.image,
-                                                                quantity: 1
-                                                            })}
-                                                        >
-                                                            Add To Cart
-                                                        </button>
-                                                        <button
-                                                            className="buy-now-btn"
-                                                            onClick={() => {
-                                                                addToCart({
-                                                                    id: product._id,
-                                                                    name: product.name,
-                                                                    price: parseFloat(product.price),
-                                                                    img: product.image,
-                                                                    quantity: 1
-                                                                });
-                                                                navigate("/Checkout");
-                                                            }}
-                                                        >
-                                                            Buy Now
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
+                    <div className="row">
+                        {visibleProducts.length > 0 ? (
+                            visibleProducts.map((product) => (
+                                <div key={product._id} className="col-lg-3 text-center">
+                                    <div className="card border-100 bg-light mb-2">
+                                        <div className="card-body">
+                                            <img
+                                                src={`http://localhost:5000${product.image}`}
+                                                className="img-fluid"
+                                                alt={product.name}
+                                            />
                                         </div>
-                                    ))
-                                ) : (
-                                    <div className="no-products">
-                                        <p>No products found matching your search.</p>
-                                        {searchQuery && (
-                                            <button 
-                                                className="clear-search-btn"
-                                                onClick={() => setSearchQuery("")}
-                                            >
-                                                Clear search
-                                            </button>
-                                        )}
                                     </div>
+                                    <h6 className="productname">{product.name}</h6>
+                                    <p>₹{product.price}</p>
+                                    <button
+                                        className="food-btn"
+                                        onClick={() => addToCart({
+                                            id: product._id,
+                                            name: product.name,
+                                            price: parseFloat(product.price),
+                                            img: `http://localhost:5000${product.image}`,
+                                            quantity: 1
+                                        })}
+                                    >
+                                        Add To Cart
+                                    </button>
+                                    <button
+                                        className="food-btn"
+                                        onClick={() => {
+                                            addToCart({
+                                                id: product._id,
+                                                name: product.name,
+                                                price: parseFloat(product.price),
+                                                img: `http://localhost:5000${product.image}`,
+                                                quantity: 1
+                                            });
+                                            navigate("/Checkout");
+                                        }}
+                                    >
+                                        Buy Now
+                                    </button>
+                                </div>
+                            ))
+                        ) : (
+                            <div className="col-12 text-center">
+                                <p>No products found matching your search.</p>
+                                {searchQuery && (
+                                    <button 
+                                        className="btn btn-link"
+                                        onClick={() => setSearchQuery("")}
+                                    >
+                                        Clear search
+                                    </button>
                                 )}
                             </div>
+                        )}
 
-                            {!loading && !error && totalPages > 1 && (
-                                <div className="pagination-container">
-                                    <div className="pagination-controls">
-                                        <button 
-                                            onClick={goToPrevPage} 
-                                            disabled={currentPage === 1}
-                                            className="pagination-nav"
-                                        >
-                                            &laquo; Previous
-                                        </button>
-                                        <div className="pagination-buttons">
-                                            {getPaginationButtons()}
-                                        </div>
-                                        <button 
-                                            onClick={goToNextPage} 
-                                            disabled={currentPage === totalPages}
-                                            className="pagination-nav"
-                                        >
-                                            Next &raquo;
-                                        </button>
-                                    </div>
-                                    <div className="pagination-info">
-                                        Page {currentPage} of {totalPages} • 
-                                        Showing {startIndex + 1}-{Math.min(endIndex, filteredProducts.length)} of {filteredProducts.length} items
-                                    </div>
+                        {/* Enhanced Pagination */}
+                        {totalPages > 1 && (
+                            <div className="pagination-container">
+                                <div className="pagination">
+                                    <button 
+                                        onClick={goToPrevPage} 
+                                        disabled={currentPage === 1}
+                                    >
+                                        &laquo; Previous
+                                    </button>
+                                    {getPaginationButtons()}
+                                    <button 
+                                        onClick={goToNextPage} 
+                                        disabled={currentPage === totalPages}
+                                    >
+                                        Next &raquo;
+                                    </button>
                                 </div>
-                            )}
-                        </>
-                    )}
+                                <div className="page-info">
+                                    Page {currentPage} of {totalPages} | 
+                                    Showing {startIndex + 1}-{Math.min(endIndex, filteredProducts.length)} of {filteredProducts.length} items
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </section>
         </>
