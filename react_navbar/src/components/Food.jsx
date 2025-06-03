@@ -26,8 +26,9 @@ const shuffleArray = (array) => {
 };
 
     // Fetch food items from backend
+    const API_BASE = import.meta.env.VITE_API_BASE_URL;
    useEffect(() => {
-  const API_BASE = import.meta.env.VITE_API_BASE_URL;
+  
 
   axios.get(`${API_BASE}/foods`) // make sure it matches backend route
     .then((res) => {
