@@ -12,6 +12,8 @@ const Food = () => {
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const itemsPerPage = 12;
     const navigate = useNavigate();
 
@@ -27,87 +29,33 @@ const Food = () => {
     };
 
     useEffect(() => {
-        axios.get(`${API_BASE}/foods`)
-            .then((res) => {
-                const shuffledData = shuffleArray(res.data);
+        const fetchFoodItems = async () => {
+            try {
+                setLoading(true);
+                setError(null);
+                const response = await axios.get(`${API_BASE}/foods`);
+                console.log("API Response:", response.data); // Debug log
+                
+                // Ensure response.data is an array
+                if (!Array.isArray(response.data)) {
+                    throw new Error("Invalid data format received from API");
+                }
+
+                const shuffledData = shuffleArray(response.data);
                 setProducts(shuffledData);
                 setFilteredProducts(shuffledData);
-            })
-            .catch((error) => console.error("Error fetching food items:", error));
+            } catch (error) {
+                console.error("Error fetching food items:", error);
+                setError(error.message || "Failed to load food items");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchFoodItems();
     }, [API_BASE]);
 
-    useEffect(() => {
-        if (searchQuery.trim() === "") {
-            setFilteredProducts(products);
-        } else {
-            const filtered = products.filter((product) =>
-                product?.name?.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-            setFilteredProducts(filtered);
-        }
-        setCurrentPage(1);
-    }, [searchQuery, products]);
-
-    const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const visibleProducts = filteredProducts.slice(startIndex, endIndex);
-
-    const goToNextPage = () => {
-        if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-    };
-    const goToPrevPage = () => {
-        if (currentPage > 1) setCurrentPage(currentPage - 1);
-    };
-    const setPage = (page) => {
-        if (page >= 1 && page <= totalPages) setCurrentPage(page);
-    };
-
-    const getPaginationButtons = () => {
-        const buttons = [];
-        const maxVisibleButtons = 5;
-
-        let startPage = Math.max(1, currentPage - Math.floor(maxVisibleButtons / 2));
-        let endPage = Math.min(totalPages, startPage + maxVisibleButtons - 1);
-
-        if (endPage - startPage + 1 < maxVisibleButtons) {
-            startPage = Math.max(1, endPage - maxVisibleButtons + 1);
-        }
-
-        if (startPage > 1) {
-            buttons.push(
-                <button key={1} onClick={() => setPage(1)}>1</button>
-            );
-            if (startPage > 2) {
-                buttons.push(<span key="start-ellipsis">...</span>);
-            }
-        }
-
-        for (let i = startPage; i <= endPage; i++) {
-            buttons.push(
-                <button
-                    key={i}
-                    className={currentPage === i ? "active" : ""}
-                    onClick={() => setPage(i)}
-                >
-                    {i}
-                </button>
-            );
-        }
-
-        if (endPage < totalPages) {
-            if (endPage < totalPages - 1) {
-                buttons.push(<span key="end-ellipsis">...</span>);
-            }
-            buttons.push(
-                <button key={totalPages} onClick={() => setPage(totalPages)}>
-                    {totalPages}
-                </button>
-            );
-        }
-
-        return buttons;
-    };
+    // ... rest of your existing code (filtering, pagination functions)
 
     return (
         <>
@@ -133,88 +81,108 @@ const Food = () => {
                         </div>
                     </div>
 
-                    <div className="row">
-                        {visibleProducts.length > 0 ? (
-                            visibleProducts.map((product) => (
-                                <div key={product._id} className="col-lg-3 text-center">
-                                    <div className="card border-100 bg-light mb-2">
-                                        <div className="card-body">
-                                            <img
-                                                src={`${API_BASE}${product.image}`}
-                                                className="img-fluid"
-                                                alt={product.name}
-                                            />
+                    {loading ? (
+                        <div className="text-center py-5">
+                            <div className="spinner-border text-primary" role="status">
+                                <span className="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    ) : error ? (
+                        <div className="alert alert-danger">
+                            Error: {error}. Please try again later.
+                        </div>
+                    ) : (
+                        <div className="row">
+                            {visibleProducts.length > 0 ? (
+                                visibleProducts.map((product) => (
+                                    <div key={product._id} className="col-lg-3 text-center mb-4">
+                                        <div className="card border-100 bg-light h-100">
+                                            <div className="card-body d-flex flex-column">
+                                                <img
+                                                    src={product.image} // Use image URL directly from backend
+                                                    className="img-fluid mx-auto"
+                                                    alt={product.name}
+                                                    style={{ maxHeight: '200px', objectFit: 'contain' }}
+                                                    onError={(e) => {
+                                                        e.target.src = 'path/to/placeholder-image.png';
+                                                    }}
+                                                />
+                                                <div className="mt-auto">
+                                                    <h6 className="productname mt-2">{product.name}</h6>
+                                                    <p className="mb-2">₹{product.price}</p>
+                                                    <button
+                                                        className="food-btn me-2"
+                                                        onClick={() => addToCart({
+                                                            id: product._id,
+                                                            name: product.name,
+                                                            price: parseFloat(product.price),
+                                                            img: product.image,
+                                                            quantity: 1
+                                                        })}
+                                                    >
+                                                        Add To Cart
+                                                    </button>
+                                                    <button
+                                                        className="food-btn"
+                                                        onClick={() => {
+                                                            addToCart({
+                                                                id: product._id,
+                                                                name: product.name,
+                                                                price: parseFloat(product.price),
+                                                                img: product.image,
+                                                                quantity: 1
+                                                            });
+                                                            navigate("/Checkout");
+                                                        }}
+                                                    >
+                                                        Buy Now
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <h6 className="productname">{product.name}</h6>
-                                    <p>₹{product.price}</p>
-                                    <button
-                                        className="food-btn"
-                                        onClick={() => addToCart({
-                                            id: product._id,
-                                            name: product.name,
-                                            price: parseFloat(product.price),
-                                            img: `${API_BASE}${product.image}`,
-                                            quantity: 1
-                                        })}
-                                    >
-                                        Add To Cart
-                                    </button>
-                                    <button
-                                        className="food-btn"
-                                        onClick={() => {
-                                            addToCart({
-                                                id: product._id,
-                                                name: product.name,
-                                                price: parseFloat(product.price),
-                                                img: `${API_BASE}${product.image}`,
-                                                quantity: 1
-                                            });
-                                            navigate("/Checkout");
-                                        }}
-                                    >
-                                        Buy Now
-                                    </button>
+                                ))
+                            ) : (
+                                <div className="col-12 text-center py-5">
+                                    <p>No products found matching your search.</p>
+                                    {searchQuery && (
+                                        <button 
+                                            className="btn btn-link"
+                                            onClick={() => setSearchQuery("")}
+                                        >
+                                            Clear search
+                                        </button>
+                                    )}
                                 </div>
-                            ))
-                        ) : (
-                            <div className="col-12 text-center">
-                                <p>No products found matching your search.</p>
-                                {searchQuery && (
-                                    <button 
-                                        className="btn btn-link"
-                                        onClick={() => setSearchQuery("")}
-                                    >
-                                        Clear search
-                                    </button>
-                                )}
-                            </div>
-                        )}
+                            )}
+                        </div>
+                    )}
 
-                        {totalPages > 1 && (
-                            <div className="pagination-container">
-                                <div className="pagination">
-                                    <button 
-                                        onClick={goToPrevPage} 
-                                        disabled={currentPage === 1}
-                                    >
-                                        &laquo; Previous
-                                    </button>
-                                    {getPaginationButtons()}
-                                    <button 
-                                        onClick={goToNextPage} 
-                                        disabled={currentPage === totalPages}
-                                    >
-                                        Next &raquo;
-                                    </button>
-                                </div>
-                                <div className="page-info">
-                                    Page {currentPage} of {totalPages} | 
-                                    Showing {startIndex + 1}-{Math.min(endIndex, filteredProducts.length)} of {filteredProducts.length} items
-                                </div>
+                    {!loading && !error && totalPages > 1 && (
+                        <div className="pagination-container mt-4">
+                            <div className="pagination">
+                                <button 
+                                    onClick={goToPrevPage} 
+                                    disabled={currentPage === 1}
+                                    className="btn btn-outline-primary"
+                                >
+                                    &laquo; Previous
+                                </button>
+                                {getPaginationButtons()}
+                                <button 
+                                    onClick={goToNextPage} 
+                                    disabled={currentPage === totalPages}
+                                    className="btn btn-outline-primary"
+                                >
+                                    Next &raquo;
+                                </button>
                             </div>
-                        )}
-                    </div>
+                            <div className="page-info mt-2">
+                                Page {currentPage} of {totalPages} | 
+                                Showing {startIndex + 1}-{Math.min(endIndex, filteredProducts.length)} of {filteredProducts.length} items
+                            </div>
+                        </div>
+                    )}
                 </div>
             </section>
         </>
