@@ -31,6 +31,7 @@ const shuffleArray = (array) => {
 
   axios.get(`${API_BASE}/foods`) // make sure it matches backend route
     .then((res) => {
+        console.log("Foods data:", res.data);
       const shuffledData = shuffleArray(res.data);
       setProducts(shuffledData);
       setFilteredProducts(shuffledData);
