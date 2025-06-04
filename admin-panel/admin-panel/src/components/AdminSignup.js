@@ -31,6 +31,7 @@ function AdminSignup() {
       [name]: value
     }));
 
+    // Clear error when user types
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: "" }));
     }
@@ -39,28 +40,45 @@ function AdminSignup() {
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.name.trim()) newErrors.name = "Name is required";
+    
+    // Name validation
+    if (!formData.name.trim()) {
+      newErrors.name = "Name is required";
+    } else if (formData.name.length < 3) {
+      newErrors.name = "Name must be at least 3 characters";
+    }
+
+    // Email validation
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "Invalid email format";
     }
+
+    // Password validation
     if (!formData.password) {
       newErrors.password = "Password is required";
     } else if (formData.password.length < 8) {
       newErrors.password = "Password must be at least 8 characters";
     }
+
+    // Role validation
     if (!validRoles.some(role => role.value === formData.role)) {
       newErrors.role = "Invalid role selected";
     }
+
+    // Secret key validation for superadmin
     if (formData.role === "superadmin" && !formData.secretKey.trim()) {
       newErrors.secretKey = "Super admin secret key is required";
     }
+
     return newErrors;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validate form
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -68,27 +86,45 @@ function AdminSignup() {
     }
 
     setIsLoading(true);
-    try {
-      const payload = formData.role === "superadmin"
-        ? formData
-        : { ...formData, secretKey: undefined };
+    setApiError("");
 
+    try {
+      // Prepare payload
+      const payload = {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        role: formData.role
+      };
+
+      // Only include secretKey for superadmin
+      if (formData.role === "superadmin") {
+        payload.secretKey = formData.secretKey;
+      }
+
+      // API call
       const response = await fetch(`${API_BASE}/admin/signup`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+        headers: { 
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+        credentials: "include" // If using cookies
       });
 
       const data = await response.json();
 
-      if (response.ok) {
-        alert("Admin registration successful!");
-        navigate("/admin/login");
-      } else {
-        setApiError(data.error || data.message || "Registration failed.");
+      if (!response.ok) {
+        throw new Error(data.message || "Registration failed");
       }
-    } catch (err) {
-      setApiError("Network error. Please try again later.");
+
+      // Success
+      alert("Admin registration successful!");
+      navigate("/admin/login");
+      
+    } catch (error) {
+      console.error("Signup error:", error);
+      setApiError(error.message || "An error occurred during registration. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -97,46 +133,55 @@ function AdminSignup() {
   return (
     <div className="auth-container">
       <h2>Admin Signup</h2>
+      {apiError && <div className="error-message">{apiError}</div>}
+      
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>Name</label>
+          <label htmlFor="name">Name</label>
           <input 
             type="text" 
+            id="name"
             name="name" 
             value={formData.name}
             onChange={handleChange}
             className={errors.name ? "error" : ""}
+            placeholder="Enter your full name"
           />
           {errors.name && <span className="error-text">{errors.name}</span>}
         </div>
 
         <div className="form-group">
-          <label>Email</label>
+          <label htmlFor="email">Email</label>
           <input 
             type="email" 
+            id="email"
             name="email" 
             value={formData.email}
             onChange={handleChange}
             className={errors.email ? "error" : ""}
+            placeholder="Enter your email"
           />
           {errors.email && <span className="error-text">{errors.email}</span>}
         </div>
 
         <div className="form-group">
-          <label>Password</label>
+          <label htmlFor="password">Password</label>
           <input 
             type="password" 
+            id="password"
             name="password" 
             value={formData.password}
             onChange={handleChange}
             className={errors.password ? "error" : ""}
+            placeholder="Enter password (min 8 characters)"
           />
           {errors.password && <span className="error-text">{errors.password}</span>}
         </div>
 
         <div className="form-group">
-          <label>Role</label>
+          <label htmlFor="role">Role</label>
           <select 
+            id="role"
             name="role" 
             value={formData.role}
             onChange={handleChange}
@@ -153,9 +198,10 @@ function AdminSignup() {
 
         {formData.role === "superadmin" && (
           <div className="form-group">
-            <label>Super Admin Secret Key</label>
+            <label htmlFor="secretKey">Super Admin Secret Key</label>
             <input
               type="password"
+              id="secretKey"
               name="secretKey"
               value={formData.secretKey}
               onChange={handleChange}
@@ -166,15 +212,26 @@ function AdminSignup() {
           </div>
         )}
 
-        {apiError && <div className="error-text api-error">{apiError}</div>}
-
-        <button type="submit" disabled={isLoading}>
-          {isLoading ? "Processing..." : "Sign Up"}
+        <button 
+          type="submit" 
+          disabled={isLoading}
+          className={isLoading ? "loading" : ""}
+        >
+          {isLoading ? (
+            <>
+              <span className="spinner"></span> Processing...
+            </>
+          ) : (
+            "Sign Up"
+          )}
         </button>
       </form>
-      <p>
-        Already have an account? <Link to="/admin/login">Login</Link>
-      </p>
+
+      <div className="auth-footer">
+        <p>
+          Already have an account? <Link to="/admin/login">Login here</Link>
+        </p>
+      </div>
     </div>
   );
 }
