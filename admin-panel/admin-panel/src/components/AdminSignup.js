@@ -4,7 +4,7 @@ import "../css/AdminSignup.css";
 
 function AdminSignup() {
   // Define API base URL with fallback
-  const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://whisker-world-qlpf.onrender.com";
+  const API_BASE = import.meta.env.VITE_API_BASE_URL
 
   const [formData, setFormData] = useState({ 
     name: "", 
