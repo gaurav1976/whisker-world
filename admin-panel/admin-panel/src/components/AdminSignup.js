@@ -2,9 +2,10 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "../css/AdminSignup.css";
 
-
-
 function AdminSignup() {
+  // Define API base URL with fallback
+  const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://whisker-world-qlpf.onrender.com";
+
   const [formData, setFormData] = useState({ 
     name: "", 
     email: "", 
@@ -31,7 +32,6 @@ function AdminSignup() {
       [name]: value
     }));
 
-    // Clear error when user types
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: "" }));
     }
@@ -41,33 +41,28 @@ function AdminSignup() {
   const validate = () => {
     const newErrors = {};
     
-    // Name validation
     if (!formData.name.trim()) {
       newErrors.name = "Name is required";
     } else if (formData.name.length < 3) {
       newErrors.name = "Name must be at least 3 characters";
     }
 
-    // Email validation
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "Invalid email format";
     }
 
-    // Password validation
     if (!formData.password) {
       newErrors.password = "Password is required";
     } else if (formData.password.length < 8) {
       newErrors.password = "Password must be at least 8 characters";
     }
 
-    // Role validation
     if (!validRoles.some(role => role.value === formData.role)) {
       newErrors.role = "Invalid role selected";
     }
 
-    // Secret key validation for superadmin
     if (formData.role === "superadmin" && !formData.secretKey.trim()) {
       newErrors.secretKey = "Super admin secret key is required";
     }
@@ -77,8 +72,6 @@ function AdminSignup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Validate form
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -89,7 +82,10 @@ function AdminSignup() {
     setApiError("");
 
     try {
-      // Prepare payload
+      if (!API_BASE) {
+        throw new Error("Server configuration error. Please try again later.");
+      }
+
       const payload = {
         name: formData.name,
         email: formData.email,
@@ -97,29 +93,32 @@ function AdminSignup() {
         role: formData.role
       };
 
-      // Only include secretKey for superadmin
       if (formData.role === "superadmin") {
         payload.secretKey = formData.secretKey;
       }
 
-      // API call
-      const API_BASE = import.meta.env.VITE_API_BASE_URL;
       const response = await fetch(`${API_BASE}/admin/signup`, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
-        credentials: "include" // If using cookies
+        credentials: "include"
       });
+
+      // Handle non-JSON responses
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const text = await response.text();
+        throw new Error(text || "Invalid server response");
+      }
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Registration failed");
+        throw new Error(data.message || "Registration failed. Please try again.");
       }
 
-      // Success
       alert("Admin registration successful!");
       navigate("/admin/login");
       
