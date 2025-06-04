@@ -1,5 +1,4 @@
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import "../css/AdminLogin.css";
 
@@ -17,9 +16,7 @@ function AdminLogin() {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
 
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: "" }));
-    }
+    if (errors[name]) setErrors(prev => ({ ...prev, [name]: "" }));
     if (apiError) setApiError("");
   };
 
@@ -51,28 +48,26 @@ function AdminLogin() {
     setIsLoading(true);
     try {
       const API_BASE = import.meta.env.VITE_API_BASE_URL;
-const response = await fetch(`${API_BASE}/login`, 
-        formData,
-        { headers: { "Content-Type": "application/json" } }
-      );
 
-      if (res.data.token && res.data.admin) {
-        // Store token and admin data
-        localStorage.setItem("adminToken", res.data.token);
-        localStorage.setItem("adminUser", JSON.stringify(res.data.admin));
-        
-        // Redirect based on role
-        if (res.data.admin.role === "superadmin") {
-          navigate("/admin/dashboard");
-        } else {
-          navigate("/admin/panel");
-        }
+      const response = await fetch(`${API_BASE}/admin/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.token && data.admin) {
+        localStorage.setItem("adminToken", data.token);
+        localStorage.setItem("adminUser", JSON.stringify(data.admin));
+
+        navigate(data.admin.role === "superadmin" ? "/admin/dashboard" : "/admin/panel");
+      } else {
+        throw new Error(data.error || "Login failed");
       }
     } catch (err) {
-      const errorMsg = err.response?.data?.error ||
-                     err.response?.data?.message ||
-                     "Login failed. Please check your credentials.";
-      setApiError(errorMsg);
+      console.error("Login error:", err);
+      setApiError(err.message);
     } finally {
       setIsLoading(false);
     }
@@ -86,9 +81,11 @@ const response = await fetch(`${API_BASE}/login`,
 
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>Email</label>
+          <label htmlFor="email">Email</label>
           <input
+            required
             type="email"
+            id="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
@@ -98,17 +95,17 @@ const response = await fetch(`${API_BASE}/login`,
         </div>
 
         <div className="form-group">
-          <label>Password</label>
+          <label htmlFor="password">Password</label>
           <input
+            required
             type="password"
+            id="password"
             name="password"
             value={formData.password}
             onChange={handleChange}
             className={errors.password ? "error" : ""}
           />
-          {errors.password && (
-            <span className="error-text">{errors.password}</span>
-          )}
+          {errors.password && <span className="error-text">{errors.password}</span>}
         </div>
 
         <button type="submit" disabled={isLoading}>

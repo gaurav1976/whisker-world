@@ -121,10 +121,25 @@ app.post("/register", async (req, res) => {
 });
 
 // ✅ ADMIN SIGNUP
+// ✅ UPDATED ADMIN SIGNUP ROUTE
 app.post("/admin/signup", async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, role = "admin", secretKey } = req.body;
+
   if (!name || !email || !password) {
     return res.status(400).json({ error: "All fields are required!" });
+  }
+
+  // Validate roles
+  const validRoles = ["junioradmin", "admin", "superadmin"];
+  if (!validRoles.includes(role)) {
+    return res.status(400).json({ error: "Invalid role!" });
+  }
+
+  // Secret key validation for superadmin
+  if (role === "superadmin") {
+    if (!secretKey || secretKey !== process.env.SUPER_ADMIN_SECRET) {
+      return res.status(403).json({ error: "Invalid or missing super admin secret key!" });
+    }
   }
 
   try {
@@ -134,7 +149,7 @@ app.post("/admin/signup", async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newAdmin = new User({ name, email, password: hashedPassword, role: "admin" });
+    const newAdmin = new User({ name, email, password: hashedPassword, role });
 
     await newAdmin.save();
     res.status(201).json({ message: "Admin registered successfully!" });
@@ -142,6 +157,7 @@ app.post("/admin/signup", async (req, res) => {
     res.status(500).json({ error: "Error signing up admin", details: error.message });
   }
 });
+
 
 
 // ✅ USER LOGIN
