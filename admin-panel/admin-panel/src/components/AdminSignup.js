@@ -1,14 +1,15 @@
 import { useState } from "react";
+import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import "../css/AdminSignup.css";
 
 function AdminSignup() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
+  const [formData, setFormData] = useState({ 
+    name: "", 
+    email: "", 
     password: "",
     role: "junioradmin",
-    secretKey: "",
+    secretKey: ""
   });
 
   const [errors, setErrors] = useState({});
@@ -16,21 +17,22 @@ function AdminSignup() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
+  // Define valid roles and their permissions
   const validRoles = [
     { value: "superadmin", label: "Super Admin" },
     { value: "admin", label: "Admin" },
-    { value: "junioradmin", label: "Junior Admin" },
+    { value: "junioradmin", label: "Junior Admin" }
   ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
-      [name]: value,
+      [name]: value
     }));
 
     if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
+      setErrors(prev => ({ ...prev, [name]: "" }));
     }
     if (apiError) setApiError("");
   };
@@ -48,7 +50,7 @@ function AdminSignup() {
     } else if (formData.password.length < 8) {
       newErrors.password = "Password must be at least 8 characters";
     }
-    if (!validRoles.some((role) => role.value === formData.role)) {
+    if (!validRoles.some(role => role.value === formData.role)) {
       newErrors.role = "Invalid role selected";
     }
     if (formData.role === "superadmin" && !formData.secretKey.trim()) {
@@ -67,30 +69,26 @@ function AdminSignup() {
 
     setIsLoading(true);
     try {
-      const API_BASE = import.meta.env.VITE_API_BASE_URL;
-
-      // Prepare payload (include secretKey only if superadmin)
-      const payload =
-        formData.role === "superadmin"
-          ? formData
-          : { ...formData, secretKey: undefined };
-
+      // Only include secretKey if role is superadmin
+      const payload = formData.role === "superadmin" ? 
+        formData : 
+        { ...formData, secretKey: undefined };
+      
       const response = await fetch(`${API_BASE}/admin/signup`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(payload)
+});
 
-      const data = await response.json();
-
-      if (response.ok) {
-        alert(data.message || "Admin registered successfully!");
+      if (response.status === 201) {
+        alert("Admin registration successful!");
         navigate("/admin/login");
-      } else {
-        setApiError(data.error || "Registration failed. Please try again.");
       }
     } catch (err) {
-      setApiError("Network error. Please try again later.");
+      const errorMsg = err.response?.data?.error || 
+                       err.response?.data?.message || 
+                       "Registration failed. Please try again.";
+      setApiError(errorMsg);
     } finally {
       setIsLoading(false);
     }
@@ -102,9 +100,9 @@ function AdminSignup() {
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>Name</label>
-          <input
-            type="text"
-            name="name"
+          <input 
+            type="text" 
+            name="name" 
             value={formData.name}
             onChange={handleChange}
             className={errors.name ? "error" : ""}
@@ -114,9 +112,9 @@ function AdminSignup() {
 
         <div className="form-group">
           <label>Email</label>
-          <input
-            type="email"
-            name="email"
+          <input 
+            type="email" 
+            name="email" 
             value={formData.email}
             onChange={handleChange}
             className={errors.email ? "error" : ""}
@@ -126,27 +124,25 @@ function AdminSignup() {
 
         <div className="form-group">
           <label>Password</label>
-          <input
-            type="password"
-            name="password"
+          <input 
+            type="password" 
+            name="password" 
             value={formData.password}
             onChange={handleChange}
             className={errors.password ? "error" : ""}
           />
-          {errors.password && (
-            <span className="error-text">{errors.password}</span>
-          )}
+          {errors.password && <span className="error-text">{errors.password}</span>}
         </div>
 
         <div className="form-group">
           <label>Role</label>
-          <select
-            name="role"
+          <select 
+            name="role" 
             value={formData.role}
             onChange={handleChange}
             className={errors.role ? "error" : ""}
           >
-            {validRoles.map((role) => (
+            {validRoles.map(role => (
               <option key={role.value} value={role.value}>
                 {role.label}
               </option>
@@ -166,9 +162,7 @@ function AdminSignup() {
               className={errors.secretKey ? "error" : ""}
               placeholder="Enter super admin secret key"
             />
-            {errors.secretKey && (
-              <span className="error-text">{errors.secretKey}</span>
-            )}
+            {errors.secretKey && <span className="error-text">{errors.secretKey}</span>}
           </div>
         )}
 
