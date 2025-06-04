@@ -17,6 +17,8 @@ function AdminSignup() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
+  const API_BASE = import.meta.env.VITE_API_BASE_URL;
+  
   // Define valid roles and their permissions
   const validRoles = [
     { value: "superadmin", label: "Super Admin" },
@@ -74,7 +76,7 @@ function AdminSignup() {
         formData : 
         { ...formData, secretKey: undefined };
       
-      const response = await fetch(`${API_BASE}/admin/signup`, {
+  const response = await fetch(`${API_BASE}/admin/signup`, {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify(payload)

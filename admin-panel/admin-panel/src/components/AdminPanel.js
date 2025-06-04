@@ -6,7 +6,7 @@ const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState("Dashboard");
   const [blogs, setBlogs] = useState([]);
   const [users, setUsers] = useState([]);
-  const [foods, setFoods] = useState([]);z
+  const [foods, setFoods] = useState([]);
   const [editBlog, setEditBlog] = useState(null);
   const [editFood, setEditFood] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
