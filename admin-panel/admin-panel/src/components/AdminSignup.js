@@ -1,7 +1,8 @@
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import "../css/AdminSignup.css";
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 function AdminSignup() {
   const [formData, setFormData] = useState({ 
@@ -17,7 +18,6 @@ function AdminSignup() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Define valid roles and their permissions
   const validRoles = [
     { value: "superadmin", label: "Super Admin" },
     { value: "admin", label: "Admin" },
@@ -69,26 +69,26 @@ function AdminSignup() {
 
     setIsLoading(true);
     try {
-      // Only include secretKey if role is superadmin
-      const payload = formData.role === "superadmin" ? 
-        formData : 
-        { ...formData, secretKey: undefined };
-      
-      const response = await fetch(`${API_BASE}/admin/signup`, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(payload)
-});
+      const payload = formData.role === "superadmin"
+        ? formData
+        : { ...formData, secretKey: undefined };
 
-      if (response.status === 201) {
+      const response = await fetch(`${API_BASE}/admin/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
         alert("Admin registration successful!");
         navigate("/admin/login");
+      } else {
+        setApiError(data.error || data.message || "Registration failed.");
       }
     } catch (err) {
-      const errorMsg = err.response?.data?.error || 
-                       err.response?.data?.message || 
-                       "Registration failed. Please try again.";
-      setApiError(errorMsg);
+      setApiError("Network error. Please try again later.");
     } finally {
       setIsLoading(false);
     }
