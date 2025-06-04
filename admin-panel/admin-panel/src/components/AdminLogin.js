@@ -15,10 +15,10 @@ function AdminLogin() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
 
     if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
+      setErrors(prev => ({ ...prev, [name]: "" }));
     }
     if (apiError) setApiError("");
   };
@@ -51,26 +51,27 @@ function AdminLogin() {
     setIsLoading(true);
     try {
       const API_BASE = import.meta.env.VITE_API_BASE_URL;
-
-      const res = await axios.post(`${API_BASE}/login`, formData);
+const response = await fetch(`${API_BASE}/login`, 
+        formData,
+        { headers: { "Content-Type": "application/json" } }
+      );
 
       if (res.data.token && res.data.admin) {
+        // Store token and admin data
         localStorage.setItem("adminToken", res.data.token);
         localStorage.setItem("adminUser", JSON.stringify(res.data.admin));
-
+        
+        // Redirect based on role
         if (res.data.admin.role === "superadmin") {
           navigate("/admin/dashboard");
         } else {
           navigate("/admin/panel");
         }
-      } else {
-        setApiError("Login failed. Invalid credentials.");
       }
     } catch (err) {
-      const errorMsg =
-        err.response?.data?.error ||
-        err.response?.data?.message ||
-        "Login failed. Please check your credentials.";
+      const errorMsg = err.response?.data?.error ||
+                     err.response?.data?.message ||
+                     "Login failed. Please check your credentials.";
       setApiError(errorMsg);
     } finally {
       setIsLoading(false);
