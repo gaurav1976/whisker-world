@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "../css/AdminSignup.css";
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 function AdminSignup() {
   const [formData, setFormData] = useState({ 
@@ -73,7 +74,6 @@ function AdminSignup() {
       const payload = formData.role === "superadmin" 
         ? formData 
         : { ...formData, secretKey: undefined };
-      const API_BASE = import.meta.env.VITE_API_BASE_URL;
       const response = await fetch(`${API_BASE}/admin/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
