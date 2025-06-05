@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { FaUsers, FaBlog, FaBox, FaBars, FaTrash, FaEdit, FaUser, FaSignOutAlt, FaLock } from "react-icons/fa";
 import "../css/AdminPanel.css";
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL;
-
 const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState("Dashboard");
   const [blogs, setBlogs] = useState([]);
@@ -48,8 +46,6 @@ const AdminPanel = () => {
   const [newAdminPassword, setNewAdminPassword] = useState("");
   const [newAdminRole, setNewAdminRole] = useState("junioradmin");
 
-  
-
   useEffect(() => {
     // Check if admin is logged in
     const loggedInAdmin = JSON.parse(localStorage.getItem('adminUser'));
@@ -72,7 +68,7 @@ const AdminPanel = () => {
 
   // Fetch Blogs
   const fetchBlogs = () => {
-    fetch(`${API_BASE}/blogs`)
+    fetch("http://localhost:5000/blogs")
       .then((res) => res.json())
       .then((data) => setBlogs(data))
       .catch((error) => console.error("Error fetching blogs:", error));
@@ -80,7 +76,7 @@ const AdminPanel = () => {
 
   // Fetch Users
   const fetchUsers = () => {
-    fetch(`${API_BASE}/users`)
+    fetch("http://localhost:5000/users")
       .then((res) => res.json())
       .then((data) => setUsers(data))
       .catch((error) => console.error("Error fetching users:", error));
@@ -88,7 +84,7 @@ const AdminPanel = () => {
 
   // Fetch Food Data
   const fetchFoods = () => {
-    fetch(`${API_BASE}/foods`)
+    fetch("http://localhost:5000/foods")
       .then((res) => res.json())
       .then((data) => setFoods(data))
       .catch((error) => console.error("Error fetching foods:", error));
@@ -96,7 +92,7 @@ const AdminPanel = () => {
 
   // Fetch Admins (only for super admin)
   const fetchAdmins = () => {
-    fetch(`${API_BASE}/admin`, {
+    fetch("http://localhost:5000/admin", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('adminToken')}`
       }
@@ -114,7 +110,7 @@ const AdminPanel = () => {
       return;
     }
     
-    fetch(`${API_BASE}/blogs/${id}`, {
+    fetch(`http://localhost:5000/blogs/${id}`, { 
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${localStorage.getItem('adminToken')}`
@@ -132,7 +128,7 @@ const AdminPanel = () => {
       return;
     }
     
-    fetch(`${API_BASE}/foods/${id}`, {
+    fetch(`http://localhost:5000/foods/${id}`, { 
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${localStorage.getItem('adminToken')}`
@@ -146,7 +142,7 @@ const AdminPanel = () => {
   const handleDeleteAdmin = (id) => {
     if (adminUser.role !== "superadmin") return;
     
-    fetch(`${API_BASE}/admin/${id}`, {
+    fetch(`http://localhost:5000/admin/${id}`, { 
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${localStorage.getItem('adminToken')}`
@@ -184,7 +180,7 @@ const AdminPanel = () => {
       formData.append("image", selectedFile);
     }
 
-    fetch(`${API_BASE}/blogs/${editBlog._id}`, {
+    fetch(`http://localhost:5000/blogs/${editBlog._id}`, {
       method: "PUT",
       body: formData,
       headers: {
@@ -209,7 +205,7 @@ const AdminPanel = () => {
       formData.append("image", selectedFile);
     }
 
-    fetch(`${API_BASE}/foods/${editFood._id}`, {
+    fetch(`http://localhost:5000/foods/${editFood._id}`, {
       method: "PUT",
       body: formData,
       headers: {
@@ -261,7 +257,7 @@ const AdminPanel = () => {
     formData.append("image", selectedFile);
     formData.append("authorId", adminUser._id);
 
-    fetch(`${API_BASE}/blogs`, {
+    fetch("http://localhost:5000/blogs", {
       method: "POST",
       body: formData,
       headers: {
@@ -292,7 +288,7 @@ const AdminPanel = () => {
     formData.append("image", selectedFile);
     formData.append("addedBy", adminUser._id);
 
-    fetch(`${API_BASE}/foods`, {
+    fetch("http://localhost:5000/foods", {
       method: "POST",
       body: formData,
       headers: {
@@ -326,7 +322,7 @@ const AdminPanel = () => {
       role: newAdminRole
     };
 
-    fetch(`${API_BASE}/admin/signup`, {
+    fetch("http://localhost:5000/admin/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -623,7 +619,7 @@ const AdminPanel = () => {
                     </div>
                   ) : (
                     <div className="blog-item">
-                      <img src={`${API_BASE}${blog.image}`} alt="Blog" width="200" />
+                      <img src={`http://localhost:5000${blog.image}`} alt="Blog" width="200" />
                       <div className="blog-details">
                         <h4>{blog.title}</h4>
                         <p>{blog.content}</p>
@@ -729,10 +725,9 @@ const AdminPanel = () => {
                       </>
                     ) : (
                       <>
-                       <td>
-  <img src={`${API_BASE}${food.image}`} alt={food.name} width="100" />
-</td>
-
+                        <td>
+                          <img src={`http://localhost:5000${food.image}`} alt={food.name} width="100" />
+                        </td>
                         <td>{food.name}</td>
                         <td>₹{food.price}</td>
                         <td>{food.category}</td>
