@@ -68,6 +68,8 @@ function AdminSignup() {
         delete payload.secretKey; // Remove secretKey if not superadmin
       }
 
+       console.log("ENV:", import.meta.env.VITE_API_BASE_URL);
+
       const API_BASE = import.meta.env.VITE_API_BASE_URL;
       const response = await fetch(`${API_BASE}/admin/signup`, {
         method: "POST",
