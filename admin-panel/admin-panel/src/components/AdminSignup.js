@@ -74,7 +74,6 @@ function AdminSignup() {
         ? formData 
         : { ...formData, secretKey: undefined };
       const API_BASE = import.meta.env.VITE_API_BASE_URL;
-      console.log("API_BASE =", import.meta.env.VITE_API_BASE_URL);
       const response = await fetch(`${API_BASE}/admin/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
