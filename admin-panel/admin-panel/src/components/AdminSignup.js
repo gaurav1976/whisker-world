@@ -156,13 +156,15 @@ function AdminSignup() {
           <div className="form-group">
             <label>Super Admin Secret Key</label>
             <input
-              type="password"
-              name="secretKey"
-              value={formData.secretKey}
-              onChange={handleChange}
-              className={errors.secretKey ? "error" : ""}
-              placeholder="Enter super admin secret key"
-            />
+  type="password"
+  name="secretKey"
+  value={formData.secretKey}
+  onChange={handleChange}
+  className={errors.secretKey ? "error" : ""}
+  placeholder="Enter super admin secret key"
+  autoComplete="off" // or use "new-password"
+/>
+
             {errors.secretKey && <span className="error-text">{errors.secretKey}</span>}
           </div>
         )}
