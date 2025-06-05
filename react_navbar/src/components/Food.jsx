@@ -24,11 +24,11 @@ const shuffleArray = (array) => {
     }
     return shuffled;
 };
-
+console.log("heyy you");
     // Fetch food items from backend
     const API_BASE = import.meta.env.VITE_API_BASE_URL;
    useEffect(() => {
-console.log("heyy you");
+
   axios.get(`https://whisker-world-qlpf.onrender.com/foods`) // make sure it matches backend route
     .then((res) => {
 
