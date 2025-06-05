@@ -16,7 +16,7 @@ app.use(express.json());
 const corsOptions = {
   origin: [
     "https://whisker-world-rhgh.vercel.app", // Your frontend URL
-    "https://whisker-world-qlpf.onrender.com"  // Your backend URL                
+              
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
@@ -120,11 +120,22 @@ app.post("/register", async (req, res) => {
   }
 });
 
-// ✅ ADMIN SIGNUP
 app.post("/admin/signup", async (req, res) => {
-  const { name, email, password } = req.body;
-  if (!name || !email || !password) {
+  const { name, email, password, role, secretKey } = req.body;
+
+  if (!name || !email || !password || !role) {
     return res.status(400).json({ error: "All fields are required!" });
+  }
+
+  const validRoles = ["superadmin", "admin", "junioradmin"];
+  if (!validRoles.includes(role)) {
+    return res.status(400).json({ error: "Invalid role" });
+  }
+
+  if (role === "superadmin") {
+    if (secretKey !== process.env.SUPER_ADMIN_SECRET) {
+      return res.status(403).json({ error: "Invalid super admin secret key" });
+    }
   }
 
   try {
@@ -134,7 +145,7 @@ app.post("/admin/signup", async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newAdmin = new User({ name, email, password: hashedPassword, role: "admin" });
+    const newAdmin = new User({ name, email, password: hashedPassword, role });
 
     await newAdmin.save();
     res.status(201).json({ message: "Admin registered successfully!" });
