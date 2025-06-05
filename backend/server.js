@@ -122,9 +122,15 @@ app.post("/register", async (req, res) => {
 
 // ✅ ADMIN SIGNUP
 app.post("/admin/signup", async (req, res) => {
-  const { name, email, password } = req.body;
-  if (!name || !email || !password) {
+  const { name, email, password, role, secretKey } = req.body;
+
+  if (!name || !email || !password || !role) {
     return res.status(400).json({ error: "All fields are required!" });
+  }
+
+  // Check secret key if superadmin
+  if (role === "superadmin" && secretKey !== process.env.SUPERADMIN_SECRET_KEY) {
+    return res.status(403).json({ error: "Invalid super admin secret key" });
   }
 
   try {
@@ -134,7 +140,7 @@ app.post("/admin/signup", async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newAdmin = new User({ name, email, password: hashedPassword, role: "admin" });
+    const newAdmin = new User({ name, email, password: hashedPassword, role });
 
     await newAdmin.save();
     res.status(201).json({ message: "Admin registered successfully!" });

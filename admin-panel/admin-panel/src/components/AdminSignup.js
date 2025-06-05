@@ -16,9 +16,6 @@ function AdminSignup() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-
-  
-  // Define valid roles and their permissions
   const validRoles = [
     { value: "superadmin", label: "Super Admin" },
     { value: "admin", label: "Admin" },
@@ -27,14 +24,9 @@ function AdminSignup() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
 
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: "" }));
-    }
+    if (errors[name]) setErrors(prev => ({ ...prev, [name]: "" }));
     if (apiError) setApiError("");
   };
 
@@ -70,26 +62,28 @@ function AdminSignup() {
 
     setIsLoading(true);
     try {
-      // Only include secretKey if role is superadmin
-      const payload = formData.role === "superadmin" ? 
-        formData : 
-        { ...formData, secretKey: undefined };
-        const API_BASE = import.meta.env.VITE_API_BASE_URL;
-  const response = await fetch(`${API_BASE}/admin/signup`, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(payload)
-});
-
-      if (response.status === 201) {
-        alert("Admin registration successful!");
-        navigate("/admin/login");
+      // Prepare payload
+      const payload = { ...formData };
+      if (formData.role !== "superadmin") {
+        delete payload.secretKey; // Remove secretKey if not superadmin
       }
+
+      const API_BASE = import.meta.env.VITE_API_BASE_URL;
+      const response = await fetch(`${API_BASE}/admin/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Registration failed. Please try again.");
+      }
+
+      alert("Admin registration successful!");
+      navigate("/admin/login");
     } catch (err) {
-      const errorMsg = err.response?.data?.error || 
-                       err.response?.data?.message || 
-                       "Registration failed. Please try again.";
-      setApiError(errorMsg);
+      setApiError(err.message);
     } finally {
       setIsLoading(false);
     }
