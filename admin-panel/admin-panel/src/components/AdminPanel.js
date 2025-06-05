@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { FaUsers, FaBlog, FaBox, FaBars, FaTrash, FaEdit, FaUser, FaSignOutAlt, FaLock } from "react-icons/fa";
 import "../css/AdminPanel.css";
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
 const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState("Dashboard");
   const [blogs, setBlogs] = useState([]);
