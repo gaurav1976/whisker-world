@@ -6,6 +6,8 @@ import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from "axios"; // ✅ FIXED
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
 const Food = () => {
     const { addToCart } = useContext(CartContext);
     const [products, setProducts] = useState([]);
@@ -26,13 +28,12 @@ const shuffleArray = (array) => {
 };
 
     // Fetch food items from backend
-    const API_BASE = import.meta.env.VITE_API_BASE_URL;
+    
    useEffect(() => {
-console.log("heyy you");
-  axios.get(`https://whisker-world-qlpf.onrender.com/foods`) // make sure it matches backend route
-    .then((res) => {
 
+  axios.get(`${API_BASE}/foods`).then((res) => {
       const shuffledData = shuffleArray(res.data);
+      console.log("shuffledData: ",shuffleArray);
       setProducts(shuffledData);
       setFilteredProducts(shuffledData);
     })
