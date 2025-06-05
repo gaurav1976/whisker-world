@@ -31,13 +31,13 @@ const shuffleArray = (array) => {
     
    useEffect(() => {
 
-  axios.get(`${API_BASE}/foods`).then((res) => {
-      const shuffledData = shuffleArray(res.data);
-      console.log("shuffledData: ",shuffleArray);
-      setProducts(shuffledData);
-      setFilteredProducts(shuffledData);
-    })
-    .catch((error) => console.error("Error fetching food items:", error));
+  axios.get(`${API_BASE}/foods`, { withCredentials: true })
+  .then(res => {
+    const shuffledData = shuffleArray(res.data);
+    setProducts(shuffledData);
+    setFilteredProducts(shuffledData);
+  })
+  .catch(error => console.error("Error fetching food items:", error));
 }, []); 
 
     // Filter products whenever search query changes
@@ -151,88 +151,92 @@ const shuffleArray = (array) => {
                     </div>
 
                     <div className="row">
-                        {visibleProducts.length > 0 ? (
-                            visibleProducts.map((product) => (
-                                <div key={product._id} className="col-lg-3 text-center">
-                                    <div className="card border-100 bg-light mb-2">
-                                        <div className="card-body">
-                                            <img
-                                                src={`${API_BASE}${product.image}`}
-                                                className="img-fluid"
-                                                alt={product.name}
-                                            />
-                                        </div>
-                                    </div>
-                                    <h6 className="productname">{product.name}</h6>
-                                    <p>₹{product.price}</p>
-                                    <button
-                                        className="food-btn"
-                                        onClick={() => addToCart({
-                                            id: product._id,
-                                            name: product.name,
-                                            price: parseFloat(product.price),
-                                            img: `${API_BASE}${product.image}`,
-                                            quantity: 1
-                                        })}
-                                    >
-                                        Add To Cart
-                                    </button>
-                                    <button
-                                        className="food-btn"
-                                        onClick={() => {
-                                            addToCart({
-                                                id: product._id,
-                                                name: product.name,
-                                                price: parseFloat(product.price),
-                                                img: `${API_BASE}${product.image}`,
-                                                quantity: 1
-                                            });
-                                            navigate("/Checkout");
-                                        }}
-                                    >
-                                        Buy Now
-                                    </button>
-                                </div>
-                            ))
-                        ) : (
-                            <div className="col-12 text-center">
-                                <p>No products found matching your search.</p>
-                                {searchQuery && (
-                                    <button 
-                                        className="btn btn-link"
-                                        onClick={() => setSearchQuery("")}
-                                    >
-                                        Clear search
-                                    </button>
-                                )}
-                            </div>
-                        )}
+  {visibleProducts.length > 0 ? (
+    visibleProducts.map((product) => (
+      <div key={product._id} className="col-lg-3 text-center">
+        <div className="card border-100 bg-light mb-2">
+          <div className="card-body">
+            <img
+              src={
+                product.image?.startsWith("/uploads/")
+                  ? `${API_BASE}${product.image}`
+                  : product.image || "/fallback.jpg"
+              }
+              className="img-fluid"
+              alt={product.name}
+            />
+          </div>
+        </div>
+        <h6 className="productname">{product.name}</h6>
+        <p>₹{product.price}</p>
+        <button
+          className="food-btn"
+          onClick={() =>
+            addToCart({
+              id: product._id,
+              name: product.name,
+              price: parseFloat(product.price),
+              img:
+                product.image?.startsWith("/uploads/")
+                  ? `${API_BASE}${product.image}`
+                  : product.image || "/fallback.jpg",
+              quantity: 1,
+            })
+          }
+        >
+          Add To Cart
+        </button>
+        <button
+          className="food-btn"
+          onClick={() => {
+            addToCart({
+              id: product._id,
+              name: product.name,
+              price: parseFloat(product.price),
+              img:
+                product.image?.startsWith("/uploads/")
+                  ? `${API_BASE}${product.image}`
+                  : product.image || "/fallback.jpg",
+              quantity: 1,
+            });
+            navigate("/Checkout");
+          }}
+        >
+          Buy Now
+        </button>
+      </div>
+    ))
+  ) : (
+    <div className="col-12 text-center">
+      <p>No products found matching your search.</p>
+      {searchQuery && (
+        <button className="btn btn-link" onClick={() => setSearchQuery("")}>
+          Clear search
+        </button>
+      )}
+    </div>
+  )}
 
-                        {/* Enhanced Pagination */}
-                        {totalPages > 1 && (
-                            <div className="pagination-container">
-                                <div className="pagination">
-                                    <button 
-                                        onClick={goToPrevPage} 
-                                        disabled={currentPage === 1}
-                                    >
-                                        &laquo; Previous
-                                    </button>
-                                    {getPaginationButtons()}
-                                    <button 
-                                        onClick={goToNextPage} 
-                                        disabled={currentPage === totalPages}
-                                    >
-                                        Next &raquo;
-                                    </button>
-                                </div>
-                                <div className="page-info">
-                                    Page {currentPage} of {totalPages} | 
-                                    Showing {startIndex + 1}-{Math.min(endIndex, filteredProducts.length)} of {filteredProducts.length} items
-                                </div>
-                            </div>
-                        )}
-                    </div>
+  {/* Pagination */}
+  {totalPages > 1 && (
+    <div className="pagination-container">
+      <div className="pagination">
+        <button onClick={goToPrevPage} disabled={currentPage === 1}>
+          &laquo; Previous
+        </button>
+        {getPaginationButtons()}
+        <button onClick={goToNextPage} disabled={currentPage === totalPages}>
+          Next &raquo;
+        </button>
+      </div>
+      <div className="page-info">
+        Page {currentPage} of {totalPages} | Showing {startIndex + 1}-
+        {Math.min(endIndex, filteredProducts.length)} of{" "}
+        {filteredProducts.length} items
+      </div>
+    </div>
+  )}
+</div>
                 </div>
             </section>
         </>

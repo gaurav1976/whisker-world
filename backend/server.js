@@ -16,7 +16,7 @@ app.use(express.json());
 const corsOptions = {
   origin: [
     "https://whisker-world-rhgh.vercel.app", // Your frontend URL
-    // "http://localhost:3000"                  // For local development
+    "https://whisker-world-qlpf.onrender.com"  // Your backend URL                
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
