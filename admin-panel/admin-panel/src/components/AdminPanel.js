@@ -46,7 +46,7 @@ const AdminPanel = () => {
   const [newAdminPassword, setNewAdminPassword] = useState("");
   const [newAdminRole, setNewAdminRole] = useState("junioradmin");
 
-  const API_BASE = import.meta.env.VITE_API_BASE_URL;
+  
 
   useEffect(() => {
     // Check if admin is logged in
@@ -323,7 +323,7 @@ const AdminPanel = () => {
       password: newAdminPassword,
       role: newAdminRole
     };
-
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
     fetch(`${API_BASE}/admin/signup`, {
       method: "POST",
       headers: {
