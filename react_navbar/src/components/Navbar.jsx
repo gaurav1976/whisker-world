@@ -119,7 +119,10 @@ const Navbar = () => {
                     borderRadius: "50%",
                     objectFit: "cover"
                   }}
-                  onError={(e) => e.target.src = "#"}
+                  onError={(e) => {
+  e.target.onerror = null; // Prevent infinite loop
+  e.target.src = "/default-avatar.jpg"; // Fallback image in public folder
+}}
                 />
                 <span className="user-name">{user?.name || "User"}</span>
               </div>
