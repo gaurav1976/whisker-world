@@ -49,12 +49,12 @@ const Explore = () => {
         {/* Display Blogs */}
         {!loading && blogPosts.map((post) => (
           <div className="explore-container" key={post._id}>
-            <h2 className="blog-title">{post.title}</h2>
+          <h2 className="blog-title">{post.title}</h2>
 {post.image && (
   <img
     src={
       post.image.startsWith("/uploads/")
-        ? `${import.meta.env.VITE_API_BASE_URL}${post.image}`
+        ? `{post.image}`
         : post.image
     }
     alt={post.title}
