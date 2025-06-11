@@ -7,25 +7,36 @@ const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
-const Food = require("./models/Food");
+const Food = require("./models/Food"); // ✅ Import the Food model
+
 
 dotenv.config();
 const app = express();
-
 app.use(express.json());
-
-// ✅ CORS configuration
 const corsOptions = {
-  origin: "https://whisker-world-rhgh.vercel.app", // ✅ exact string is better
+  origin: [
+    "https://whisker-world-rhgh.vercel.app", // Your frontend URL
+    // "http://localhost:3000"                  // For local development
+  ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
-  optionsSuccessStatus: 200,
+  optionsSuccessStatus: 200 // Some browsers have issues with 204
 };
 
-app.use(cors(corsOptions));           // ✅ Enable CORS globally
-app.options("*", cors(corsOptions));  // ✅ Handle preflight requests
+// Apply CORS middleware
+app.use(cors(corsOptions));
 
+// Explicitly handle OPTIONS requests for all routes
+app.options('*', cors(corsOptions));
+
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://whisker-world-rhgh.vercel.app");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
 // ✅ Serve uploaded images statically
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
