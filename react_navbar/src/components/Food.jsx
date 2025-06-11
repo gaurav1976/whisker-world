@@ -6,7 +6,7 @@ import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from "axios"; 
 
-const API_BASE = ""; // Leave blank because Vercel is handling the proxy
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 
 const Food = () => {
@@ -30,8 +30,8 @@ const shuffleArray = (array) => {
 
     // Fetch food items from backend
     useEffect(() => {
-  axios
-    .get("/api/foods", { withCredentials: true }) // 🔁 Use relative path
+  axios.get("https://whisker-world-qlpf.onrender.com/api/foods", { withCredentials: true })
+
     .then((res) => {
       console.log("Fetched food items:", res.data);
       const shuffledData = shuffleArray(res.data);
@@ -161,7 +161,7 @@ const shuffleArray = (array) => {
             <img
               src={
                 product.image?.startsWith("/uploads/")
-                   ? `/api${product.image}` // ✅ Prefix with /api
+                         ? `https://whisker-world-qlpf.onrender.com${product.image}`
                   : product.image || "/fallback.jpg"
               }
               className="img-fluid"
@@ -180,7 +180,7 @@ const shuffleArray = (array) => {
               price: parseFloat(product.price),
               img:
                 product.image?.startsWith("/uploads/")
-                  ? `/api${product.image}`
+                    ? `https://whisker-world-qlpf.onrender.com${product.image}`
                   : product.image || "/fallback.jpg",
               quantity: 1,
             })
@@ -197,7 +197,7 @@ const shuffleArray = (array) => {
               price: parseFloat(product.price),
               img:
                 product.image?.startsWith("/uploads/")
-                   ? `/api${product.image}`
+                     ? `https://whisker-world-qlpf.onrender.com${product.image}`
                   : product.image || "/fallback.jpg",
               quantity: 1,
             });
