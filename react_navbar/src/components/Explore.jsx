@@ -19,7 +19,7 @@ const Explore = () => {
   const [loading, setLoading] = useState(true);
 
   // Fetch Blogs from API and shuffle
-    const API_BASE = import.meta.env.VITE_API_BASE_URL;
+    // const API_BASE = import.meta.env.VITE_API_BASE_URL;
  useEffect(() => {
 
   console.log("hii",API_BASE);
