@@ -29,17 +29,19 @@ const shuffleArray = (array) => {
 
     // Fetch food items from backend
     
-   useEffect(() => {
-
-  axios.get(`${API_BASE}/foods`, { withCredentials: true })
-  .then(res => {
-    const shuffledData = shuffleArray(res.data);
-    setProducts(shuffledData);
-    setFilteredProducts(shuffledData);
-  })
-  .catch(error => console.error("Error fetching food items:", error));
-}, []); 
-
+  useEffect(() => {
+  axios
+    .get(`${API_BASE}/api/foods`, { withCredentials: true })
+    .then((res) => {
+      console.log("Fetched food items:", res.data);
+      const shuffledData = shuffleArray(res.data);
+      setProducts(shuffledData);
+      setFilteredProducts(shuffledData);
+    })
+    .catch((error) =>
+      console.error("Error fetching food items:", error.message)
+    );
+}, []);
     // Filter products whenever search query changes
     useEffect(() => {
         if (searchQuery.trim() === "") {
