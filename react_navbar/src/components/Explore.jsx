@@ -19,9 +19,10 @@ const Explore = () => {
   const [loading, setLoading] = useState(true);
 
   // Fetch Blogs from API and shuffle
-    // const API_BASE = import.meta.env.VITE_API_BASE_URL;
+    const API_BASE = import.meta.env.VITE_API_BASE_URL;
  useEffect(() => {
 
+  console.log("hii",API_BASE);
   axios.get(`${API_BASE}/explore`)
     .then((response) => {
       const shuffled = shuffleArray(response.data);
@@ -49,12 +50,12 @@ const Explore = () => {
         {/* Display Blogs */}
         {!loading && blogPosts.map((post) => (
           <div className="explore-container" key={post._id}>
-          <h2 className="blog-title">{post.title}</h2>
+            <h2 className="blog-title">{post.title}</h2>
 {post.image && (
   <img
     src={
       post.image.startsWith("/uploads/")
-        ? `{post.image}`
+        ? `${import.meta.env.VITE_API_BASE_URL}${post.image}`
         : post.image
     }
     alt={post.title}
