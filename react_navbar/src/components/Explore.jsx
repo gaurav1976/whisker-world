@@ -22,7 +22,6 @@ const Explore = () => {
     // const API_BASE = import.meta.env.VITE_API_BASE_URL;
  useEffect(() => {
 
-  console.log("hii",API_BASE);
   axios.get(`${API_BASE}/explore`)
     .then((response) => {
       const shuffled = shuffleArray(response.data);
