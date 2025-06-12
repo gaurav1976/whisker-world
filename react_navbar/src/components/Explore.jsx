@@ -14,11 +14,18 @@ const shuffleArray = (array) => {
   return shuffled;
 };
 
+// 👉 Sanitize helper function
+const sanitizeContent = (content) => {
+  if (!content) return '';
+  return content
+    .replace(/const API_BASE = import\.meta\.env\.VITE_API_BASE_URL;/gi, '')
+    .replace(/contact API_BASE = importmeis\.envNTE_API_BASE_URL:/gi, '')
+    .trim();
+};
+
 const Explore = () => {
   const [blogPosts, setBlogPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // ✅ Correctly declare API_BASE outside JSX
   const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
@@ -42,41 +49,44 @@ const Explore = () => {
         {loading && <p>Loading blogs...</p>}
         {!loading && blogPosts.length === 0 && <p>No blogs available</p>}
 
-        {!loading && blogPosts.map((post) => (
-          <div className="explore-container" key={post._id}>
-            <h2 className="blog-title">{post.title}</h2>
+        {!loading && blogPosts.map((post) => {
+          const cleanContent = sanitizeContent(post.content);
+          return (
+            <div className="explore-container" key={post._id}>
+              <h2 className="blog-title">{post.title}</h2>
 
-            {post.image && (
-              <img
-                src={
-                  post.image.startsWith("/uploads/")
-                    ? `${API_BASE}${post.image}`
-                    : post.image
-                }
-                alt={post.title}
-                className="blog-image"
-              />
-            )}
+              {post.image && (
+                <img
+                  src={
+                    post.image.startsWith("/uploads/")
+                      ? `${API_BASE}${post.image}`
+                      : post.image
+                  }
+                  alt={post.title}
+                  className="blog-image"
+                />
+              )}
 
-            <div className="blog-meta">
-              <span>By Admin</span> |
-              <span>{new Date(post.date).toLocaleDateString()}</span> |
-              <span>{post.category || "General"}</span>
+              <div className="blog-meta">
+                <span>By Admin</span> |
+                <span>{new Date(post.date).toLocaleDateString()}</span> |
+                <span>{post.category || "General"}</span>
+              </div>
+
+              <p className="blog-content">
+                {cleanContent.length > 2000
+                  ? `${cleanContent.substring(0, 2000)}...`
+                  : cleanContent}
+              </p>
+
+              {post.link ? (
+                <Link to={post.link} className="read-more-btn">Read More</Link>
+              ) : (
+                <a href="/Explore" className="read-more-btn">Love More</a>
+              )}
             </div>
-
-            <p className="blog-content">
-              {post.content.length > 2000
-                ? `${post.content.substring(0, 2000)}...`
-                : post.content}
-            </p>
-
-            {post.link ? (
-              <Link to={post.link} className="read-more-btn">Read More</Link>
-            ) : (
-              <a href="/Explore" className="read-more-btn">Love More</a>
-            )}
-          </div>
-        ))}
+          );
+        })}
       </div>
     </>
   );
