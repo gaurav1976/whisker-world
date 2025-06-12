@@ -63,12 +63,7 @@ function AdminLogin() {
       if (response.ok) {
         localStorage.setItem("adminToken", data.token);
         localStorage.setItem("adminUser", JSON.stringify(data.admin));
-
-        if (data.admin.role === "superadmin") {
-          navigate("/admin/dashboard");
-        } else {
-          navigate("/admin/panel");
-        }
+        navigate("/admin/dashboard"); // Simplified to single dashboard
       } else {
         throw new Error(data.message || "Login failed");
       }
