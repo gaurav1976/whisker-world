@@ -15,7 +15,7 @@ function AdminSignup() {
   const navigate = useNavigate();
 
   const API_BASE = import.meta.env.VITE_API_BASE_URL;
-  
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -61,12 +61,13 @@ function AdminSignup() {
         body: JSON.stringify(formData)
       });
 
+      const data = await response.json();
+
       if (response.status === 201) {
         alert("Admin registration successful!");
         navigate("/admin/login");
       } else {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Registration failed");
+        throw new Error(data.error || "Registration failed");
       }
     } catch (err) {
       setApiError(err.message);

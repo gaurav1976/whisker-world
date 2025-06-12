@@ -16,13 +16,11 @@ app.use(express.json());
 const corsOptions = {
   origin: [
     "https://whisker-world-rhgh.vercel.app", // Your frontend URL
-    "https://whisker-world.vercel.app", // Add all possible frontend URLs
-    // "http://localhost:3000"
+    // "http://localhost:3000"                  // For local development
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
-  preflightContinue: false,
   optionsSuccessStatus: 200 // Some browsers have issues with 204
 };
 
@@ -124,35 +122,39 @@ app.post("/register", async (req, res) => {
 
 // ✅ ADMIN SIGNUP
 app.post("/admin/signup", async (req, res) => {
-  const { name, email, password, role, secretKey } = req.body;
+  const { name, email, password } = req.body;
 
-  if (!name || !email || !password || !role) {
-    return res.status(400).json({ message: "All fields are required!" });
-  }
-
-  if (role === "superadmin" && secretKey !== process.env.SUPERADMIN_SECRET_KEY) {
-    return res.status(403).json({ message: "Invalid super admin secret key" });
+  // Basic validation
+  if (!name || !email || !password) {
+    return res.status(400).json({ error: "Name, email and password are required!" });
   }
 
   try {
+    // Check if admin already exists
     const existingAdmin = await User.findOne({ email });
     if (existingAdmin) {
-      return res.status(400).json({ message: "Admin email already exists!" });
+      return res.status(400).json({ error: "Admin already exists with this email!" });
     }
 
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newAdmin = new User({ name, email, password: hashedPassword, role });
+    
+    // Create new admin (no role field)
+    const newAdmin = new User({ 
+      name, 
+      email, 
+      password: hashedPassword 
+    });
 
     await newAdmin.save();
     res.status(201).json({ message: "Admin registered successfully!" });
   } catch (error) {
-    res.status(500).json({
-      message: "Error signing up admin",
-      details: error.message,
+    res.status(500).json({ 
+      error: "Error signing up admin", 
+      details: error.message 
     });
   }
 });
-
 
 
 // ✅ USER LOGIN
@@ -184,39 +186,30 @@ app.post("/login", async (req, res) => {
 
 // ✅ ADMIN LOGIN
 app.post("/admin/login", async (req, res) => {
-  const { email, password } = req.body;
-
   try {
-    const admin = await User.findOne({ email });
+    const { email, password } = req.body;
+
+    const admin = await User.findOne({ email, role: "admin" });
     if (!admin) {
-      return res.status(404).json({ message: "Admin not found!" });
+      return res.status(400).json({ error: "Admin not found!" });
     }
 
     const isMatch = await bcrypt.compare(password, admin.password);
     if (!isMatch) {
-      return res.status(401).json({ message: "Invalid credentials!" });
+      return res.status(400).json({ error: "Invalid credentials!" });
     }
 
-    const token = jwt.sign(
-      { id: admin._id, role: admin.role },
-      process.env.JWT_SECRET || "your_secret_key",
-      { expiresIn: "1h" }
-    );
+    const token = jwt.sign({ id: admin._id, role: admin.role }, "your_secret_key", {
+      expiresIn: "1h",
+    });
 
-    return res.status(200).json({
+    res.status(200).json({
       message: "Admin login successful!",
       token,
-      admin: {
-        name: admin.name,
-        email: admin.email,
-        role: admin.role,
-      },
+      admin: { name: admin.name, email: admin.email, role: admin.role },
     });
   } catch (error) {
-    return res.status(500).json({
-      message: "Admin login failed",
-      details: error.message,
-    });
+    res.status(500).json({ error: "Admin login failed", details: error.message });
   }
 });
 
