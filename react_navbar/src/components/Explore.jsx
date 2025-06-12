@@ -55,8 +55,8 @@ const Explore = () => {
   <img
     src={
       post.image.startsWith("/uploads/")
-        ? `${import.meta.env.VITE_API_BASE_URL}${post.image}`
-        : post.image
+        // ? `${import.meta.env.VITE_API_BASE_URL}${post.image}`
+        // : post.image
     }
     alt={post.title}
     className="blog-image"
