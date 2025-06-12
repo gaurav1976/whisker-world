@@ -17,7 +17,7 @@ const corsOptions = {
   origin: [
     "https://whisker-world-rhgh.vercel.app", // Your frontend URL
     "https://whisker-world.vercel.app", // Add all possible frontend URLs
-    "http://localhost:3000"
+    // "http://localhost:3000"
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
