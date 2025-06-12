@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import "../css/AdminSignup.css";
 
 function AdminSignup() {
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
   const [formData, setFormData] = useState({ 
     name: "", 
     email: "", 
@@ -14,7 +15,7 @@ function AdminSignup() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const API_BASE = import.meta.env.VITE_API_BASE_URL;
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
