@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { FaUsers, FaBlog, FaBox, FaBars, FaTrash, FaEdit, FaUser, FaSignOutAlt, FaLock } from "react-icons/fa";
+import { FaUsers, FaBlog, FaBox, FaBars, FaTrash, FaEdit, FaUser, FaSignOutAlt } from "react-icons/fa";
 import "../css/AdminPanel.css";
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState("Dashboard");
@@ -11,7 +13,6 @@ const AdminPanel = () => {
   const [editFood, setEditFood] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [adminUser, setAdminUser] = useState(null);
-  const [adminList, setAdminList] = useState([]); // For super admin to manage other admins
 
   // Blog Editing States
   const [updatedTitle, setUpdatedTitle] = useState("");
@@ -39,12 +40,6 @@ const AdminPanel = () => {
   const [adminPassword, setAdminPassword] = useState("");
   const [adminPhoto, setAdminPhoto] = useState("");
 
-  // New Admin States (for super admin)
-  const [newAdminName, setNewAdminName] = useState("");
-  const [newAdminEmail, setNewAdminEmail] = useState("");
-  const [newAdminPassword, setNewAdminPassword] = useState("");
-  const [newAdminRole, setNewAdminRole] = useState("junioradmin");
-
   useEffect(() => {
     // Check if admin is logged in
     const loggedInAdmin = JSON.parse(localStorage.getItem('adminUser'));
@@ -61,12 +56,11 @@ const AdminPanel = () => {
     if (activeTab === "Blogs") fetchBlogs();
     if (activeTab === "Users") fetchUsers();
     if (activeTab === "Products") fetchFoods();
-
   }, [activeTab, adminUser]);
 
   // Fetch Blogs
   const fetchBlogs = () => {
-    fetch("http://localhost:5000/blogs")
+    fetch(`${API_BASE}/blogs`)
       .then((res) => res.json())
       .then((data) => setBlogs(data))
       .catch((error) => console.error("Error fetching blogs:", error));
@@ -74,7 +68,7 @@ const AdminPanel = () => {
 
   // Fetch Users
   const fetchUsers = () => {
-    fetch("http://localhost:5000/users")
+    fetch(`${API_BASE}/users`)
       .then((res) => res.json())
       .then((data) => setUsers(data))
       .catch((error) => console.error("Error fetching users:", error));
@@ -82,33 +76,15 @@ const AdminPanel = () => {
 
   // Fetch Food Data
   const fetchFoods = () => {
-    fetch("http://localhost:5000/foods")
+    fetch(`${API_BASE}/foods`)
       .then((res) => res.json())
       .then((data) => setFoods(data))
       .catch((error) => console.error("Error fetching foods:", error));
   };
 
-  // Fetch Admins (only for super admin)
-  const fetchAdmins = () => {
-    fetch("http://localhost:5000/admin", {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('adminToken')}`
-      }
-    })
-      .then((res) => res.json())
-      .then((data) => setAdminList(data))
-      .catch((error) => console.error("Error fetching admins:", error));
-  };
-
   // Delete Blog
   const handleDeleteBlog = (id) => {
-    // Junior admins can't delete blogs
-    if (adminUser.role === "junioradmin") {
-      alert("You don't have permission to delete blogs");
-      return;
-    }
-    
-    fetch(`http://localhost:5000/blogs/${id}`, { 
+    fetch(`${API_BASE}/blogs/${id}`, { 
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${localStorage.getItem('adminToken')}`
@@ -120,13 +96,7 @@ const AdminPanel = () => {
 
   // Delete Food
   const handleDeleteFood = (id) => {
-    // Junior admins can't delete foods
-    if (adminUser.role === "junioradmin") {
-      alert("You don't have permission to delete products");
-      return;
-    }
-    
-    fetch(`http://localhost:5000/foods/${id}`, { 
+    fetch(`${API_BASE}/foods/${id}`, { 
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${localStorage.getItem('adminToken')}`
@@ -136,23 +106,8 @@ const AdminPanel = () => {
       .catch((error) => console.error("Error deleting food:", error));
   };
 
-  // Delete Admin (only for super admin)
-  const handleDeleteAdmin = (id) => {
-    if (adminUser.role !== "superadmin") return;
-    
-    fetch(`http://localhost:5000/admin/${id}`, { 
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('adminToken')}`
-      }
-    })
-      .then(() => fetchAdmins())
-      .catch((error) => console.error("Error deleting admin:", error));
-  };
-
   // Edit Blog
   const handleEditBlog = (blog) => {
-    // Junior admins can only edit their own blogs (if implemented)
     setEditBlog(blog);
     setUpdatedTitle(blog.title);
     setUpdatedImage(blog.image);
@@ -161,7 +116,6 @@ const AdminPanel = () => {
 
   // Edit Food
   const handleEditFood = (food) => {
-    // Junior admins can only edit their own foods (if implemented)
     setEditFood(food);
     setUpdatedFoodName(food.name);
     setUpdatedFoodPrice(food.price);
@@ -178,7 +132,7 @@ const AdminPanel = () => {
       formData.append("image", selectedFile);
     }
 
-    fetch(`http://localhost:5000/blogs/${editBlog._id}`, {
+    fetch(`${API_BASE}/blogs/${editBlog._id}`, {
       method: "PUT",
       body: formData,
       headers: {
@@ -203,7 +157,7 @@ const AdminPanel = () => {
       formData.append("image", selectedFile);
     }
 
-    fetch(`http://localhost:5000/foods/${editFood._id}`, {
+    fetch(`${API_BASE}/foods/${editFood._id}`, {
       method: "PUT",
       body: formData,
       headers: {
@@ -255,7 +209,7 @@ const AdminPanel = () => {
     formData.append("image", selectedFile);
     formData.append("authorId", adminUser._id);
 
-    fetch("http://localhost:5000/blogs", {
+    fetch(`${API_BASE}/blogs`, {
       method: "POST",
       body: formData,
       headers: {
@@ -286,7 +240,7 @@ const AdminPanel = () => {
     formData.append("image", selectedFile);
     formData.append("addedBy", adminUser._id);
 
-    fetch("http://localhost:5000/foods", {
+    fetch(`${API_BASE}/foods`, {
       method: "POST",
       body: formData,
       headers: {
@@ -302,41 +256,6 @@ const AdminPanel = () => {
         setSelectedFile(null);
       })
       .catch((error) => console.error("Error adding food:", error));
-  };
-
-  // Add New Admin (only for super admin)
-  const handleAddAdmin = async () => {
-    if (adminUser.role !== "superadmin") return;
-    
-    if (!newAdminName || !newAdminEmail || !newAdminPassword) {
-      alert("Please fill all fields!");
-      return;
-    }
-
-    const newAdmin = {
-      name: newAdminName,
-      email: newAdminEmail,
-      password: newAdminPassword,
-      role: newAdminRole
-    };
-
-    fetch("http://localhost:5000/admin/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem('adminToken')}`
-      },
-      body: JSON.stringify(newAdmin)
-    })
-      .then((res) => res.json())
-      .then(() => {
-        fetchAdmins();
-        setNewAdminName("");
-        setNewAdminEmail("");
-        setNewAdminPassword("");
-        setNewAdminRole("junioradmin");
-      })
-      .catch((error) => console.error("Error adding admin:", error));
   };
 
   // Update Admin Profile
@@ -361,14 +280,6 @@ const AdminPanel = () => {
     window.location.href = '/admin/login';
   };
 
-  // Check if current admin has permission for an action
-  const hasPermission = (requiredRole) => {
-    if (!adminUser) return false;
-    if (adminUser.role === "superadmin") return true;
-    if (requiredRole === "admin" && adminUser.role === "admin") return true;
-    return adminUser.role === requiredRole;
-  };
-
   return (
     <div className="admin-container">
       <div className="sidebar">
@@ -385,7 +296,6 @@ const AdminPanel = () => {
               </div>
               <p className="admin-name">{adminUser.name}</p>
               <p className="admin-email">{adminUser.email}</p>
-              <p className="admin-role-badge">{adminUser.role}</p>
             </>
           )}
         </div>
@@ -396,11 +306,9 @@ const AdminPanel = () => {
           <FaUser className="icon" /> Admin Profile
         </button>
         
-        {hasPermission("admin") && (
-          <button className="sidebar-button" onClick={() => setActiveTab("Users")}>
-            <FaUsers className="icon" /> Users
-          </button>
-        )}
+        <button className="sidebar-button" onClick={() => setActiveTab("Users")}>
+          <FaUsers className="icon" /> Users
+        </button>
         
         <button className="sidebar-button" onClick={() => setActiveTab("Blogs")}>
           <FaBlog className="icon" /> Blogs
@@ -409,12 +317,6 @@ const AdminPanel = () => {
         <button className="sidebar-button" onClick={() => setActiveTab("Products")}>
           <FaBox className="icon" /> Products
         </button>
-        
-        {adminUser?.role === "superadmin" && (
-          <button className="sidebar-button" onClick={() => setActiveTab("Admins")}>
-            <FaLock className="icon" /> Manage Admins
-          </button>
-        )}
         
         <button className="sidebar-button logout-btn" onClick={handleLogout}>
           <FaSignOutAlt className="icon" /> Logout
@@ -442,13 +344,6 @@ const AdminPanel = () => {
                 <h4>Total Products</h4>
                 <p>{foods.length}</p>
               </div>
-              {adminUser?.role === "superadmin" && (
-                <div className="stat-card">
-                  <FaLock className="stat-icon" />
-                  <h4>Total Admins</h4>
-                  <p>{adminList.length}</p>
-                </div>
-              )}
             </div>
           </div>
         )}
@@ -479,10 +374,7 @@ const AdminPanel = () => {
                 </div>
                 <div className="admin-profile-info">
                   <h2>{adminName}</h2>
-                  <p className={`admin-role ${adminUser.role}`}>
-                    {adminUser.role === "superadmin" ? "Super Administrator" : 
-                     adminUser.role === "admin" ? "Administrator" : "Junior Administrator"}
-                  </p>
+                  <p className="admin-role">Administrator</p>
                 </div>
               </div>
 
@@ -532,7 +424,7 @@ const AdminPanel = () => {
         )}
 
         {/* Users Tab */}
-        {activeTab === "Users" && hasPermission("admin") && (
+        {activeTab === "Users" && (
           <div className="content">
             <h3>Manage Users</h3>
             <table>
@@ -552,11 +444,9 @@ const AdminPanel = () => {
                       <button className="edit-btn">
                         <FaEdit />
                       </button>
-                      {hasPermission("admin") && (
-                        <button className="delete-btn">
-                          <FaTrash />
-                        </button>
-                      )}
+                      <button className="delete-btn">
+                        <FaTrash />
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -570,26 +460,24 @@ const AdminPanel = () => {
           <div className="content">
             <h3>Manage Blog Content</h3>
 
-            {/* Add Blog Form - Only for admins and super admins */}
-            {(hasPermission("admin") || adminUser?.role === "superadmin") && (
-              <div className="add-blog-form">
-                <h4>Add a New Blog</h4>
-                <input
-                  type="text"
-                  value={newTitle}
-                  onChange={(e) => setNewTitle(e.target.value)}
-                  placeholder="Enter blog title"
-                />
-                <input type="file" onChange={handleFileChange} />
-                {selectedFile && <img src={URL.createObjectURL(selectedFile)} alt="Preview" width="200" />}
-                <textarea
-                  value={newContent}
-                  onChange={(e) => setNewContent(e.target.value)}
-                  placeholder="Enter blog content"
-                />
-                <button onClick={handleAddBlog}>Add Blog</button>
-              </div>
-            )}
+            {/* Add Blog Form */}
+            <div className="add-blog-form">
+              <h4>Add a New Blog</h4>
+              <input
+                type="text"
+                value={newTitle}
+                onChange={(e) => setNewTitle(e.target.value)}
+                placeholder="Enter blog title"
+              />
+              <input type="file" onChange={handleFileChange} />
+              {selectedFile && <img src={URL.createObjectURL(selectedFile)} alt="Preview" width="200" />}
+              <textarea
+                value={newContent}
+                onChange={(e) => setNewContent(e.target.value)}
+                placeholder="Enter blog content"
+              />
+              <button onClick={handleAddBlog}>Add Blog</button>
+            </div>
 
             {/* Blog List */}
             <ul className="blog-list">
@@ -617,7 +505,7 @@ const AdminPanel = () => {
                     </div>
                   ) : (
                     <div className="blog-item">
-                      <img src={`http://localhost:5000${blog.image}`} alt="Blog" width="200" />
+                      <img src={`${API_BASE}${blog.image}`} alt="Blog" width="200" />
                       <div className="blog-details">
                         <h4>{blog.title}</h4>
                         <p>{blog.content}</p>
@@ -626,11 +514,9 @@ const AdminPanel = () => {
                         <button className="edit-btn" onClick={() => handleEditBlog(blog)}>
                           <FaEdit />
                         </button>
-                        {hasPermission("admin") && (
-                          <button className="delete-btn" onClick={() => handleDeleteBlog(blog._id)}>
-                            <FaTrash />
-                          </button>
-                        )}
+                        <button className="delete-btn" onClick={() => handleDeleteBlog(blog._id)}>
+                          <FaTrash />
+                        </button>
                       </div>
                     </div>
                   )}
@@ -645,33 +531,31 @@ const AdminPanel = () => {
           <div className="content">
             <h3>Manage Food Products</h3>
 
-            {/* Add Food Form - Only for admins and super admins */}
-            {(hasPermission("admin") || adminUser?.role === "superadmin") && (
-              <div className="add-food-form">
-                <h4>Add a New Food Product</h4>
-                <input
-                  type="text"
-                  value={newFoodName}
-                  onChange={(e) => setNewFoodName(e.target.value)}
-                  placeholder="Enter food name"
-                />
-                <input
-                  type="text"
-                  value={newFoodPrice}
-                  onChange={(e) => setNewFoodPrice(e.target.value)}
-                  placeholder="Enter price"
-                />
-                <input
-                  type="text"
-                  value={newFoodCategory}
-                  onChange={(e) => setNewFoodCategory(e.target.value)}
-                  placeholder="Enter category"
-                />
-                <input type="file" onChange={handleFileChange} />
-                {selectedFile && <img src={URL.createObjectURL(selectedFile)} alt="Preview" width="200" />}
-                <button onClick={handleAddFood}>Add Food</button>
-              </div>
-            )}
+            {/* Add Food Form */}
+            <div className="add-food-form">
+              <h4>Add a New Food Product</h4>
+              <input
+                type="text"
+                value={newFoodName}
+                onChange={(e) => setNewFoodName(e.target.value)}
+                placeholder="Enter food name"
+              />
+              <input
+                type="text"
+                value={newFoodPrice}
+                onChange={(e) => setNewFoodPrice(e.target.value)}
+                placeholder="Enter price"
+              />
+              <input
+                type="text"
+                value={newFoodCategory}
+                onChange={(e) => setNewFoodCategory(e.target.value)}
+                placeholder="Enter category"
+              />
+              <input type="file" onChange={handleFileChange} />
+              {selectedFile && <img src={URL.createObjectURL(selectedFile)} alt="Preview" width="200" />}
+              <button onClick={handleAddFood}>Add Food</button>
+            </div>
 
             {/* Food List */}
             <table className="food-table">
@@ -724,7 +608,7 @@ const AdminPanel = () => {
                     ) : (
                       <>
                         <td>
-                          <img src={`http://localhost:5000${food.image}`} alt={food.name} width="100" />
+                          <img src={`${API_BASE}${food.image}`} alt={food.name} width="100" />
                         </td>
                         <td>{food.name}</td>
                         <td>₹{food.price}</td>
@@ -733,90 +617,12 @@ const AdminPanel = () => {
                           <button className="edit-btn" onClick={() => handleEditFood(food)}>
                             <FaEdit />
                           </button>
-                          {hasPermission("admin") && (
-                            <button className="delete-btn" onClick={() => handleDeleteFood(food._id)}>
-                              <FaTrash />
-                            </button>
-                          )}
+                          <button className="delete-btn" onClick={() => handleDeleteFood(food._id)}>
+                            <FaTrash />
+                          </button>
                         </td>
                       </>
                     )}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-
-        {/* Admins Tab (Super Admin Only) */}
-        {activeTab === "Admins" && adminUser?.role === "superadmin" && (
-          <div className="content">
-            <h3>Manage Administrators</h3>
-
-            {/* Add Admin Form */}
-            <div className="add-admin-form">
-              <h4>Add a New Administrator</h4>
-              <input
-                type="text"
-                value={newAdminName}
-                onChange={(e) => setNewAdminName(e.target.value)}
-                placeholder="Enter admin name"
-              />
-              <input
-                type="email"
-                value={newAdminEmail}
-                onChange={(e) => setNewAdminEmail(e.target.value)}
-                placeholder="Enter admin email"
-              />
-              <input
-                type="password"
-                value={newAdminPassword}
-                onChange={(e) => setNewAdminPassword(e.target.value)}
-                placeholder="Enter password"
-              />
-              <select
-                value={newAdminRole}
-                onChange={(e) => setNewAdminRole(e.target.value)}
-              >
-                <option value="superadmin">Super Admin</option>
-                <option value="admin">Admin</option>
-                <option value="junioradmin">Junior Admin</option>
-              </select>
-              <button onClick={handleAddAdmin}>Add Admin</button>
-            </div>
-
-            {/* Admins List */}
-            <table className="admins-table">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Role</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {adminList.map((admin) => (
-                  <tr key={admin._id}>
-                    <td>{admin.name}</td>
-                    <td>{admin.email}</td>
-                    <td className={`role-badge ${admin.role}`}>
-                      {admin.role === "superadmin" ? "Super Admin" : 
-                       admin.role === "admin" ? "Admin" : "Junior Admin"}
-                    </td>
-                    <td>
-                      <button className="edit-btn">
-                        <FaEdit />
-                      </button>
-                      {admin.role !== "superadmin" && (
-                        <button 
-                          className="delete-btn" 
-                          onClick={() => handleDeleteAdmin(admin._id)}
-                        >
-                          <FaTrash />
-                        </button>
-                      )}
-                    </td>
                   </tr>
                 ))}
               </tbody>
