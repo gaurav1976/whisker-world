@@ -51,18 +51,13 @@ function AdminLogin() {
     setIsLoading(true);
     try {
       const API_BASE = import.meta.env.VITE_API_BASE_URL;
-const response = await fetch(`${API_BASE}/login`, 
-        formData,
-        { headers: { "Content-Type": "application/json" } }
-      );
+      const response = await axios.post(`${API_BASE}/login`, formData);
 
-      if (res.data.token && res.data.admin) {
-        // Store token and admin data
-        localStorage.setItem("adminToken", res.data.token);
-        localStorage.setItem("adminUser", JSON.stringify(res.data.admin));
-        
-        // Redirect based on role
-        if (res.data.admin.role === "superadmin") {
+      if (response.data.token && response.data.admin) {
+        localStorage.setItem("adminToken", response.data.token);
+        localStorage.setItem("adminUser", JSON.stringify(response.data.admin));
+
+        if (response.data.admin.role === "superadmin") {
           navigate("/admin/dashboard");
         } else {
           navigate("/admin/panel");
@@ -70,8 +65,8 @@ const response = await fetch(`${API_BASE}/login`,
       }
     } catch (err) {
       const errorMsg = err.response?.data?.error ||
-                     err.response?.data?.message ||
-                     "Login failed. Please check your credentials.";
+                       err.response?.data?.message ||
+                       "Login failed. Please check your credentials.";
       setApiError(errorMsg);
     } finally {
       setIsLoading(false);
