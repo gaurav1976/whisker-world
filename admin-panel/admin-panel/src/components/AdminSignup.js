@@ -6,9 +6,7 @@ function AdminSignup() {
   const [formData, setFormData] = useState({ 
     name: "", 
     email: "", 
-    password: "",
-    role: "junioradmin",
-    secretKey: ""
+    password: ""
   });
 
   const [errors, setErrors] = useState({});
@@ -17,24 +15,11 @@ function AdminSignup() {
   const navigate = useNavigate();
 
   const API_BASE = import.meta.env.VITE_API_BASE_URL;
-  
-  // Define valid roles and their permissions
-  const validRoles = [
-    { value: "superadmin", label: "Super Admin" },
-    { value: "admin", label: "Admin" },
-    { value: "junioradmin", label: "Junior Admin" }
-  ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: "" }));
-    }
+    setFormData(prev => ({ ...prev, [name]: value }));
+    if (errors[name]) setErrors(prev => ({ ...prev, [name]: "" }));
     if (apiError) setApiError("");
   };
 
@@ -51,12 +36,6 @@ function AdminSignup() {
     } else if (formData.password.length < 8) {
       newErrors.password = "Password must be at least 8 characters";
     }
-    if (!validRoles.some(role => role.value === formData.role)) {
-      newErrors.role = "Invalid role selected";
-    }
-    if (formData.role === "superadmin" && !formData.secretKey.trim()) {
-      newErrors.secretKey = "Super admin secret key is required";
-    }
     return newErrors;
   };
 
@@ -70,26 +49,22 @@ function AdminSignup() {
 
     setIsLoading(true);
     try {
-      // Only include secretKey if role is superadmin
-      const payload = formData.role === "superadmin" ? 
-        formData : 
-        { ...formData, secretKey: undefined };
-      
-  const response = await fetch(`${API_BASE}/admin/signup`, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(payload)
-});
+      const response = await fetch(`${API_BASE}/admin/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
-      if (response.status === 201) {
-        alert("Admin registration successful!");
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("Signup successful!");
         navigate("/admin/login");
+      } else {
+        setApiError(data.message || "Signup failed. Please try again.");
       }
     } catch (err) {
-      const errorMsg = err.response?.data?.error || 
-                       err.response?.data?.message || 
-                       "Registration failed. Please try again.";
-      setApiError(errorMsg);
+      setApiError("Network error. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -97,7 +72,7 @@ function AdminSignup() {
 
   return (
     <div className="auth-container">
-      <h2>Admin Signup</h2>
+      <h2>Signup</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>Name</label>
@@ -134,38 +109,6 @@ function AdminSignup() {
           />
           {errors.password && <span className="error-text">{errors.password}</span>}
         </div>
-
-        <div className="form-group">
-          <label>Role</label>
-          <select 
-            name="role" 
-            value={formData.role}
-            onChange={handleChange}
-            className={errors.role ? "error" : ""}
-          >
-            {validRoles.map(role => (
-              <option key={role.value} value={role.value}>
-                {role.label}
-              </option>
-            ))}
-          </select>
-          {errors.role && <span className="error-text">{errors.role}</span>}
-        </div>
-
-        {formData.role === "superadmin" && (
-          <div className="form-group">
-            <label>Super Admin Secret Key</label>
-            <input
-              type="password"
-              name="secretKey"
-              value={formData.secretKey}
-              onChange={handleChange}
-              className={errors.secretKey ? "error" : ""}
-              placeholder="Enter super admin secret key"
-            />
-            {errors.secretKey && <span className="error-text">{errors.secretKey}</span>}
-          </div>
-        )}
 
         {apiError && <div className="error-text api-error">{apiError}</div>}
 

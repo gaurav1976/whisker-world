@@ -124,37 +124,26 @@ app.post("/register", async (req, res) => {
 app.post("/admin/signup", async (req, res) => {
   const { name, email, password } = req.body;
 
-  // Basic validation
   if (!name || !email || !password) {
-    return res.status(400).json({ error: "Name, email and password are required!" });
+    return res.status(400).json({ message: "All fields are required!" });
   }
 
   try {
-    // Check if admin already exists
-    const existingAdmin = await User.findOne({ email });
-    if (existingAdmin) {
-      return res.status(400).json({ error: "Admin already exists with this email!" });
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email already exists!" });
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
-    
-    // Create new admin (no role field)
-    const newAdmin = new User({ 
-      name, 
-      email, 
-      password: hashedPassword 
-    });
+    const newUser = new User({ name, email, password: hashedPassword });
 
-    await newAdmin.save();
-    res.status(201).json({ message: "Admin registered successfully!" });
+    await newUser.save();
+    res.status(201).json({ message: "User registered successfully!" });
   } catch (error) {
-    res.status(500).json({ 
-      error: "Error signing up admin", 
-      details: error.message 
-    });
+    res.status(500).json({ message: "Error signing up", details: error.message });
   }
 });
+
 
 
 // ✅ USER LOGIN
