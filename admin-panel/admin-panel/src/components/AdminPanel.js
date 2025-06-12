@@ -53,7 +53,6 @@ const AdminPanel = () => {
       setAdminName(loggedInAdmin.name);
       setAdminEmail(loggedInAdmin.email);
       setAdminPhoto(loggedInAdmin.photo || '');
-      setAdminRole(loggedInAdmin.role || 'admin');
     } else {
       // Redirect to login if not authenticated
       window.location.href = '/admin/login';
@@ -62,7 +61,7 @@ const AdminPanel = () => {
     if (activeTab === "Blogs") fetchBlogs();
     if (activeTab === "Users") fetchUsers();
     if (activeTab === "Products") fetchFoods();
-    if (activeTab === "Admins" && adminUser?.role === "superadmin") fetchAdmins();
+
   }, [activeTab, adminUser]);
 
   // Fetch Blogs
