@@ -1,89 +1,58 @@
 import { useState } from "react";
-import axios from "axios";
-import { useNavigate, Link } from "react-router-dom";
-import "../css/AdminLogin.css";
+import { useNavigate } from "react-router-dom";
+import "../css/Auth.css";
 
 function AdminLogin() {
   const [formData, setFormData] = useState({
     email: "",
-    password: "",
+    password: ""
   });
-  const [errors, setErrors] = useState({});
-  const [apiError, setApiError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: "" }));
-    }
-    if (apiError) setApiError("");
-  };
-
-  const validate = () => {
-    const newErrors = {};
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Invalid email format";
-    }
-
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-    } else if (formData.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters";
-    }
-
-    return newErrors;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
+    setError("");
+    
+    if (!formData.email || !formData.password) {
+      setError("Email and password are required");
       return;
     }
 
-    setIsLoading(true);
+    setLoading(true);
     try {
-      const API_BASE = import.meta.env.VITE_API_BASE_URL;
-const response = await fetch(`${API_BASE}/login`, 
-        formData,
-        { headers: { "Content-Type": "application/json" } }
-      );
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData)
+      });
 
-      if (res.data.token && res.data.admin) {
-        // Store token and admin data
-        localStorage.setItem("adminToken", res.data.token);
-        localStorage.setItem("adminUser", JSON.stringify(res.data.admin));
-        
-        // Redirect based on role
-        if (res.data.admin.role === "superadmin") {
-          navigate("/admin/dashboard");
-        } else {
-          navigate("/admin/panel");
-        }
-      }
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Login failed");
+
+      // Store token and user data
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      
+      navigate("/dashboard");
     } catch (err) {
-      const errorMsg = err.response?.data?.error ||
-                     err.response?.data?.message ||
-                     "Login failed. Please check your credentials.";
-      setApiError(errorMsg);
+      setError(err.message);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
   return (
     <div className="auth-container">
-      <h2>Admin Login</h2>
-
-      {apiError && <div className="error-text api-error">{apiError}</div>}
-
+      <h2>Login</h2>
+      {error && <div className="error-message">{error}</div>}
+      
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>Email</label>
@@ -92,9 +61,8 @@ const response = await fetch(`${API_BASE}/login`,
             name="email"
             value={formData.email}
             onChange={handleChange}
-            className={errors.email ? "error" : ""}
+            required
           />
-          {errors.email && <span className="error-text">{errors.email}</span>}
         </div>
 
         <div className="form-group">
@@ -104,23 +72,20 @@ const response = await fetch(`${API_BASE}/login`,
             name="password"
             value={formData.password}
             onChange={handleChange}
-            className={errors.password ? "error" : ""}
+            required
           />
-          {errors.password && (
-            <span className="error-text">{errors.password}</span>
-          )}
         </div>
 
-        <button type="submit" disabled={isLoading}>
-          {isLoading ? "Logging in..." : "Login"}
+        <button type="submit" disabled={loading}>
+          {loading ? "Logging In..." : "Login"}
         </button>
       </form>
 
       <p className="auth-footer">
-        New to ADMIN PANEL? <Link to="/admin/signup">Create an Account</Link>
+        Don't have an account? <a href="/signup">Sign Up</a>
       </p>
     </div>
   );
 }
 
-export default AdminLogin;
+export default AdninLogin;
