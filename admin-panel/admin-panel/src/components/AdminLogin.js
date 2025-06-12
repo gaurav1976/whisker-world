@@ -7,6 +7,7 @@ function AdminLogin() {
     email: "",
     password: "",
   });
+
   const [errors, setErrors] = useState({});
   const [apiError, setApiError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -47,6 +48,8 @@ function AdminLogin() {
     setIsLoading(true);
     try {
       const API_BASE = import.meta.env.VITE_API_BASE_URL;
+      if (!API_BASE) throw new Error("API base URL is not defined");
+
       const response = await fetch(`${API_BASE}/admin/login`, {
         method: "POST",
         headers: {

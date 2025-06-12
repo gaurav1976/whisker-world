@@ -8,7 +8,7 @@ function AdminSignup() {
     email: "",
     password: "",
     role: "junioradmin",
-    secretKey: ""
+    secretKey: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -16,18 +16,16 @@ function AdminSignup() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  
-
   const validRoles = [
     { value: "superadmin", label: "Super Admin" },
     { value: "admin", label: "Admin" },
-    { value: "junioradmin", label: "Junior Admin" }
+    { value: "junioradmin", label: "Junior Admin" },
   ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    if (errors[name]) setErrors(prev => ({ ...prev, [name]: "" }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
     if (apiError) setApiError("");
   };
 
@@ -44,7 +42,7 @@ function AdminSignup() {
     } else if (formData.password.length < 8) {
       newErrors.password = "Password must be at least 8 characters";
     }
-    if (!validRoles.some(role => role.value === formData.role)) {
+    if (!validRoles.some((role) => role.value === formData.role)) {
       newErrors.role = "Invalid role selected";
     }
     if (formData.role === "superadmin" && !formData.secretKey.trim()) {
@@ -62,17 +60,21 @@ function AdminSignup() {
     }
 
     setIsLoading(true);
+
     try {
-      // Prepare payload
       const payload = { ...formData };
       if (formData.role !== "superadmin") {
         delete payload.secretKey;
       }
-const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
+      const API_BASE = import.meta.env.VITE_API_BASE_URL;
+      console.log("API_BASE:", API_BASE); // For debugging
+      if (!API_BASE) throw new Error("API base URL is not defined");
+
       const response = await fetch(`${API_BASE}/admin/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       });
 
       const data = await response.json();
@@ -127,7 +129,9 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL;
             onChange={handleChange}
             className={errors.password ? "error" : ""}
           />
-          {errors.password && <span className="error-text">{errors.password}</span>}
+          {errors.password && (
+            <span className="error-text">{errors.password}</span>
+          )}
         </div>
 
         <div className="form-group">
@@ -138,7 +142,7 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL;
             onChange={handleChange}
             className={errors.role ? "error" : ""}
           >
-            {validRoles.map(role => (
+            {validRoles.map((role) => (
               <option key={role.value} value={role.value}>
                 {role.label}
               </option>
@@ -158,7 +162,9 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL;
               className={errors.secretKey ? "error" : ""}
               placeholder="Enter super admin secret key"
             />
-            {errors.secretKey && <span className="error-text">{errors.secretKey}</span>}
+            {errors.secretKey && (
+              <span className="error-text">{errors.secretKey}</span>
+            )}
           </div>
         )}
 
@@ -168,6 +174,7 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL;
           {isLoading ? "Processing..." : "Sign Up"}
         </button>
       </form>
+
       <p>
         Already have an account? <Link to="/admin/login">Login</Link>
       </p>
