@@ -38,7 +38,6 @@ const AdminPanel = () => {
   const [adminEmail, setAdminEmail] = useState("");
   const [adminPassword, setAdminPassword] = useState("");
   const [adminPhoto, setAdminPhoto] = useState("");
-  const [adminRole, setAdminRole] = useState("");
 
   // New Admin States (for super admin)
   const [newAdminName, setNewAdminName] = useState("");

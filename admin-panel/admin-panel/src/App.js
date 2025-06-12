@@ -5,7 +5,6 @@ import AdminSignup from "./components/AdminSignup";
 import AdminLogin from "./components/AdminLogin";
 
 function App() {
-  const user = JSON.parse(localStorage.getItem('user'));
   return (
     <Router>
       <Routes>
