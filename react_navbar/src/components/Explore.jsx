@@ -51,7 +51,6 @@ const Explore = () => {
         {!loading && blogPosts.map((post) => (
           <div className="explore-container" key={post._id}>
             <h2 className="blog-title">{post.title}</h2>
-{post.image && (
   <img
     src={
       post.image.startsWith("/uploads/")
