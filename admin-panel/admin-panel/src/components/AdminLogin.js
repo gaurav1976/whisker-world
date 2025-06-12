@@ -1,5 +1,4 @@
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import "../css/AdminLogin.css";
 
@@ -8,6 +7,7 @@ function AdminLogin() {
     email: "",
     password: "",
   });
+
   const [errors, setErrors] = useState({});
   const [apiError, setApiError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -15,11 +15,8 @@ function AdminLogin() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: "" }));
-    }
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
     if (apiError) setApiError("");
   };
 
@@ -51,28 +48,28 @@ function AdminLogin() {
     setIsLoading(true);
     try {
       const API_BASE = import.meta.env.VITE_API_BASE_URL;
-const response = await fetch(`${API_BASE}/login`, 
-        formData,
-        { headers: { "Content-Type": "application/json" } }
-      );
+      if (!API_BASE) throw new Error("API base URL is not defined");
 
-      if (res.data.token && res.data.admin) {
-        // Store token and admin data
-        localStorage.setItem("adminToken", res.data.token);
-        localStorage.setItem("adminUser", JSON.stringify(res.data.admin));
-        
-        // Redirect based on role
-        if (res.data.admin.role === "superadmin") {
-          navigate("/admin/dashboard");
-        } else {
-          navigate("/admin/panel");
-        }
+      const response = await fetch(`${API_BASE}/admin/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Login failed");
       }
+
+      // Successful login handling
+      localStorage.setItem("adminToken", data.token);
+      localStorage.setItem("adminUser", JSON.stringify(data.admin));
+      navigate("/admin/dashboard");
     } catch (err) {
-      const errorMsg = err.response?.data?.error ||
-                     err.response?.data?.message ||
-                     "Login failed. Please check your credentials.";
-      setApiError(errorMsg);
+      setApiError(err.message);
     } finally {
       setIsLoading(false);
     }
