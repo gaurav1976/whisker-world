@@ -16,7 +16,7 @@ function AdminSignup() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const API_BASE = import.meta.env.VITE_API_BASE_URL;
+  
 
   const validRoles = [
     { value: "superadmin", label: "Super Admin" },
@@ -68,7 +68,7 @@ function AdminSignup() {
       if (formData.role !== "superadmin") {
         delete payload.secretKey;
       }
-
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
       const response = await fetch(`${API_BASE}/admin/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
