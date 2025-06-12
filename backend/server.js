@@ -126,28 +126,57 @@ app.post("/register", async (req, res) => {
 app.post("/admin/signup", async (req, res) => {
   const { name, email, password, role, secretKey } = req.body;
 
+  // Validation
   if (!name || !email || !password || !role) {
     return res.status(400).json({ error: "All fields are required!" });
   }
 
-  // Check secret key if superadmin
-  if (role === "superadmin" && secretKey !== process.env.SUPERADMIN_SECRET_KEY) {
-    return res.status(403).json({ error: "Invalid super admin secret key" });
+  if (role === "superadmin") {
+    if (!secretKey) {
+      return res.status(400).json({ error: "Super admin secret key is required" });
+    }
+    if (secretKey !== process.env.SUPERADMIN_SECRET_KEY) {
+      return res.status(403).json({ error: "Invalid super admin secret key" });
+    }
   }
 
   try {
+    // Check for existing admin
     const existingAdmin = await User.findOne({ email });
     if (existingAdmin) {
       return res.status(400).json({ error: "Admin email already exists!" });
     }
 
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newAdmin = new User({ name, email, password: hashedPassword, role });
+    
+    // Create new admin
+    const newAdmin = new User({ 
+      name, 
+      email, 
+      password: hashedPassword, 
+      role 
+    });
 
     await newAdmin.save();
-    res.status(201).json({ message: "Admin registered successfully!" });
+    
+    // Return success without sensitive data
+    res.status(201).json({ 
+      success: true,
+      message: "Admin registered successfully!",
+      admin: {
+        id: newAdmin._id,
+        name: newAdmin.name,
+        email: newAdmin.email,
+        role: newAdmin.role
+      }
+    });
   } catch (error) {
-    res.status(500).json({ error: "Error signing up admin", details: error.message });
+    console.error("Admin signup error:", error);
+    res.status(500).json({ 
+      error: "Internal server error",
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 });
 

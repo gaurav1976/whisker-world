@@ -52,45 +52,46 @@ function AdminSignup() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
+  e.preventDefault();
+  const validationErrors = validate();
+  if (Object.keys(validationErrors).length > 0) {
+    setErrors(validationErrors);
+    return;
+  }
+
+  setIsLoading(true);
+  setApiError(""); // Clear previous errors
+
+  try {
+    const payload = { ...formData };
+    if (formData.role !== "superadmin") {
+      delete payload.secretKey;
     }
 
-    setIsLoading(true);
+    const API_BASE = import.meta.env.VITE_API_BASE_URL;
+    const response = await fetch(`${API_BASE}/admin/signup`, {
+      method: "POST",
+      headers: { 
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
 
-    try {
-      const payload = { ...formData };
-      if (formData.role !== "superadmin") {
-        delete payload.secretKey;
-      }
+    const data = await response.json();
 
-      const API_BASE = import.meta.env.VITE_API_BASE_URL;
-      console.log("API_BASE:", API_BASE); // For debugging
-      if (!API_BASE) throw new Error("API base URL is not defined");
-
-      const response = await fetch(`${API_BASE}/admin/signup`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        alert("Admin registration successful!");
-        navigate("/admin/login");
-      } else {
-        throw new Error(data.message || "Signup failed. Please try again.");
-      }
-    } catch (err) {
-      setApiError(err.message);
-    } finally {
-      setIsLoading(false);
+    if (!response.ok) {
+      throw new Error(data.error || "Signup failed. Please try again.");
     }
-  };
+
+    alert("Admin registration successful!");
+    navigate("/admin/login");
+  } catch (err) {
+    setApiError(err.message);
+    console.error("Signup error:", err);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     <div className="auth-container">
