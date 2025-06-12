@@ -83,14 +83,12 @@ const AdminPanel = () => {
   };
 
   // Fetch Food Data
-  const API_BASE = import.meta.env.VITE_API_BASE_URL;
-
-const fetchFoods = () => {
-  fetch(`${API_BASE}/foods`)
-    .then((res) => res.json())
-    .then((data) => setFoods(data))
-    .catch((error) => console.error("Error fetching foods:", error));
-};
+  const fetchFoods = () => {
+    fetch("http://localhost:5000/foods")
+      .then((res) => res.json())
+      .then((data) => setFoods(data))
+      .catch((error) => console.error("Error fetching foods:", error));
+  };
 
   // Fetch Admins (only for super admin)
   const fetchAdmins = () => {
@@ -124,24 +122,21 @@ const fetchFoods = () => {
 
   // Delete Food
   const handleDeleteFood = (id) => {
-   const API_BASE = import.meta.env.VITE_API_BASE_URL;
-
-const deleteFood = (id) => {
-  // Junior admins can't delete foods
-  if (adminUser.role === "junioradmin") {
-    alert("You don't have permission to delete products");
-    return;
-  }
-
-  fetch(`${API_BASE}/foods/${id}`, {
-    method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
-    },
-  })
-    .then(() => fetchFoods())
-    .catch((error) => console.error("Error deleting food:", error));
-};
+    // Junior admins can't delete foods
+    if (adminUser.role === "junioradmin") {
+      alert("You don't have permission to delete products");
+      return;
+    }
+    
+    fetch(`http://localhost:5000/foods/${id}`, { 
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('adminToken')}`
+      }
+    })
+      .then(() => fetchFoods())
+      .catch((error) => console.error("Error deleting food:", error));
+  };
 
   // Delete Admin (only for super admin)
   const handleDeleteAdmin = (id) => {
@@ -210,20 +205,21 @@ const deleteFood = (id) => {
       formData.append("image", selectedFile);
     }
 
-fetch(`${API_BASE}/foods/${editFood._id}`, {
-  method: "PUT",
-  body: formData,
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem('adminToken')}`
-  }
-})
-  .then(() => {
-    fetchFoods();
-    setEditFood(null);
-    setSelectedFile(null);
-  })
-  .catch((error) => console.error("Error updating food:", error));
+    fetch(`http://localhost:5000/foods/${editFood._id}`, {
+      method: "PUT",
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('adminToken')}`
+      }
+    })
+      .then(() => {
+        fetchFoods();
+        setEditFood(null);
+        setSelectedFile(null);
+      })
+      .catch((error) => console.error("Error updating food:", error));
   };
+
   // Handle File Change
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -292,25 +288,24 @@ fetch(`${API_BASE}/foods/${editFood._id}`, {
     formData.append("image", selectedFile);
     formData.append("addedBy", adminUser._id);
 
-    const API_BASE = import.meta.env.VITE_API_BASE_URL;
-
-fetch(`${API_BASE}/foods`, {
-  method: "POST",
-  body: formData,
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem('adminToken')}`
-  }
-})
-  .then((res) => res.json())
-  .then(() => {
-    fetchFoods();
-    setNewFoodName("");
-    setNewFoodPrice("");
-    setNewFoodCategory("");
-    setSelectedFile(null);
-  })
-  .catch((error) => console.error("Error adding food:", error));
+    fetch("http://localhost:5000/foods", {
+      method: "POST",
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('adminToken')}`
+      }
+    })
+      .then((res) => res.json())
+      .then(() => {
+        fetchFoods();
+        setNewFoodName("");
+        setNewFoodPrice("");
+        setNewFoodCategory("");
+        setSelectedFile(null);
+      })
+      .catch((error) => console.error("Error adding food:", error));
   };
+
   // Add New Admin (only for super admin)
   const handleAddAdmin = async () => {
     if (adminUser.role !== "superadmin") return;
@@ -375,6 +370,7 @@ fetch(`${API_BASE}/foods`, {
     if (requiredRole === "admin" && adminUser.role === "admin") return true;
     return adminUser.role === requiredRole;
   };
+
   return (
     <div className="admin-container">
       <div className="sidebar">
@@ -833,5 +829,5 @@ fetch(`${API_BASE}/foods`, {
     </div>
   );
 };
-};
+
 export default AdminPanel;
