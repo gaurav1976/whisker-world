@@ -121,44 +121,33 @@ app.post("/register", async (req, res) => {
 });
 
 // ✅ ADMIN SIGNUP
-// ✅ ADMIN SIGNUP
 app.post("/admin/signup", async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, role, secretKey } = req.body;
 
-  // 1. Basic validation
-  if (!name?.trim() || !email?.trim() || !password) {
-    return res.status(400).json({ message: "All fields are required!" });
+  if (!name || !email || !password || !role) {
+    return res.status(400).json({ error: "All fields are required!" });
+  }
+
+  // Check secret key if superadmin
+  if (role === "superadmin" && secretKey !== process.env.SUPERADMIN_SECRET_KEY) {
+    return res.status(403).json({ error: "Invalid super admin secret key" });
   }
 
   try {
-    // 2. Check if email already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "Email already registered!" });
+    const existingAdmin = await User.findOne({ email });
+    if (existingAdmin) {
+      return res.status(400).json({ error: "Admin email already exists!" });
     }
 
-    // 3. Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
+    const newAdmin = new User({ name, email, password: hashedPassword, role });
 
-    // 4. Create new admin user
-    const newUser = new User({
-      name: name.trim(),
-      email: email.trim(),
-      password: hashedPassword,
-      role: "admin" // Optional: Add a role if needed
-    });
-
-    await newUser.save();
-
-    // 5. Send success response
+    await newAdmin.save();
     res.status(201).json({ message: "Admin registered successfully!" });
-
   } catch (error) {
-    console.error("Signup error:", error);
-    res.status(500).json({ message: "Server error while signing up", error: error.message });
+    res.status(500).json({ error: "Error signing up admin", details: error.message });
   }
 });
-
 
 
 // ✅ USER LOGIN

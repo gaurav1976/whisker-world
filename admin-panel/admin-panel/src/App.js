@@ -5,34 +5,19 @@ import AdminSignup from "./components/AdminSignup";
 import AdminLogin from "./components/AdminLogin";
 
 function App() {
-  const isAuthenticated = !!localStorage.getItem("adminToken");
-
+  const user = JSON.parse(localStorage.getItem('user'));
   return (
     <Router>
       <Routes>
-        {/* Default route: show signup page first */}
+        {/* Default route: redirect to admin signup */}
         <Route path="/" element={<Navigate to="/admin/signup" />} />
 
-        {/* Admin Signup */}
+        {/* Admin authentication routes */}
         <Route path="/admin/signup" element={<AdminSignup />} />
-
-        {/* Admin Login */}
         <Route path="/admin/login" element={<AdminLogin />} />
-
-        {/* Protected Admin Dashboard */}
-        <Route
-          path="/admin/dashboard"
-          element={
-            isAuthenticated ? (
-              <AdminPanel />
-            ) : (
-              <Navigate to="/admin/login" replace />
-            )
-          }
-        />
-
-        {/* Catch-all: redirect unknown routes to signup */}
-        <Route path="*" element={<Navigate to="/admin/signup" replace />} />
+        
+        {/* Protected admin panel route */}
+        <Route path="/admin/panel" element={<AdminPanel />} />
       </Routes>
     </Router>
   );
