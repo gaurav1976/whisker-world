@@ -16,11 +16,13 @@ app.use(express.json());
 const corsOptions = {
   origin: [
     "https://whisker-world-rhgh.vercel.app", // Your frontend URL
-    // "http://localhost:3000"                  // For local development
+    "https://whisker-world.vercel.app", // Add all possible frontend URLs
+    "http://localhost:3000"
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   credentials: true,
+  preflightContinue: false,
   optionsSuccessStatus: 200 // Some browsers have issues with 204
 };
 

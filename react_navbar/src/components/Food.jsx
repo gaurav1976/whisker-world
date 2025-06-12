@@ -30,15 +30,35 @@ const shuffleArray = (array) => {
     // Fetch food items from backend
     
    useEffect(() => {
+  const fetchFoods = async () => {
+    try {
+      console.log("Fetching from:", `${API_BASE}/foods`);
+      const response = await axios.get(`${API_BASE}/foods`, {
+        withCredentials: true,
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      console.log("API Response:", response);
+      
+      if (!response.data) {
+        throw new Error("Empty response data");
+      }
+      
+      const shuffledData = shuffleArray(response.data);
+      setProducts(shuffledData);
+      setFilteredProducts(shuffledData);
+    } catch (error) {
+      console.error("Full error:", error);
+      console.error("Error response:", error.response?.data);
+      // Optional: Set some error state to show to users
+    }
+  };
 
-  axios.get(`${API_BASE}/foods`, { withCredentials: true })
-  .then(res => {
-    const shuffledData = shuffleArray(res.data);
-    setProducts(shuffledData);
-    setFilteredProducts(shuffledData);
-  })
-  .catch(error => console.error("Error fetching food items:", error));
-}, []); 
+  fetchFoods();
+}, []);
 
     // Filter products whenever search query changes
     useEffect(() => {
