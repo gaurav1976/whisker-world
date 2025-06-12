@@ -1,49 +1,53 @@
 .auth-container {
-  max-width: 450px;
-  margin: 80px auto;
-  padding: 30px 35px;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-  background-color: #ffffff;
+  max-width: 440px;
+  margin: 60px auto;
+  padding: 28px 32px;
+  border-radius: 14px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  transition: all 0.3s ease-in-out;
 }
 
 .auth-container h2 {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
   color: #2c3e50;
-  font-size: 26px;
+  font-size: 25px;
+  font-weight: 700;
 }
 
 .form-group {
-  margin-bottom: 22px;
+  margin-bottom: 20px;
 }
 
 .form-group label {
   display: block;
   font-weight: 600;
   margin-bottom: 8px;
-  color: #444;
+  color: #333;
 }
 
 .form-group input {
   width: 100%;
-  padding: 10px 14px;
+  padding: 10px 13px;
   border: 1px solid #ccc;
   border-radius: 6px;
   font-size: 15px;
-  background-color: #fff;
-  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  background-color: #fafafa;
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .form-group input:focus {
   border-color: #28a745;
-  box-shadow: 0 0 5px rgba(40, 167, 69, 0.2);
+  box-shadow: 0 0 6px rgba(40, 167, 69, 0.2);
+  background-color: #fff;
   outline: none;
 }
 
 .error {
   border-color: #e74c3c !important;
+  background-color: #fff5f5;
 }
 
 .error-text {
@@ -54,9 +58,11 @@
 }
 
 .api-error {
+  color: #e74c3c;
   margin-bottom: 15px;
   text-align: center;
   font-weight: 600;
+  font-size: 14px;
 }
 
 button[type="submit"] {
@@ -70,7 +76,6 @@ button[type="submit"] {
   border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.25s ease;
-  position: relative;
 }
 
 button[type="submit"]:hover {
@@ -84,7 +89,7 @@ button[disabled] {
 
 .auth-container p {
   text-align: center;
-  margin-top: 15px;
+  margin-top: 16px;
   font-size: 14px;
 }
 
@@ -98,7 +103,7 @@ button[disabled] {
   text-decoration: underline;
 }
 
-/* Optional loading spinner on button */
+/* Loading spinner on submit button */
 button.loading::after {
   content: "";
   display: inline-block;
@@ -117,18 +122,20 @@ button.loading::after {
   }
 }
 
-/* Mobile responsive styles */
+/* Mobile Responsive */
 @media (max-width: 480px) {
   .auth-container {
-    margin: 40px 16px;
-    padding: 25px;
+    margin: 30px 16px;
+    padding: 22px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
   }
 
   .auth-container h2 {
-    font-size: 22px;
+    font-size: 21px;
   }
 
   button[type="submit"] {
     font-size: 15px;
+    padding: 11px 0;
   }
 }
