@@ -184,30 +184,39 @@ app.post("/login", async (req, res) => {
 
 // ✅ ADMIN LOGIN
 app.post("/admin/login", async (req, res) => {
-  try {
-    const { email, password } = req.body;
+  const { email, password } = req.body;
 
-    const admin = await User.findOne({ email, role: "admin" });
+  try {
+    const admin = await User.findOne({ email });
     if (!admin) {
-      return res.status(400).json({ error: "Admin not found!" });
+      return res.status(404).json({ message: "Admin not found!" });
     }
 
     const isMatch = await bcrypt.compare(password, admin.password);
     if (!isMatch) {
-      return res.status(400).json({ error: "Invalid credentials!" });
+      return res.status(401).json({ message: "Invalid credentials!" });
     }
 
-    const token = jwt.sign({ id: admin._id, role: admin.role }, "your_secret_key", {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { id: admin._id, role: admin.role },
+      process.env.JWT_SECRET || "your_secret_key",
+      { expiresIn: "1h" }
+    );
 
-    res.status(200).json({
+    return res.status(200).json({
       message: "Admin login successful!",
       token,
-      admin: { name: admin.name, email: admin.email, role: admin.role },
+      admin: {
+        name: admin.name,
+        email: admin.email,
+        role: admin.role,
+      },
     });
   } catch (error) {
-    res.status(500).json({ error: "Admin login failed", details: error.message });
+    return res.status(500).json({
+      message: "Admin login failed",
+      details: error.message,
+    });
   }
 });
 
