@@ -48,14 +48,14 @@ function AdminLogin() {
     try {
       const API_BASE = import.meta.env.VITE_API_BASE_URL;
       const response = await fetch(`${API_BASE}/admin/login`, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify(formData),
-});
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-const data = await response.json();
+      const data = await response.json();
 
       if (response.ok) {
         localStorage.setItem("adminToken", data.token);
