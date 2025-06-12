@@ -3,7 +3,6 @@ import { useNavigate, Link } from "react-router-dom";
 import "../css/AdminSignup.css";
 
 function AdminSignup() {
-const API_BASE = import.meta.env.VITE_API_BASE_URL;
   const [formData, setFormData] = useState({ 
     name: "", 
     email: "", 
@@ -14,8 +13,6 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL;
   const [apiError, setApiError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
-  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -50,6 +47,9 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
     setIsLoading(true);
     try {
+      const API_BASE = import.meta.env.VITE_API_BASE_URL;
+      if (!API_BASE) throw new Error("API base URL is not defined");
+
       const response = await fetch(`${API_BASE}/admin/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -65,7 +65,7 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL;
         setApiError(data.message || "Signup failed. Please try again.");
       }
     } catch (err) {
-      setApiError("Network error. Please try again.");
+      setApiError(err.message || "Network error. Please try again.");
     } finally {
       setIsLoading(false);
     }
