@@ -121,26 +121,41 @@ app.post("/register", async (req, res) => {
 });
 
 // ✅ ADMIN SIGNUP
+// ✅ ADMIN SIGNUP
 app.post("/admin/signup", async (req, res) => {
   const { name, email, password } = req.body;
 
-  if (!name || !email || !password) {
+  // 1. Basic validation
+  if (!name?.trim() || !email?.trim() || !password) {
     return res.status(400).json({ message: "All fields are required!" });
   }
 
   try {
+    // 2. Check if email already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: "Email already exists!" });
+      return res.status(400).json({ message: "Email already registered!" });
     }
 
+    // 3. Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ name, email, password: hashedPassword });
+
+    // 4. Create new admin user
+    const newUser = new User({
+      name: name.trim(),
+      email: email.trim(),
+      password: hashedPassword,
+      role: "admin" // Optional: Add a role if needed
+    });
 
     await newUser.save();
-    res.status(201).json({ message: "User registered successfully!" });
+
+    // 5. Send success response
+    res.status(201).json({ message: "Admin registered successfully!" });
+
   } catch (error) {
-    res.status(500).json({ message: "Error signing up", details: error.message });
+    console.error("Signup error:", error);
+    res.status(500).json({ message: "Server error while signing up", error: error.message });
   }
 });
 
