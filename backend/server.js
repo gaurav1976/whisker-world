@@ -304,23 +304,6 @@ app.get("/blogs", async (req, res) => {
   }
 });
 
-// Add this temporary route to your backend (e.g., in `server.js`)
-app.get('/cleanup-blogs', async (req, res) => {
-  const blogs = await Blog.find({});
-  const updates = blogs.map(blog => {
-    const cleanContent = blog.content.replace(
-      /const API_BASE = import\.meta\.env\.VITE_API_BASE_URL;|contact API_BASE = importmeis\.envNTE_API_BASE_URL:/gi, 
-      ''
-    );
-    return Blog.updateOne(
-      { _id: blog._id },
-      { $set: { content: cleanContent.trim() } }
-    );
-  });
-  await Promise.all(updates);
-  res.send(`Cleaned ${updates.length} blogs.`);
-});
-
 // ✅ ADD NEW BLOG (with Image Upload)
 app.post("/blogs", upload.single("image"), async (req, res) => {
   try {
