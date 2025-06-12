@@ -1,12 +1,11 @@
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import "../css/AdminSignup.css";
 
 function AdminSignup() {
-  const [formData, setFormData] = useState({ 
-    name: "", 
-    email: "", 
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
     password: "",
     role: "junioradmin",
     secretKey: ""
@@ -18,8 +17,7 @@ function AdminSignup() {
   const navigate = useNavigate();
 
   const API_BASE = import.meta.env.VITE_API_BASE_URL;
-  
-  // Define valid roles and their permissions
+
   const validRoles = [
     { value: "superadmin", label: "Super Admin" },
     { value: "admin", label: "Admin" },
@@ -28,14 +26,8 @@ function AdminSignup() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: "" }));
-    }
+    setFormData(prev => ({ ...prev, [name]: value }));
+    if (errors[name]) setErrors(prev => ({ ...prev, [name]: "" }));
     if (apiError) setApiError("");
   };
 
@@ -71,26 +63,28 @@ function AdminSignup() {
 
     setIsLoading(true);
     try {
-      // Only include secretKey if role is superadmin
-      const payload = formData.role === "superadmin" ? 
-        formData : 
-        { ...formData, secretKey: undefined };
-      
-  const response = await fetch(`${API_BASE}/admin/signup`, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(payload)
-});
+      // Prepare payload
+      const payload = { ...formData };
+      if (formData.role !== "superadmin") {
+        delete payload.secretKey;
+      }
 
-      if (response.status === 201) {
+      const response = await fetch(`${API_BASE}/admin/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
         alert("Admin registration successful!");
         navigate("/admin/login");
+      } else {
+        throw new Error(data.message || "Signup failed. Please try again.");
       }
     } catch (err) {
-      const errorMsg = err.response?.data?.error || 
-                       err.response?.data?.message || 
-                       "Registration failed. Please try again.";
-      setApiError(errorMsg);
+      setApiError(err.message);
     } finally {
       setIsLoading(false);
     }
@@ -102,9 +96,9 @@ function AdminSignup() {
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>Name</label>
-          <input 
-            type="text" 
-            name="name" 
+          <input
+            type="text"
+            name="name"
             value={formData.name}
             onChange={handleChange}
             className={errors.name ? "error" : ""}
@@ -114,9 +108,9 @@ function AdminSignup() {
 
         <div className="form-group">
           <label>Email</label>
-          <input 
-            type="email" 
-            name="email" 
+          <input
+            type="email"
+            name="email"
             value={formData.email}
             onChange={handleChange}
             className={errors.email ? "error" : ""}
@@ -126,9 +120,9 @@ function AdminSignup() {
 
         <div className="form-group">
           <label>Password</label>
-          <input 
-            type="password" 
-            name="password" 
+          <input
+            type="password"
+            name="password"
             value={formData.password}
             onChange={handleChange}
             className={errors.password ? "error" : ""}
@@ -138,8 +132,8 @@ function AdminSignup() {
 
         <div className="form-group">
           <label>Role</label>
-          <select 
-            name="role" 
+          <select
+            name="role"
             value={formData.role}
             onChange={handleChange}
             className={errors.role ? "error" : ""}
