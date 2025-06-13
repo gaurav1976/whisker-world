@@ -8,4 +8,4 @@ export default defineConfig({
     outDir: 'dist',
   },
   base: '/', // <--- this is correct for Vercel
-});
+}); 
