@@ -9,34 +9,34 @@ const path = require("path");
 const fs = require("fs");
 const Food = require("./models/Food"); // ✅ Import the Food model
 
-
 dotenv.config();
 const app = express();
 app.use(express.json());
+
+// ✅ Updated dynamic CORS configuration
 const corsOptions = {
-  origin: [
-    "https://whisker-world-rhgh.vercel.app", // Your frontend URL
-    // "http://localhost:3000"                  // For local development
-  ],
+  origin: (origin, callback) => {
+    const allowedOrigins = [
+      "https://whisker-world-rhgh.vercel.app",             // Frontend domain
+      "https://admin-panel-ten-dun.vercel.app"             // Admin panel custom domain
+    ];
+    const vercelPreviewRegex = /^https:\/\/admin-panel-[\w-]+\.vercel\.app$/; // All Vercel preview domains
+
+    if (!origin || allowedOrigins.includes(origin) || vercelPreviewRegex.test(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
-  optionsSuccessStatus: 200 // Some browsers have issues with 204
+  optionsSuccessStatus: 200
 };
 
-// Apply CORS middleware
 app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // Explicitly handle preflight requests
 
-// Explicitly handle OPTIONS requests for all routes
-app.options('*', cors(corsOptions));
-
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "https://whisker-world-rhgh.vercel.app");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.header("Access-Control-Allow-Credentials", "true");
-  next();
-});
 // ✅ Serve uploaded images statically
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
@@ -45,7 +45,7 @@ const uploadDir = path.join(__dirname, "uploads");
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
 }
-
+// upper code chage//////////////////////////////
 // ✅ Connect to MongoDB
 mongoose
   .connect(process.env.MONGO_URI)
