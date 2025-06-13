@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { FaUsers, FaBlog, FaBox, FaBars, FaTrash, FaEdit, FaUser, FaSignOutAlt } from "react-icons/fa";
 import "../css/AdminPanel.css";
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
 
 const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState("Dashboard");
@@ -39,7 +39,7 @@ const AdminPanel = () => {
   const [adminEmail, setAdminEmail] = useState("");
   const [adminPassword, setAdminPassword] = useState("");
   const [adminPhoto, setAdminPhoto] = useState("");
-
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
   useEffect(() => {
     // Check if admin is logged in
     const loggedInAdmin = JSON.parse(localStorage.getItem('adminUser'));
