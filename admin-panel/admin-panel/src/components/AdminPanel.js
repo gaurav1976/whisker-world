@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { FaUsers, FaBlog, FaBox, FaBars, FaTrash, FaEdit, FaUser, FaSignOutAlt } from "react-icons/fa";
 import "../css/AdminPanel.css";
 
@@ -39,9 +39,34 @@ const AdminPanel = () => {
   const [adminEmail, setAdminEmail] = useState("");
   const [adminPassword, setAdminPassword] = useState("");
   const [adminPhoto, setAdminPhoto] = useState("");
-const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
+  const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
+  // Fetch Blogs
+  const fetchBlogs = useCallback(() => {
+    fetch(`${API_BASE}/blogs`)
+      .then((res) => res.json())
+      .then((data) => setBlogs(data))
+      .catch((error) => console.error("Error fetching blogs:", error));
+  }, [API_BASE]);
+
+  // Fetch Users
+  const fetchUsers = useCallback(() => {
+    fetch(`${API_BASE}/users`)
+      .then((res) => res.json())
+      .then((data) => setUsers(data))
+      .catch((error) => console.error("Error fetching users:", error));
+  }, [API_BASE]);
+
+  // Fetch Food Data
+  const fetchFoods = useCallback(() => {
+    fetch(`${API_BASE}/foods`)
+      .then((res) => res.json())
+      .then((data) => setFoods(data))
+      .catch((error) => console.error("Error fetching foods:", error));
+  }, [API_BASE]);
+
   useEffect(() => {
-    // Check if admin is logged in
     const loggedInAdmin = JSON.parse(localStorage.getItem('adminUser'));
     if (loggedInAdmin) {
       setAdminUser(loggedInAdmin);
@@ -49,42 +74,17 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL;
       setAdminEmail(loggedInAdmin.email);
       setAdminPhoto(loggedInAdmin.photo || '');
     } else {
-      // Redirect to login if not authenticated
       window.location.href = '/admin/login';
     }
 
     if (activeTab === "Blogs") fetchBlogs();
     if (activeTab === "Users") fetchUsers();
     if (activeTab === "Products") fetchFoods();
-  }, [activeTab, adminUser]);
-
-  // Fetch Blogs
-  const fetchBlogs = () => {
-    fetch(`${API_BASE}/blogs`)
-      .then((res) => res.json())
-      .then((data) => setBlogs(data))
-      .catch((error) => console.error("Error fetching blogs:", error));
-  };
-
-  // Fetch Users
-  const fetchUsers = () => {
-    fetch(`${API_BASE}/users`)
-      .then((res) => res.json())
-      .then((data) => setUsers(data))
-      .catch((error) => console.error("Error fetching users:", error));
-  };
-
-  // Fetch Food Data
-  const fetchFoods = () => {
-    fetch(`${API_BASE}/foods`)
-      .then((res) => res.json())
-      .then((data) => setFoods(data))
-      .catch((error) => console.error("Error fetching foods:", error));
-  };
+  }, [activeTab, adminUser, fetchBlogs, fetchUsers, fetchFoods]);
 
   // Delete Blog
   const handleDeleteBlog = (id) => {
-    fetch(`${API_BASE}/blogs/${id}`, { 
+    fetch(`${API_BASE}/blogs/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${localStorage.getItem('adminToken')}`
@@ -96,7 +96,7 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
   // Delete Food
   const handleDeleteFood = (id) => {
-    fetch(`${API_BASE}/foods/${id}`, { 
+    fetch(`${API_BASE}/foods/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${localStorage.getItem('adminToken')}`
@@ -266,8 +266,7 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL;
       email: adminEmail,
       photo: adminPhoto,
     };
-    
-    // In a real app, you would send this to your backend
+
     localStorage.setItem('adminUser', JSON.stringify(updatedAdmin));
     setAdminUser(updatedAdmin);
     alert('Profile updated successfully!');
