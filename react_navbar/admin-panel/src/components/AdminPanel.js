@@ -67,205 +67,279 @@ const AdminPanel = () => {
   }, [activeTab, adminUser]);
 
   // Fetch Blogs
-const fetchBlogs = () => {
-  fetch(`${API_BASE_URL}/blogs`)
-    .then((res) => res.json())
-    .then((data) => setBlogs(data))
-    .catch((error) => console.error("Error fetching blogs:", error));
-};
-
-// Fetch Users
-const fetchUsers = () => {
-  fetch(`${API_BASE_URL}/users`)
-    .then((res) => res.json())
-    .then((data) => setUsers(data))
-    .catch((error) => console.error("Error fetching users:", error));
-};
-
-// Fetch Food Data
-const fetchFoods = () => {
-  fetch(`${API_BASE_URL}/foods`)
-    .then((res) => res.json())
-    .then((data) => setFoods(data))
-    .catch((error) => console.error("Error fetching foods:", error));
-};
-
-// Fetch Admins (only for super admin)
-const fetchAdmins = () => {
-  fetch(`${API_BASE_URL}/admin`, {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem('adminToken')}`
-    }
-  })
-    .then((res) => res.json())
-    .then((data) => setAdminList(data))
-    .catch((error) => console.error("Error fetching admins:", error));
-};
-
-// Delete Blog
-const handleDeleteBlog = (id) => {
-  fetch(`${API_BASE_URL}/blogs/${id}`, { 
-    method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem('adminToken')}`
-    }
-  })
-    .then(() => fetchBlogs())
-    .catch((error) => console.error("Error deleting blog:", error));
-};
-
-// Delete Food
-const handleDeleteFood = (id) => {
-  fetch(`${API_BASE_URL}/foods/${id}`, { 
-    method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem('adminToken')}`
-    }
-  })
-    .then(() => fetchFoods())
-    .catch((error) => console.error("Error deleting food:", error));
-};
-
-// Delete Admin (only for super admin)
-const handleDeleteAdmin = (id) => {
-  fetch(`${API_BASE_URL}/admin/${id}`, { 
-    method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem('adminToken')}`
-    }
-  })
-    .then(() => fetchAdmins())
-    .catch((error) => console.error("Error deleting admin:", error));
-};
-
-// Update Blog
-const handleUpdateBlog = async () => {
-  const formData = new FormData();
-  formData.append("title", updatedTitle);
-  formData.append("content", updatedContent);
-  if (selectedFile) {
-    formData.append("image", selectedFile);
-  }
-
-  fetch(`${API_BASE_URL}/blogs/${editBlog._id}`, {
-    method: "PUT",
-    body: formData,
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem('adminToken')}`
-    }
-  })
-    .then(() => {
-      fetchBlogs();
-      setEditBlog(null);
-      setSelectedFile(null);
-    })
-    .catch((error) => console.error("Error updating blog:", error));
-};
-
-// Update Food
-const handleUpdateFood = async () => {
-  const formData = new FormData();
-  formData.append("name", updatedFoodName);
-  formData.append("price", updatedFoodPrice);
-  formData.append("category", updatedFoodCategory);
-  if (selectedFile) {
-    formData.append("image", selectedFile);
-  }
-
-  fetch(`${API_BASE_URL}/foods/${editFood._id}`, {
-    method: "PUT",
-    body: formData,
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem('adminToken')}`
-    }
-  })
-    .then(() => {
-      fetchFoods();
-      setEditFood(null);
-      setSelectedFile(null);
-    })
-    .catch((error) => console.error("Error updating food:", error));
-};
-
-// Add New Blog
-const handleAddBlog = async () => {
-  const formData = new FormData();
-  formData.append("title", newTitle);
-  formData.append("content", newContent);
-  formData.append("image", selectedFile);
-  formData.append("authorId", adminUser._id);
-
-  fetch(`${API_BASE_URL}/blogs`, {
-    method: "POST",
-    body: formData,
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem('adminToken')}`
-    }
-  })
-    .then((res) => res.json())
-    .then(() => {
-      fetchBlogs();
-      setNewTitle("");
-      setNewContent("");
-      setSelectedFile(null);
-    })
-    .catch((error) => console.error("Error adding blog:", error));
-};
-
-// Add New Food
-const handleAddFood = async () => {
-  const formData = new FormData();
-  formData.append("name", newFoodName);
-  formData.append("price", newFoodPrice);
-  formData.append("category", newFoodCategory);
-  formData.append("image", selectedFile);
-  formData.append("addedBy", adminUser._id);
-
-  fetch(`${API_BASE_URL}/foods`, {
-    method: "POST",
-    body: formData,
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem('adminToken')}`
-    }
-  })
-    .then((res) => res.json())
-    .then(() => {
-      fetchFoods();
-      setNewFoodName("");
-      setNewFoodPrice("");
-      setNewFoodCategory("");
-      setSelectedFile(null);
-    })
-    .catch((error) => console.error("Error adding food:", error));
-};
-
-// Add New Admin (only for super admin)
-const handleAddAdmin = async () => {
-  const newAdmin = {
-    name: newAdminName,
-    email: newAdminEmail,
-    password: newAdminPassword,
-    role: newAdminRole
+  const fetchBlogs = () => {
+    fetch("http://localhost:5000/blogs")
+      .then((res) => res.json())
+      .then((data) => setBlogs(data))
+      .catch((error) => console.error("Error fetching blogs:", error));
   };
 
-  fetch(`${API_BASE_URL}/admin/signup`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem('adminToken')}`
-    },
-    body: JSON.stringify(newAdmin)
-  })
-    .then((res) => res.json())
-    .then(() => {
-      fetchAdmins();
-      setNewAdminName("");
-      setNewAdminEmail("");
-      setNewAdminPassword("");
-      setNewAdminRole("junioradmin");
+  // Fetch Users
+  const fetchUsers = () => {
+    fetch("http://localhost:5000/users")
+      .then((res) => res.json())
+      .then((data) => setUsers(data))
+      .catch((error) => console.error("Error fetching users:", error));
+  };
+
+  // Fetch Food Data
+  const fetchFoods = () => {
+    fetch("http://localhost:5000/foods")
+      .then((res) => res.json())
+      .then((data) => setFoods(data))
+      .catch((error) => console.error("Error fetching foods:", error));
+  };
+
+  // Fetch Admins (only for super admin)
+  const fetchAdmins = () => {
+    fetch("http://localhost:5000/admin", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('adminToken')}`
+      }
     })
-    .catch((error) => console.error("Error adding admin:", error));
-};
+      .then((res) => res.json())
+      .then((data) => setAdminList(data))
+      .catch((error) => console.error("Error fetching admins:", error));
+  };
+
+  // Delete Blog
+  const handleDeleteBlog = (id) => {
+    // Junior admins can't delete blogs
+    if (adminUser.role === "junioradmin") {
+      alert("You don't have permission to delete blogs");
+      return;
+    }
+    
+    fetch(`http://localhost:5000/blogs/${id}`, { 
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('adminToken')}`
+      }
+    })
+      .then(() => fetchBlogs())
+      .catch((error) => console.error("Error deleting blog:", error));
+  };
+
+  // Delete Food
+  const handleDeleteFood = (id) => {
+    // Junior admins can't delete foods
+    if (adminUser.role === "junioradmin") {
+      alert("You don't have permission to delete products");
+      return;
+    }
+    
+    fetch(`http://localhost:5000/foods/${id}`, { 
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('adminToken')}`
+      }
+    })
+      .then(() => fetchFoods())
+      .catch((error) => console.error("Error deleting food:", error));
+  };
+
+  // Delete Admin (only for super admin)
+  const handleDeleteAdmin = (id) => {
+    if (adminUser.role !== "superadmin") return;
+    
+    fetch(`http://localhost:5000/admin/${id}`, { 
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('adminToken')}`
+      }
+    })
+      .then(() => fetchAdmins())
+      .catch((error) => console.error("Error deleting admin:", error));
+  };
+
+  // Edit Blog
+  const handleEditBlog = (blog) => {
+    // Junior admins can only edit their own blogs (if implemented)
+    setEditBlog(blog);
+    setUpdatedTitle(blog.title);
+    setUpdatedImage(blog.image);
+    setUpdatedContent(blog.content);
+  };
+
+  // Edit Food
+  const handleEditFood = (food) => {
+    // Junior admins can only edit their own foods (if implemented)
+    setEditFood(food);
+    setUpdatedFoodName(food.name);
+    setUpdatedFoodPrice(food.price);
+    setUpdatedFoodCategory(food.category);
+    setUpdatedFoodImage(food.image);
+  };
+
+  // Update Blog
+  const handleUpdateBlog = async () => {
+    const formData = new FormData();
+    formData.append("title", updatedTitle);
+    formData.append("content", updatedContent);
+    if (selectedFile) {
+      formData.append("image", selectedFile);
+    }
+
+    fetch(`http://localhost:5000/blogs/${editBlog._id}`, {
+      method: "PUT",
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('adminToken')}`
+      }
+    })
+      .then(() => {
+        fetchBlogs();
+        setEditBlog(null);
+        setSelectedFile(null);
+      })
+      .catch((error) => console.error("Error updating blog:", error));
+  };
+
+  // Update Food
+  const handleUpdateFood = async () => {
+    const formData = new FormData();
+    formData.append("name", updatedFoodName);
+    formData.append("price", updatedFoodPrice);
+    formData.append("category", updatedFoodCategory);
+    if (selectedFile) {
+      formData.append("image", selectedFile);
+    }
+
+    fetch(`http://localhost:5000/foods/${editFood._id}`, {
+      method: "PUT",
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('adminToken')}`
+      }
+    })
+      .then(() => {
+        fetchFoods();
+        setEditFood(null);
+        setSelectedFile(null);
+      })
+      .catch((error) => console.error("Error updating food:", error));
+  };
+
+  // Handle File Change
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setSelectedFile(file);
+    if (editBlog) {
+      setUpdatedImage(URL.createObjectURL(file));
+    }
+    if (editFood) {
+      setUpdatedFoodImage(URL.createObjectURL(file));
+    }
+  };
+
+  // Handle Admin Photo Change
+  const handleAdminPhotoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAdminPhoto(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Add New Blog
+  const handleAddBlog = async () => {
+    if (!newTitle || !selectedFile || !newContent) {
+      alert("Please fill all fields and upload an image!");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("title", newTitle);
+    formData.append("content", newContent);
+    formData.append("image", selectedFile);
+    formData.append("authorId", adminUser._id);
+
+    fetch("http://localhost:5000/blogs", {
+      method: "POST",
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('adminToken')}`
+      }
+    })
+      .then((res) => res.json())
+      .then(() => {
+        fetchBlogs();
+        setNewTitle("");
+        setNewContent("");
+        setSelectedFile(null);
+      })
+      .catch((error) => console.error("Error adding blog:", error));
+  };
+
+  // Add New Food
+  const handleAddFood = async () => {
+    if (!newFoodName || !newFoodPrice || !newFoodCategory || !selectedFile) {
+      alert("Please fill all fields and upload an image!");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("name", newFoodName);
+    formData.append("price", newFoodPrice);
+    formData.append("category", newFoodCategory);
+    formData.append("image", selectedFile);
+    formData.append("addedBy", adminUser._id);
+
+    fetch("http://localhost:5000/foods", {
+      method: "POST",
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('adminToken')}`
+      }
+    })
+      .then((res) => res.json())
+      .then(() => {
+        fetchFoods();
+        setNewFoodName("");
+        setNewFoodPrice("");
+        setNewFoodCategory("");
+        setSelectedFile(null);
+      })
+      .catch((error) => console.error("Error adding food:", error));
+  };
+
+  // Add New Admin (only for super admin)
+  const handleAddAdmin = async () => {
+    if (adminUser.role !== "superadmin") return;
+    
+    if (!newAdminName || !newAdminEmail || !newAdminPassword) {
+      alert("Please fill all fields!");
+      return;
+    }
+
+    const newAdmin = {
+      name: newAdminName,
+      email: newAdminEmail,
+      password: newAdminPassword,
+      role: newAdminRole
+    };
+
+    fetch("http://localhost:5000/admin/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem('adminToken')}`
+      },
+      body: JSON.stringify(newAdmin)
+    })
+      .then((res) => res.json())
+      .then(() => {
+        fetchAdmins();
+        setNewAdminName("");
+        setNewAdminEmail("");
+        setNewAdminPassword("");
+        setNewAdminRole("junioradmin");
+      })
+      .catch((error) => console.error("Error adding admin:", error));
+  };
 
   // Update Admin Profile
   const handleUpdateAdminProfile = () => {
