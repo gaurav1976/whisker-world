@@ -1,30 +1,36 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const User = require("../models/User"); // make sure this path is correct
+const Admin = require("../models/Admin"); // ✅ Use correct model
 
-const router = express.Router(); // ✅ Use router instead of app
+const router = express.Router();
 
 // ✅ ADMIN SIGNUP
 router.post("/admin/signup", async (req, res) => {
-  const { name, email, password } = req.body;
-  if (!name || !email || !password) {
+  const { name, email, password, role, secretKey } = req.body;
+
+  if (!name || !email || !password || !role) {
     return res.status(400).json({ error: "All fields are required!" });
   }
 
+  // Super admin secret check (if needed)
+  if (role === "superadmin" && secretKey !== process.env.SUPER_ADMIN_SECRET) {
+    return res.status(403).json({ error: "Invalid secret key for super admin!" });
+  }
+
   try {
-    const existingAdmin = await User.findOne({ email });
+    const existingAdmin = await Admin.findOne({ email });
     if (existingAdmin) {
       return res.status(400).json({ error: "Email already exists!" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newAdmin = new User({ name, email, password: hashedPassword, role: "admin" });
+    const newAdmin = new Admin({ name, email, password: hashedPassword, role });
     await newAdmin.save();
 
     res.status(201).json({ message: "Admin registered successfully!" });
   } catch (error) {
-    res.status(500).json({ error: "Signup failed", details: error.message });
+    res.status(500).json({ error: "Error signing up admin", details: error.message });
   }
 });
 
@@ -33,8 +39,8 @@ router.post("/admin/login", async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const admin = await User.findOne({ email });
-    if (!admin || admin.role !== "admin") {
+    const admin = await Admin.findOne({ email });
+    if (!admin) {
       return res.status(400).json({ error: "Admin not found!" });
     }
 
@@ -43,33 +49,33 @@ router.post("/admin/login", async (req, res) => {
       return res.status(400).json({ error: "Invalid credentials!" });
     }
 
-    const token = jwt.sign({ id: admin._id, role: admin.role }, "your_secret_key", { expiresIn: "1h" });
+    const token = jwt.sign({ id: admin._id, role: admin.role }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
 
     res.status(200).json({
       message: "Admin login successful!",
       token,
-      admin: { name: admin.name, email: admin.email },
+      admin: { name: admin.name, email: admin.email, role: admin.role },
     });
   } catch (error) {
     res.status(500).json({ error: "Login failed", details: error.message });
   }
 });
 
-// ✅ ADMIN AUTH MIDDLEWARE
+// ✅ Middleware
 const adminAuth = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) return res.status(401).json({ error: "Unauthorized" });
 
   try {
-    const decoded = jwt.verify(token, "your_secret_key");
-    if (decoded.role !== "admin") return res.status(403).json({ error: "Forbidden" });
-
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.adminId = decoded.id;
+    req.adminRole = decoded.role;
     next();
   } catch (err) {
     res.status(400).json({ error: "Invalid token" });
   }
 };
 
-// ✅ Export both router and middleware
 module.exports = { router, adminAuth };
