@@ -74,9 +74,11 @@ function AdminSignup() {
         formData : 
         { ...formData, secretKey: undefined };
       
-      const res = await axios.post("http://localhost:5000/admin/signup", payload, {
-        headers: { "Content-Type": "application/json" }
-      });
+     const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
+const res = await axios.post(`${API_BASE}/admin/signup`, payload, {
+  headers: { "Content-Type": "application/json" }
+});
 
       if (res.status === 201) {
         alert("Admin registration successful!");
