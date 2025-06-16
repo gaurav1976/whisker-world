@@ -17,11 +17,11 @@ app.use(express.json());
 const corsOptions = {
   origin: (origin, callback) => {
     const allowedOrigins = [
-      "http://localhost:5173", // ✅ Allow local frontend for development
-      "https://whisker-world-rhgh.vercel.app", // Production frontend
-      "https://admin-panel-ten-dun.vercel.app"
+      "http://localhost:5173", 
+      "https://whisker-world-rhgh.vercel.app",             // Frontend domain
+      "https://admin-panel-ten-dun.vercel.app"             // Admin panel custom domain
     ];
-    const vercelPreviewRegex = /^https:\/\/admin-panel-[\w-]+\.vercel\.app$/;
+    const vercelPreviewRegex = /^https:\/\/admin-panel-[\w-]+\.vercel\.app$/; // All Vercel preview domains
 
     if (!origin || allowedOrigins.includes(origin) || vercelPreviewRegex.test(origin)) {
       callback(null, true);
@@ -34,6 +34,9 @@ const corsOptions = {
   credentials: true,
   optionsSuccessStatus: 200
 };
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // Explicitly handle preflight requests
 
 // ✅ Serve uploaded images statically
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
