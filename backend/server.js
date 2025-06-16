@@ -17,23 +17,23 @@ app.use(express.json());
 const corsOptions = {
   origin: (origin, callback) => {
     const allowedOrigins = [
-      "http://localhost:5174", 
-      "http://localhost:5173", 
-      "https://whisker-world-rhgh.vercel.app",             // Frontend domain
-      "https://admin-panel-ten-dun.vercel.app"             // Admin panel custom domain
+      "https://whisker-world-rhgh.vercel.app",  // ✅ Your Vercel frontend
+      "https://admin-panel-ten-dun.vercel.app"  // ✅ Your admin panel
     ];
-    const vercelPreviewRegex = /^https:\/\/admin-panel-[\w-]+\.vercel\.app$/; // All Vercel preview domains
+
+    const vercelPreviewRegex = /^https:\/\/admin-panel-[\w-]+\.vercel\.app$/;
 
     if (!origin || allowedOrigins.includes(origin) || vercelPreviewRegex.test(origin)) {
       callback(null, true);
     } else {
+      console.log("❌ CORS BLOCKED:", origin);
       callback(new Error("Not allowed by CORS"));
     }
   },
+  credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true,
-  optionsSuccessStatus: 200
+  optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
