@@ -17,11 +17,11 @@ app.use(express.json());
 const corsOptions = {
   origin: (origin, callback) => {
     const allowedOrigins = [
-      "http://localhost:5173", 
-      "https://whisker-world-rhgh.vercel.app",             // Frontend domain
-      "https://admin-panel-ten-dun.vercel.app"             // Admin panel custom domain
+      "http://localhost:5173", // ✅ Allow local frontend for development
+      "https://whisker-world-rhgh.vercel.app", // Production frontend
+      "https://admin-panel-ten-dun.vercel.app"
     ];
-    const vercelPreviewRegex = /^https:\/\/admin-panel-[\w-]+\.vercel\.app$/; // All Vercel preview domains
+    const vercelPreviewRegex = /^https:\/\/admin-panel-[\w-]+\.vercel\.app$/;
 
     if (!origin || allowedOrigins.includes(origin) || vercelPreviewRegex.test(origin)) {
       callback(null, true);
@@ -34,9 +34,6 @@ const corsOptions = {
   credentials: true,
   optionsSuccessStatus: 200
 };
-
-app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // Explicitly handle preflight requests
 
 // ✅ Serve uploaded images statically
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -65,7 +62,7 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model("User", userSchema);
 
-// fetch all food items:
+// fetch all foods items:
 app.get("/foods", async (req, res) => {
   try {
       const foods = await Food.find();
@@ -255,7 +252,7 @@ app.put("/foods/:id", upload.single("image"), async (req, res) => {
     }
     res.json({ message: "Food Item Updated Successfully", updatedFood });
   } catch (error) {
-    res.status(500).json({ error: "Error updating food item", details: error.message });
+    res.status(500).json({ error: "Error updating foods item", details: error.message });
   }
 });
 //  DELETE FOOD ITEM BY ID
@@ -277,7 +274,7 @@ app.delete("/foods/:id", async (req, res) => {
 
     res.json({ message: "Food Item Deleted Successfully" });
   } catch (error) {
-    res.status(500).json({ error: "Error deleting food item", details: error.message });
+    res.status(500).json({ error: "Error deleting foods item", details: error.message });
   }
 });
 
@@ -288,7 +285,7 @@ app.get("/foods", async (req, res) => {
     const foods = await Food.find();
     res.json(foods);
   } catch (error) {
-    res.status(500).json({ error: "Error fetching food items", details: error.message });
+    res.status(500).json({ error: "Error fetching foods items", details: error.message });
   }
 });
 

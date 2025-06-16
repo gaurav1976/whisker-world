@@ -6,7 +6,6 @@ import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from "axios"; 
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 const Food = () => {
     const { addToCart } = useContext(CartContext);
@@ -28,32 +27,26 @@ const shuffleArray = (array) => {
 };
 
     // Fetch food items from backend
-    
-   useEffect(() => {
-    console.log("API Base URL:", import.meta.env.VITE_API_BASE_URL);
+   const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
+useEffect(() => {
+  console.log("API Base URL:", API_BASE); // This shows correct
   const fetchFoods = async () => {
     try {
       const response = await axios.get(`${API_BASE}/foods`, {
-        withCredentials: true,
+        withCredentials: true, // Required if backend uses cookies/auth
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         }
       });
-      
       console.log("API Response:", response);
-      
-      if (!response.data) {
-        throw new Error("Empty response data");
-      }
-      
       const shuffledData = shuffleArray(response.data);
       setProducts(shuffledData);
       setFilteredProducts(shuffledData);
     } catch (error) {
       console.error("Full error:", error);
       console.error("Error response:", error.response?.data);
-      // Optional: Set some error state to show to users
     }
   };
 
