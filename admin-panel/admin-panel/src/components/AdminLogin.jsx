@@ -50,11 +50,10 @@ function AdminLogin() {
 
     setIsLoading(true);
     try {
-      const res = await axios.post(
-        "http://localhost:5000/admin/login",
-        formData,
-        { headers: { "Content-Type": "application/json" } }
-      );
+      const API_BASE = import.meta.env.VITE_API_BASE_URL;
+const res = await axios.post(`${API_BASE}/admin/login`, formData, {
+  headers: { "Content-Type": "application/json" },
+});
 
       if (res.data.token && res.data.admin) {
         // Store token and admin data
