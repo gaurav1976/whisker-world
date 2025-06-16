@@ -1,4 +1,3 @@
-import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import AdminPanel from "./components/AdminPanel";
 import AdminSignup from "./components/AdminSignup";
