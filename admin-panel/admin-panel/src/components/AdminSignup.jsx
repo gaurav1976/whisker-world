@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import "../css/AdminSignup.css";
 
@@ -16,8 +17,6 @@ function AdminSignup() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const API_BASE = import.meta.env.VITE_API_BASE_URL;
-  
   // Define valid roles and their permissions
   const validRoles = [
     { value: "superadmin", label: "Super Admin" },
@@ -75,13 +74,11 @@ function AdminSignup() {
         formData : 
         { ...formData, secretKey: undefined };
       
-  const response = await fetch(`${API_BASE}/admin/signup`, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(payload)
-});
+      const res = await axios.post("http://localhost:5000/admin/signup", payload, {
+        headers: { "Content-Type": "application/json" }
+      });
 
-      if (response.status === 201) {
+      if (res.status === 201) {
         alert("Admin registration successful!");
         navigate("/admin/login");
       }
