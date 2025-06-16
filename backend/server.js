@@ -282,18 +282,6 @@ app.delete("/foods/:id", async (req, res) => {
   }
 });
 
-//  GET ALL FOOD ITEMS
-
-app.get("/foods", async (req, res) => {
-  try {
-    const foods = await Food.find();
-    res.json(foods);
-  } catch (error) {
-    res.status(500).json({ error: "Error fetching foods items", details: error.message });
-  }
-});
-
-
 
 
 // ✅ GET ALL BLOGS
