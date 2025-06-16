@@ -1,7 +1,7 @@
 {
   "routes": [
     {
-      "src": "/Foods",
+      "src": "/Explore",
       "dest": "/index.html",
       "headers": {
         "Access-Control-Allow-Origin": "*",
