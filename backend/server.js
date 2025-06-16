@@ -17,6 +17,7 @@ app.use(express.json());
 const corsOptions = {
   origin: (origin, callback) => {
     const allowedOrigins = [
+      "http://localhost:5174", 
       "http://localhost:5173", 
       "https://whisker-world-rhgh.vercel.app",             // Frontend domain
       "https://admin-panel-ten-dun.vercel.app"             // Admin panel custom domain
