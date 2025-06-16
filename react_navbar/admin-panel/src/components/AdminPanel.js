@@ -83,11 +83,12 @@ const AdminPanel = () => {
   };
 
   // Fetch Food Data
-  const fetchFoods = () => {
-    fetch("http://localhost:5000/foods")
-      .then((res) => res.json())
-      .then((data) => setFoods(data))
-      .catch((error) => console.error("Error fetching foods:", error));
+
+const fetchFoods = () => {
+  fetch(`${API_BASE}/foods`)
+    .then((res) => res.json())
+    .then((data) => setFoods(data))
+    .catch((error) => console.error("Error fetching foods:", error));
   };
 
   // Fetch Admins (only for super admin)
@@ -128,14 +129,16 @@ const AdminPanel = () => {
       return;
     }
     
-    fetch(`http://localhost:5000/foods/${id}`, { 
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('adminToken')}`
-      }
-    })
-      .then(() => fetchFoods())
-      .catch((error) => console.error("Error deleting food:", error));
+    const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
+fetch(`${API_BASE}/foods/${id}`, {
+  method: "DELETE",
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem('adminToken')}`
+  }
+})
+  .then(() => fetchFoods())
+  .catch((error) => console.error("Error deleting food:", error));
   };
 
   // Delete Admin (only for super admin)
@@ -196,29 +199,31 @@ const AdminPanel = () => {
   };
 
   // Update Food
-  const handleUpdateFood = async () => {
-    const formData = new FormData();
-    formData.append("name", updatedFoodName);
-    formData.append("price", updatedFoodPrice);
-    formData.append("category", updatedFoodCategory);
-    if (selectedFile) {
-      formData.append("image", selectedFile);
-    }
+ const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
-    fetch(`http://localhost:5000/foods/${editFood._id}`, {
-      method: "PUT",
-      body: formData,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('adminToken')}`
-      }
+const handleUpdateFood = async () => {
+  const formData = new FormData();
+  formData.append("name", updatedFoodName);
+  formData.append("price", updatedFoodPrice);
+  formData.append("category", updatedFoodCategory);
+  if (selectedFile) {
+    formData.append("image", selectedFile);
+  }
+
+  fetch(`${API_BASE}/foods/${editFood._id}`, {
+    method: "PUT",
+    body: formData,
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('adminToken')}`
+    }
+  })
+    .then(() => {
+      fetchFoods();
+      setEditFood(null);
+      setSelectedFile(null);
     })
-      .then(() => {
-        fetchFoods();
-        setEditFood(null);
-        setSelectedFile(null);
-      })
-      .catch((error) => console.error("Error updating food:", error));
-  };
+    .catch((error) => console.error("Error updating food:", error));
+};
 
   // Handle File Change
   const handleFileChange = (e) => {
@@ -288,12 +293,14 @@ const AdminPanel = () => {
     formData.append("image", selectedFile);
     formData.append("addedBy", adminUser._id);
 
-    fetch("http://localhost:5000/foods", {
-      method: "POST",
-      body: formData,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('adminToken')}`
-      }
+   const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
+fetch(`${API_BASE}/foods`, {
+  method: "POST",
+  body: formData,
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem('adminToken')}`
+  }
     })
       .then((res) => res.json())
       .then(() => {
