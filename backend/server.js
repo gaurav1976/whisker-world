@@ -67,14 +67,26 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model("User", userSchema);
 
 // fetch all foods items:
+// For public (main project)
 app.get("/foods", async (req, res) => {
   try {
-      const foods = await Food.find();
-      res.json(foods);
+    const foods = await Food.find();
+    res.json(foods);
   } catch (error) {
-      res.status(500).json({ error: "Error fetching food items", details: error.message });
+    res.status(500).json({ error: "Error fetching food items" });
   }
 });
+
+// For admin (protected)
+app.get("/admin/foods", verifyAdminToken, async (req, res) => {
+  try {
+    const foods = await Food.find();
+    res.json(foods);
+  } catch (error) {
+    res.status(500).json({ error: "Error fetching admin food items" });
+  }
+});
+
 
 
 // ✅ Blog Schema
