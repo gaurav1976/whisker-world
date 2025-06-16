@@ -67,49 +67,14 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model("User", userSchema);
 
 // fetch all foods items:
-// For public (main project)
 app.get("/foods", async (req, res) => {
   try {
-    const foods = await Food.find();
-    res.json(foods);
+      const foods = await Food.find();
+      res.json(foods);
   } catch (error) {
-    res.status(500).json({ error: "Error fetching food items" });
+      res.status(500).json({ error: "Error fetching food items", details: error.message });
   }
 });
-
-// For admin (protected)
-app.get("/admin/foods", verifyAdminToken, async (req, res) => {
-  try {
-    const foods = await Food.find();
-    res.json(foods);
-  } catch (error) {
-    res.status(500).json({ error: "Error fetching admin food items" });
-  }
-});
-
-const jwt = require("jsonwebtoken");
-
-function verifyAdminToken(req, res, next) {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ message: "No token provided" });
-  }
-
-  const token = authHeader.split(" ")[1];
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET); // Make sure this secret exists
-    if (decoded.role !== "admin") {
-      return res.status(403).json({ message: "Access denied" });
-    }
-
-    req.user = decoded; // You can access user details in other routes
-    next();
-  } catch (err) {
-    return res.status(403).json({ message: "Invalid token" });
-  }
-}
 
 
 // ✅ Blog Schema
@@ -316,6 +281,18 @@ app.delete("/foods/:id", async (req, res) => {
     res.status(500).json({ error: "Error deleting foods item", details: error.message });
   }
 });
+
+//  GET ALL FOOD ITEMS
+
+app.get("/foods", async (req, res) => {
+  try {
+    const foods = await Food.find();
+    res.json(foods);
+  } catch (error) {
+    res.status(500).json({ error: "Error fetching foods items", details: error.message });
+  }
+});
+
 
 
 
