@@ -30,9 +30,9 @@ const shuffleArray = (array) => {
     // Fetch food items from backend
     
    useEffect(() => {
+    console.log("API Base URL:", import.meta.env.VITE_API_BASE_URL);
   const fetchFoods = async () => {
     try {
-      console.log("Fetching from:", `${API_BASE}/foods`);
       const response = await axios.get(`${API_BASE}/foods`, {
         withCredentials: true,
         headers: {
