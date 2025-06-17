@@ -27,7 +27,7 @@ const Food = () => {
     return shuffled;
   };
 
-  useEffect(() => {
+   useEffect(() => {
     const fetchFoods = async () => {
       try {
         const response = await axios.get(`${API_BASE}/foods`, {
