@@ -2,8 +2,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import { FaUsers, FaBlog, FaBox, FaBars, FaTrash, FaEdit, FaUser, FaSignOutAlt } from "react-icons/fa";
 import "../css/AdminPanel.css";
 
-
-
 const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState("Dashboard");
   const [blogs, setBlogs] = useState([]);
