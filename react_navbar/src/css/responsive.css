@@ -1,58 +1,109 @@
-/* responsive.css */
-
-/* 1. Mobile Devices (max-width: 480px) */
+/* ================================
+   1. Mobile Devices (max-width: 480px)
+   ================================ */
 @media screen and (max-width: 480px) {
   .navbar-grid {
     flex-direction: column;
+    align-items: flex-start;
     padding: 10px;
   }
 
   .nav-menu {
     flex-direction: column;
+    align-items: flex-start;
     gap: 10px;
+    width: 100%;
   }
 
-  .product .col-lg-3 {
+  .searchbarfood {
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
   }
 
   .searchbarfood input {
     width: 100%;
+    padding: 8px;
+    font-size: 14px;
   }
 
-  .pagination-container {
-    flex-direction: column;
-    text-align: center;
+  .product .col-lg-3 {
+    width: 100% !important;
+    margin-bottom: 20px;
   }
 
   .food-btn {
     width: 100%;
     margin-bottom: 10px;
   }
+
+  .pagination-container {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .page-info {
+    font-size: 14px;
+  }
 }
 
-/* 2. Tablets (481px to 768px) */
+
+/* ================================
+   2. Tablets (481px to 768px)
+   ================================ */
 @media screen and (min-width: 481px) and (max-width: 768px) {
-  .product .col-lg-3 {
-    width: 50%;
+  .navbar-grid {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .nav-menu {
     flex-wrap: wrap;
+    gap: 15px;
   }
 
   .right-menu {
     flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .product .col-lg-3 {
+    width: 50% !important;
+    margin-bottom: 20px;
+  }
+
+  .searchbarfood input {
+    width: 100%;
   }
 }
 
-/* 3. Laptops (769px to 1024px) */
+
+/* ================================
+   3. Laptops (769px to 1024px)
+   ================================ */
 @media screen and (min-width: 769px) and (max-width: 1024px) {
   .product .col-lg-3 {
-    width: 33.33%;
+    width: 33.33% !important;
+    margin-bottom: 20px;
+  }
+
+  .nav-menu {
+    gap: 10px;
+  }
+
+  .right-menu {
+    gap: 10px;
   }
 }
 
-/* 4. Desktops (1025px and up) */
-/* Optional – keep existing layout */
+
+/* ================================
+   4. Desktops (1025px and up)
+   ================================ */
+/* You can optionally set large layouts here */
+@media screen and (min-width: 1025px) {
+  .product .col-lg-3 {
+    width: 25% !important;
+  }
+}
