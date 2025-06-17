@@ -10,7 +10,7 @@ header {
     position: relative;
 }
 body {
-    margin-top: 60px; /* Adjust based on navbar height */
+  padding-top: 60px; /* Works better when navbar is fixed */
 }
 html, body {
     overflow-x: hidden; /* Prevent horizontal scrolling */
@@ -272,3 +272,40 @@ html, body {
   .cart-link:hover .cart-count-badge {
     background-color: #cc0000;
   }
+  @media (max-width: 768px) {
+  .nav-menu {
+    display: none; /* Hide menu by default */
+    flex-direction: column;
+    position: absolute;
+    top: 60px; /* adjust to navbar height */
+    left: 0;
+    width: 100%;
+    background-color: #ebaacc;
+    padding: 10px 0;
+    z-index: 99;
+  }
+
+  .nav-menu.active {
+    display: flex; /* Show when toggled */
+  }
+
+  .right-menu {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .auth-links {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .search-bar {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .user-info {
+    padding: 5px;
+    width: 100%;
+  }
+}
