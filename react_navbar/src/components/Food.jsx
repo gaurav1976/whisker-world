@@ -26,12 +26,13 @@ const shuffleArray = (array) => {
     return shuffled;
 };
 
-    // Fetch food items from backend
-   const API_BASE = import.meta.env.VITE_API_BASE_URL;
+   
 
 useEffect(() => {
-  console.log("API Base URL:", API_BASE); // This shows correct
   const fetchFoods = async () => {
+     // Fetch food items from backend
+   const API_BASE = import.meta.env.VITE_API_BASE_URL;
+    console.log("API Base URL:", API_BASE); // This shows correct
     try {
       const response = await axios.get(`${API_BASE}/foods`, {
         withCredentials: true, // Required if backend uses cookies/auth
