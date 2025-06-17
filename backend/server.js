@@ -66,6 +66,10 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model("User", userSchema);
 
+app.get("/", (req, res) => {
+  res.send("Whisker World API is running!");
+});
+
 // fetch all foods items:
 app.get("/foods", async (req, res) => {
   try {
