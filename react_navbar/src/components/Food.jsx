@@ -29,7 +29,6 @@ const Food = () => {
 
   useEffect(() => {
     const fetchFoods = async () => {
-      console.log("API_BASE:", API_BASE);
       try {
         const response = await axios.get(`${API_BASE}/foods`, {
           withCredentials: true,
