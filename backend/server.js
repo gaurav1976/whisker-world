@@ -69,10 +69,14 @@ const User = mongoose.model("User", userSchema);
 // fetch all foods items:
 app.get("/foods", async (req, res) => {
   try {
-      const foods = await Food.find();
-      res.json(foods);
+    const foods = await Food.find();
+    res.json(foods);
   } catch (error) {
-      res.status(500).json({ error: "Error fetching food items", details: error.message });
+    console.error("Error fetching foods:", error.message);
+    res.status(500).json({
+      error: "Error fetching food items",
+      details: error.message,
+    });
   }
 });
 
