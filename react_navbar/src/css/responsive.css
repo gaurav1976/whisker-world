@@ -1,0 +1,58 @@
+/* responsive.css */
+
+/* 1. Mobile Devices (max-width: 480px) */
+@media screen and (max-width: 480px) {
+  .navbar-grid {
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .nav-menu {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .product .col-lg-3 {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .searchbarfood input {
+    width: 100%;
+  }
+
+  .pagination-container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .food-btn {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}
+
+/* 2. Tablets (481px to 768px) */
+@media screen and (min-width: 481px) and (max-width: 768px) {
+  .product .col-lg-3 {
+    width: 50%;
+  }
+
+  .nav-menu {
+    flex-wrap: wrap;
+  }
+
+  .right-menu {
+    flex-wrap: wrap;
+  }
+}
+
+/* 3. Laptops (769px to 1024px) */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  .product .col-lg-3 {
+    width: 33.33%;
+  }
+}
+
+/* 4. Desktops (1025px and up) */
+/* Optional – keep existing layout */
