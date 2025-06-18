@@ -3,278 +3,426 @@ import { FaUsers, FaBlog, FaBox, FaBars, FaTrash, FaEdit, FaUser, FaSignOutAlt }
 import "../css/AdminPanel.css";
 
 const AdminPanel = () => {
+  // State management
   const [activeTab, setActiveTab] = useState("Dashboard");
   const [blogs, setBlogs] = useState([]);
   const [users, setUsers] = useState([]);
   const [foods, setFoods] = useState([]);
-  const [editBlog, setEditBlog] = useState(null);
-  const [editFood, setEditFood] = useState(null);
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [adminUser, setAdminUser] = useState(null);
 
-  // Blog Editing States
-  const [updatedTitle, setUpdatedTitle] = useState("");
-  const [updatedImage, setUpdatedImage] = useState("");
-  const [updatedContent, setUpdatedContent] = useState("");
+  // Blog states
+  const [blogEditData, setBlogEditData] = useState({
+    id: null,
+    title: '',
+    content: '',
+    image: '',
+    imageFile: null
+  });
 
-  // Food Editing States
-  const [updatedFoodName, setUpdatedFoodName] = useState("");
-  const [updatedFoodPrice, setUpdatedFoodPrice] = useState("");
-  const [updatedFoodCategory, setUpdatedFoodCategory] = useState("");
-  const [updatedFoodImage, setUpdatedFoodImage] = useState("");
+  // Food states
+  const [foodEditData, setFoodEditData] = useState({
+    id: null,
+    name: '',
+    price: '',
+    category: '',
+    image: '',
+    imageFile: null
+  });
 
-  // New Blog States
-  const [newTitle, setNewTitle] = useState("");
-  const [newContent, setNewContent] = useState("");
+  // New item states
+  const [newBlog, setNewBlog] = useState({
+    title: '',
+    content: '',
+    imageFile: null
+  });
 
-  // New Food States
-  const [newFoodName, setNewFoodName] = useState("");
-  const [newFoodPrice, setNewFoodPrice] = useState("");
-  const [newFoodCategory, setNewFoodCategory] = useState("");
+  const [newFood, setNewFood] = useState({
+    name: '',
+    price: '',
+    category: '',
+    imageFile: null
+  });
 
-  // Admin Profile States
-  const [adminName, setAdminName] = useState("");
-  const [adminEmail, setAdminEmail] = useState("");
-  const [adminPassword, setAdminPassword] = useState("");
-  const [adminPhoto, setAdminPhoto] = useState("");
+  // Admin profile states
+  const [adminProfile, setAdminProfile] = useState({
+    name: '',
+    email: '',
+    password: '',
+    photo: ''
+  });
 
   const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
-  // Fetch Blogs
-  const fetchBlogs = useCallback(() => {
-    fetch(`${API_BASE}/blogs`)
-      .then((res) => res.json())
-      .then((data) => setBlogs(data))
-      .catch((error) => console.error("Error fetching blogs:", error));
+  // Fetch data functions
+  const fetchBlogs = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(`${API_BASE}/blogs`);
+      if (!res.ok) throw new Error('Failed to fetch blogs');
+      const data = await res.json();
+      setBlogs(data);
+    } catch (err) {
+      setError(err.message);
+      console.error("Error fetching blogs:", err);
+    } finally {
+      setIsLoading(false);
+    }
   }, [API_BASE]);
 
-  // Fetch Users
-  const fetchUsers = useCallback(() => {
-    fetch(`${API_BASE}/users`)
-      .then((res) => res.json())
-      .then((data) => setUsers(data))
-      .catch((error) => console.error("Error fetching users:", error));
+  const fetchUsers = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(`${API_BASE}/users`);
+      if (!res.ok) throw new Error('Failed to fetch users');
+      const data = await res.json();
+      setUsers(data);
+    } catch (err) {
+      setError(err.message);
+      console.error("Error fetching users:", err);
+    } finally {
+      setIsLoading(false);
+    }
   }, [API_BASE]);
 
-  // Fetch Food Data
-  const fetchFoods = useCallback(() => {
-    fetch(`${API_BASE}/foods`)
-      .then((res) => res.json())
-      .then((data) => setFoods(data))
-      .catch((error) => console.error("Error fetching foods:", error));
+  const fetchFoods = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(`${API_BASE}/foods`);
+      if (!res.ok) throw new Error('Failed to fetch foods');
+      const data = await res.json();
+      setFoods(data);
+    } catch (err) {
+      setError(err.message);
+      console.error("Error fetching foods:", err);
+    } finally {
+      setIsLoading(false);
+    }
   }, [API_BASE]);
 
+  // Load data based on active tab
   useEffect(() => {
     const loggedInAdmin = JSON.parse(localStorage.getItem('adminUser'));
     if (loggedInAdmin) {
       setAdminUser(loggedInAdmin);
-      setAdminName(loggedInAdmin.name);
-      setAdminEmail(loggedInAdmin.email);
-      setAdminPhoto(loggedInAdmin.photo || '');
+      setAdminProfile({
+        name: loggedInAdmin.name,
+        email: loggedInAdmin.email,
+        photo: loggedInAdmin.photo || '',
+        password: ''
+      });
     } else {
       window.location.href = '/admin/login';
     }
 
-    if (activeTab === "Blogs") fetchBlogs();
-    if (activeTab === "Users") fetchUsers();
-    if (activeTab === "Products") fetchFoods();
-  }, [activeTab, adminUser, fetchBlogs, fetchUsers, fetchFoods]);
-
-  // Delete Blog
-  const handleDeleteBlog = (id) => {
-    fetch(`${API_BASE}/blogs/${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('adminToken')}`
-      }
-    })
-      .then(() => fetchBlogs())
-      .catch((error) => console.error("Error deleting blog:", error));
-  };
-
-  // Delete Food
-  const handleDeleteFood = (id) => {
-    fetch(`${API_BASE}/foods/${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('adminToken')}`
-      }
-    })
-      .then(() => fetchFoods())
-      .catch((error) => console.error("Error deleting food:", error));
-  };
-
-  // Edit Blog
-  const handleEditBlog = (blog) => {
-    setEditBlog(blog);
-    setUpdatedTitle(blog.title);
-    setUpdatedImage(blog.image);
-    setUpdatedContent(blog.content);
-  };
-
-  // Edit Food
-  const handleEditFood = (food) => {
-    setEditFood(food);
-    setUpdatedFoodName(food.name);
-    setUpdatedFoodPrice(food.price);
-    setUpdatedFoodCategory(food.category);
-    setUpdatedFoodImage(food.image);
-  };
-
-  // Update Blog
-  const handleUpdateBlog = async () => {
-    const formData = new FormData();
-    formData.append("title", updatedTitle);
-    formData.append("content", updatedContent);
-    if (selectedFile) {
-      formData.append("image", selectedFile);
-    }
-
-    fetch(`${API_BASE}/blogs/${editBlog._id}`, {
-      method: "PUT",
-      body: formData,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('adminToken')}`
-      }
-    })
-      .then(() => {
+    switch (activeTab) {
+      case "Blogs":
         fetchBlogs();
-        setEditBlog(null);
-        setSelectedFile(null);
-      })
-      .catch((error) => console.error("Error updating blog:", error));
-  };
-
-  // Update Food
-  const handleUpdateFood = async () => {
-    const formData = new FormData();
-    formData.append("name", updatedFoodName);
-    formData.append("price", updatedFoodPrice);
-    formData.append("category", updatedFoodCategory);
-    if (selectedFile) {
-      formData.append("image", selectedFile);
-    }
-
-    fetch(`${API_BASE}/foods/${editFood._id}`, {
-      method: "PUT",
-      body: formData,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('adminToken')}`
-      }
-    })
-      .then(() => {
+        break;
+      case "Users":
+        fetchUsers();
+        break;
+      case "Products":
         fetchFoods();
-        setEditFood(null);
-        setSelectedFile(null);
-      })
-      .catch((error) => console.error("Error updating food:", error));
+        break;
+      default:
+        break;
+    }
+  }, [activeTab, fetchBlogs, fetchUsers, fetchFoods]);
+
+  // Blog CRUD operations
+  const handleDeleteBlog = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this blog?")) return;
+    
+    setIsLoading(true);
+    try {
+      const res = await fetch(`${API_BASE}/blogs/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('adminToken')}`
+        }
+      });
+      if (!res.ok) throw new Error('Failed to delete blog');
+      await fetchBlogs();
+    } catch (err) {
+      setError(err.message);
+      console.error("Error deleting blog:", err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  // Handle File Change
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setSelectedFile(file);
-    if (editBlog) {
-      setUpdatedImage(URL.createObjectURL(file));
+  const handleEditBlog = (blog) => {
+    setBlogEditData({
+      id: blog._id,
+      title: blog.title,
+      content: blog.content,
+      image: blog.image,
+      imageFile: null
+    });
+  };
+
+  const handleUpdateBlog = async () => {
+    if (!blogEditData.title || !blogEditData.content) {
+      alert("Title and content are required!");
+      return;
     }
-    if (editFood) {
-      setUpdatedFoodImage(URL.createObjectURL(file));
+
+    setIsLoading(true);
+    const formData = new FormData();
+    formData.append("title", blogEditData.title);
+    formData.append("content", blogEditData.content);
+    if (blogEditData.imageFile) {
+      formData.append("image", blogEditData.imageFile);
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/blogs/${blogEditData.id}`, {
+        method: "PUT",
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('adminToken')}`
+        }
+      });
+      if (!res.ok) throw new Error('Failed to update blog');
+      
+      await fetchBlogs();
+      setBlogEditData({
+        id: null,
+        title: '',
+        content: '',
+        image: '',
+        imageFile: null
+      });
+    } catch (err) {
+      setError(err.message);
+      console.error("Error updating blog:", err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Handle Admin Photo Change
+  const handleAddBlog = async () => {
+    if (!newBlog.title || !newBlog.content || !newBlog.imageFile) {
+      alert("Please fill all fields and upload an image!");
+      return;
+    }
+
+    setIsLoading(true);
+    const formData = new FormData();
+    formData.append("title", newBlog.title);
+    formData.append("content", newBlog.content);
+    formData.append("image", newBlog.imageFile);
+    formData.append("authorId", adminUser._id);
+
+    try {
+      const res = await fetch(`${API_BASE}/blogs`, {
+        method: "POST",
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('adminToken')}`
+        }
+      });
+      if (!res.ok) throw new Error('Failed to add blog');
+      
+      await fetchBlogs();
+      setNewBlog({
+        title: '',
+        content: '',
+        imageFile: null
+      });
+    } catch (err) {
+      setError(err.message);
+      console.error("Error adding blog:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Food CRUD operations
+  const handleDeleteFood = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this food item?")) return;
+    
+    setIsLoading(true);
+    try {
+      const res = await fetch(`${API_BASE}/foods/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('adminToken')}`
+        }
+      });
+      if (!res.ok) throw new Error('Failed to delete food');
+      await fetchFoods();
+    } catch (err) {
+      setError(err.message);
+      console.error("Error deleting food:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleEditFood = (food) => {
+    setFoodEditData({
+      id: food._id,
+      name: food.name,
+      price: food.price,
+      category: food.category,
+      image: food.image,
+      imageFile: null
+    });
+  };
+
+  const handleUpdateFood = async () => {
+    if (!foodEditData.name || !foodEditData.price || !foodEditData.category) {
+      alert("All fields are required!");
+      return;
+    }
+
+    setIsLoading(true);
+    const formData = new FormData();
+    formData.append("name", foodEditData.name);
+    formData.append("price", foodEditData.price);
+    formData.append("category", foodEditData.category);
+    if (foodEditData.imageFile) {
+      formData.append("image", foodEditData.imageFile);
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/foods/${foodEditData.id}`, {
+        method: "PUT",
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('adminToken')}`
+        }
+      });
+      if (!res.ok) throw new Error('Failed to update food');
+      
+      await fetchFoods();
+      setFoodEditData({
+        id: null,
+        name: '',
+        price: '',
+        category: '',
+        image: '',
+        imageFile: null
+      });
+    } catch (err) {
+      setError(err.message);
+      console.error("Error updating food:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleAddFood = async () => {
+    if (!newFood.name || !newFood.price || !newFood.category || !newFood.imageFile) {
+      alert("Please fill all fields and upload an image!");
+      return;
+    }
+
+    setIsLoading(true);
+    const formData = new FormData();
+    formData.append("name", newFood.name);
+    formData.append("price", newFood.price);
+    formData.append("category", newFood.category);
+    formData.append("image", newFood.imageFile);
+    formData.append("addedBy", adminUser._id);
+
+    try {
+      const res = await fetch(`${API_BASE}/foods`, {
+        method: "POST",
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('adminToken')}`
+        }
+      });
+      if (!res.ok) throw new Error('Failed to add food');
+      
+      await fetchFoods();
+      setNewFood({
+        name: '',
+        price: '',
+        category: '',
+        imageFile: null
+      });
+    } catch (err) {
+      setError(err.message);
+      console.error("Error adding food:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Admin profile operations
   const handleAdminPhotoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        alert("File size should be less than 5MB");
+        return;
+      }
       const reader = new FileReader();
       reader.onloadend = () => {
-        setAdminPhoto(reader.result);
+        setAdminProfile(prev => ({
+          ...prev,
+          photo: reader.result
+        }));
       };
       reader.readAsDataURL(file);
     }
   };
 
-  // Add New Blog
-  const handleAddBlog = async () => {
-    if (!newTitle || !selectedFile || !newContent) {
-      alert("Please fill all fields and upload an image!");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("title", newTitle);
-    formData.append("content", newContent);
-    formData.append("image", selectedFile);
-    formData.append("authorId", adminUser._id);
-
-    fetch(`${API_BASE}/blogs`, {
-      method: "POST",
-      body: formData,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('adminToken')}`
-      }
-    })
-      .then((res) => res.json())
-      .then(() => {
-        fetchBlogs();
-        setNewTitle("");
-        setNewContent("");
-        setSelectedFile(null);
-      })
-      .catch((error) => console.error("Error adding blog:", error));
-  };
-
-  // Add New Food
-  const handleAddFood = async () => {
-    if (!newFoodName || !newFoodPrice || !newFoodCategory || !selectedFile) {
-      alert("Please fill all fields and upload an image!");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("name", newFoodName);
-    formData.append("price", newFoodPrice);
-    formData.append("category", newFoodCategory);
-    formData.append("image", selectedFile);
-    formData.append("addedBy", adminUser._id);
-
-    fetch(`${API_BASE}/foods`, {
-      method: "POST",
-      body: formData,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('adminToken')}`
-      }
-    })
-      .then((res) => res.json())
-      .then(() => {
-        fetchFoods();
-        setNewFoodName("");
-        setNewFoodPrice("");
-        setNewFoodCategory("");
-        setSelectedFile(null);
-      })
-      .catch((error) => console.error("Error adding food:", error));
-  };
-
-  // Update Admin Profile
   const handleUpdateAdminProfile = () => {
+    if (!adminProfile.name || !adminProfile.email) {
+      alert("Name and email are required!");
+      return;
+    }
+
     const updatedAdmin = {
       ...adminUser,
-      name: adminName,
-      email: adminEmail,
-      photo: adminPhoto,
+      name: adminProfile.name,
+      email: adminProfile.email,
+      photo: adminProfile.photo,
     };
+
+    if (adminProfile.password) {
+      updatedAdmin.password = adminProfile.password;
+    }
 
     localStorage.setItem('adminUser', JSON.stringify(updatedAdmin));
     setAdminUser(updatedAdmin);
     alert('Profile updated successfully!');
   };
 
-  // Handle Logout
+  // Logout
   const handleLogout = () => {
     localStorage.removeItem('adminUser');
     localStorage.removeItem('adminToken');
     window.location.href = '/admin/login';
+  };
+
+  // Helper function for file handling
+  const handleFileChange = (e, setStateFunction) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        alert("File size should be less than 5MB");
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setStateFunction(prev => ({
+          ...prev,
+          image: reader.result,
+          imageFile: file
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
@@ -285,8 +433,8 @@ const AdminPanel = () => {
           {adminUser && (
             <>
               <div className="admin-photo">
-                {adminPhoto ? (
-                  <img src={adminPhoto} alt="Admin" />
+                {adminProfile.photo ? (
+                  <img src={adminProfile.photo} alt="Admin" />
                 ) : (
                   <FaUser className="default-photo" />
                 )}
@@ -302,25 +450,24 @@ const AdminPanel = () => {
         <button className="sidebar-button" onClick={() => setActiveTab("AdminProfile")}>
           <FaUser className="icon" /> Admin Profile
         </button>
-        
         <button className="sidebar-button" onClick={() => setActiveTab("Users")}>
           <FaUsers className="icon" /> Users
         </button>
-        
         <button className="sidebar-button" onClick={() => setActiveTab("Blogs")}>
           <FaBlog className="icon" /> Blogs
         </button>
-        
         <button className="sidebar-button" onClick={() => setActiveTab("Products")}>
           <FaBox className="icon" /> Products
         </button>
-        
         <button className="sidebar-button logout-btn" onClick={handleLogout}>
           <FaSignOutAlt className="icon" /> Logout
         </button>
       </div>
 
       <div className="main-content">
+        {isLoading && <div className="loading-overlay">Loading...</div>}
+        {error && <div className="error-message">{error}</div>}
+
         {/* Dashboard Tab */}
         {activeTab === "Dashboard" && (
           <div className="content">
@@ -352,8 +499,8 @@ const AdminPanel = () => {
             <div className="admin-profile-container">
               <div className="admin-profile-header">
                 <div className="admin-profile-photo">
-                  {adminPhoto ? (
-                    <img src={adminPhoto} alt="Admin" />
+                  {adminProfile.photo ? (
+                    <img src={adminProfile.photo} alt="Admin" />
                   ) : (
                     <div className="admin-profile-photo-placeholder">
                       <FaUser />
@@ -370,7 +517,7 @@ const AdminPanel = () => {
                   </label>
                 </div>
                 <div className="admin-profile-info">
-                  <h2>{adminName}</h2>
+                  <h2>{adminProfile.name}</h2>
                   <p className="admin-role">Administrator</p>
                 </div>
               </div>
@@ -380,24 +527,24 @@ const AdminPanel = () => {
                   <label>Full Name</label>
                   <input
                     type="text"
-                    value={adminName}
-                    onChange={(e) => setAdminName(e.target.value)}
+                    value={adminProfile.name}
+                    onChange={(e) => setAdminProfile(prev => ({...prev, name: e.target.value}))}
                   />
                 </div>
                 <div className="profile-form-group">
                   <label>Email Address</label>
                   <input
                     type="email"
-                    value={adminEmail}
-                    onChange={(e) => setAdminEmail(e.target.value)}
+                    value={adminProfile.email}
+                    onChange={(e) => setAdminProfile(prev => ({...prev, email: e.target.value}))}
                   />
                 </div>
                 <div className="profile-form-group">
                   <label>Password</label>
                   <input
                     type="password"
-                    value={adminPassword}
-                    onChange={(e) => setAdminPassword(e.target.value)}
+                    value={adminProfile.password}
+                    onChange={(e) => setAdminProfile(prev => ({...prev, password: e.target.value}))}
                     placeholder="Enter new password"
                   />
                 </div>
@@ -409,7 +556,7 @@ const AdminPanel = () => {
               <div className="admin-stats">
                 <div className="admin-stat-card">
                   <h4>Account Created</h4>
-                  <p>{new Date().toLocaleDateString()}</p>
+                  <p>{new Date(adminUser.createdAt || Date.now()).toLocaleDateString()}</p>
                 </div>
                 <div className="admin-stat-card">
                   <h4>Last Login</h4>
@@ -429,6 +576,7 @@ const AdminPanel = () => {
                 <tr>
                   <th>Name</th>
                   <th>Email</th>
+                  <th>Joined</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -437,6 +585,7 @@ const AdminPanel = () => {
                   <tr key={user._id}>
                     <td>{user.name}</td>
                     <td>{user.email}</td>
+                    <td>{new Date(user.createdAt).toLocaleDateString()}</td>
                     <td>
                       <button className="edit-btn">
                         <FaEdit />
@@ -462,15 +611,19 @@ const AdminPanel = () => {
               <h4>Add a New Blog</h4>
               <input
                 type="text"
-                value={newTitle}
-                onChange={(e) => setNewTitle(e.target.value)}
+                value={newBlog.title}
+                onChange={(e) => setNewBlog(prev => ({...prev, title: e.target.value}))}
                 placeholder="Enter blog title"
               />
-              <input type="file" onChange={handleFileChange} />
-              {selectedFile && <img src={URL.createObjectURL(selectedFile)} alt="Preview" width="200" />}
+              <input 
+                type="file" 
+                onChange={(e) => handleFileChange(e, setNewBlog)} 
+                accept="image/*"
+              />
+              {newBlog.image && <img src={newBlog.image} alt="Preview" width="200" />}
               <textarea
-                value={newContent}
-                onChange={(e) => setNewContent(e.target.value)}
+                value={newBlog.content}
+                onChange={(e) => setNewBlog(prev => ({...prev, content: e.target.value}))}
                 placeholder="Enter blog content"
               />
               <button onClick={handleAddBlog}>Add Blog</button>
@@ -480,32 +633,49 @@ const AdminPanel = () => {
             <ul className="blog-list">
               {blogs.map((blog) => (
                 <li key={blog._id}>
-                  {editBlog && editBlog._id === blog._id ? (
+                  {blogEditData.id === blog._id ? (
                     <div className="edit-blog-form">
                       <input
                         type="text"
-                        value={updatedTitle}
-                        onChange={(e) => setUpdatedTitle(e.target.value)}
+                        value={blogEditData.title}
+                        onChange={(e) => setBlogEditData(prev => ({...prev, title: e.target.value}))}
                         placeholder="Enter new title"
                       />
-                      <input type="file" onChange={handleFileChange} />
-                      {updatedImage && <img src={updatedImage} alt="Preview" width="200" />}
+                      <input 
+                        type="file" 
+                        onChange={(e) => handleFileChange(e, setBlogEditData)} 
+                        accept="image/*"
+                      />
+                      {blogEditData.image && <img src={blogEditData.image} alt="Preview" width="200" />}
                       <textarea
-                        value={updatedContent}
-                        onChange={(e) => setUpdatedContent(e.target.value)}
+                        value={blogEditData.content}
+                        onChange={(e) => setBlogEditData(prev => ({...prev, content: e.target.value}))}
                         placeholder="Enter blog content"
                       />
                       <div className="edit-actions">
                         <button onClick={handleUpdateBlog}>Save</button>
-                        <button onClick={() => setEditBlog(null)}>Cancel</button>
+                        <button onClick={() => setBlogEditData({
+                          id: null,
+                          title: '',
+                          content: '',
+                          image: '',
+                          imageFile: null
+                        })}>Cancel</button>
                       </div>
                     </div>
                   ) : (
                     <div className="blog-item">
-                      <img src={`${API_BASE}${blog.image}`} alt="Blog" width="200" />
+                      <img 
+                        src={blog.image.startsWith('http') ? blog.image : `${API_BASE}${blog.image}`} 
+                        alt="Blog" 
+                        width="200" 
+                      />
                       <div className="blog-details">
                         <h4>{blog.title}</h4>
                         <p>{blog.content}</p>
+                        <p className="blog-date">
+                          {new Date(blog.createdAt).toLocaleDateString()}
+                        </p>
                       </div>
                       <div className="blog-actions">
                         <button className="edit-btn" onClick={() => handleEditBlog(blog)}>
@@ -533,24 +703,28 @@ const AdminPanel = () => {
               <h4>Add a New Food Product</h4>
               <input
                 type="text"
-                value={newFoodName}
-                onChange={(e) => setNewFoodName(e.target.value)}
+                value={newFood.name}
+                onChange={(e) => setNewFood(prev => ({...prev, name: e.target.value}))}
                 placeholder="Enter food name"
               />
               <input
                 type="text"
-                value={newFoodPrice}
-                onChange={(e) => setNewFoodPrice(e.target.value)}
+                value={newFood.price}
+                onChange={(e) => setNewFood(prev => ({...prev, price: e.target.value}))}
                 placeholder="Enter price"
               />
               <input
                 type="text"
-                value={newFoodCategory}
-                onChange={(e) => setNewFoodCategory(e.target.value)}
+                value={newFood.category}
+                onChange={(e) => setNewFood(prev => ({...prev, category: e.target.value}))}
                 placeholder="Enter category"
               />
-              <input type="file" onChange={handleFileChange} />
-              {selectedFile && <img src={URL.createObjectURL(selectedFile)} alt="Preview" width="200" />}
+              <input 
+                type="file" 
+                onChange={(e) => handleFileChange(e, setNewFood)} 
+                accept="image/*"
+              />
+              {newFood.image && <img src={newFood.image} alt="Preview" width="200" />}
               <button onClick={handleAddFood}>Add Food</button>
             </div>
 
@@ -562,54 +736,74 @@ const AdminPanel = () => {
                   <th>Name</th>
                   <th>Price</th>
                   <th>Category</th>
+                  <th>Added</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {foods.map((food) => (
                   <tr key={food._id}>
-                    {editFood && editFood._id === food._id ? (
+                    {foodEditData.id === food._id ? (
                       <>
                         <td>
-                          <input type="file" onChange={handleFileChange} />
-                          {updatedFoodImage && (
-                            <img src={updatedFoodImage} alt="Preview" width="100" />
+                          <input 
+                            type="file" 
+                            onChange={(e) => handleFileChange(e, setFoodEditData)} 
+                            accept="image/*"
+                          />
+                          {foodEditData.image && (
+                            <img src={foodEditData.image} alt="Preview" width="100" />
                           )}
                         </td>
                         <td>
                           <input
                             type="text"
-                            value={updatedFoodName}
-                            onChange={(e) => setUpdatedFoodName(e.target.value)}
+                            value={foodEditData.name}
+                            onChange={(e) => setFoodEditData(prev => ({...prev, name: e.target.value}))}
                           />
                         </td>
                         <td>
                           <input
                             type="text"
-                            value={updatedFoodPrice}
-                            onChange={(e) => setUpdatedFoodPrice(e.target.value)}
+                            value={foodEditData.price}
+                            onChange={(e) => setFoodEditData(prev => ({...prev, price: e.target.value}))}
                           />
                         </td>
                         <td>
                           <input
                             type="text"
-                            value={updatedFoodCategory}
-                            onChange={(e) => setUpdatedFoodCategory(e.target.value)}
+                            value={foodEditData.category}
+                            onChange={(e) => setFoodEditData(prev => ({...prev, category: e.target.value}))}
                           />
+                        </td>
+                        <td>
+                          {new Date(food.createdAt).toLocaleDateString()}
                         </td>
                         <td>
                           <button onClick={handleUpdateFood}>Save</button>
-                          <button onClick={() => setEditFood(null)}>Cancel</button>
+                          <button onClick={() => setFoodEditData({
+                            id: null,
+                            name: '',
+                            price: '',
+                            category: '',
+                            image: '',
+                            imageFile: null
+                          })}>Cancel</button>
                         </td>
                       </>
                     ) : (
                       <>
                         <td>
-                          <img src={`${API_BASE}${food.image}`} alt={food.name} width="100" />
+                          <img 
+                            src={food.image.startsWith('http') ? food.image : `${API_BASE}${food.image}`} 
+                            alt={food.name} 
+                            width="100" 
+                          />
                         </td>
                         <td>{food.name}</td>
                         <td>₹{food.price}</td>
                         <td>{food.category}</td>
+                        <td>{new Date(food.createdAt).toLocaleDateString()}</td>
                         <td>
                           <button className="edit-btn" onClick={() => handleEditFood(food)}>
                             <FaEdit />
