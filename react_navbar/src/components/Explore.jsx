@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import "../css/Explore.css";
 import Navbar from "./Navbar";
+import { FaCalendarAlt, FaUser, FaTags, FaArrowRight } from "react-icons/fa";
+import { Skeleton } from "@mui/material";
 
-// 👉 Shuffle helper function
+// Shuffle helper function
 const shuffleArray = (array) => {
   const shuffled = [...array];
   for (let i = shuffled.length - 1; i > 0; i--) {
@@ -17,71 +18,106 @@ const shuffleArray = (array) => {
 const Explore = () => {
   const [blogPosts, setBlogPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
-  // Fetch Blogs from API and shuffle
-    const API_BASE = import.meta.env.VITE_API_BASE_URL;
- useEffect(() => {
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const response = await axios.get(`${API_BASE}/explore`);
+        const shuffled = shuffleArray(response.data);
+        setBlogPosts(shuffled);
+      } catch (err) {
+        console.error("Error fetching blogs:", err);
+        setError("Failed to load blogs. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  console.log("hii",API_BASE);
-  axios.get(`${API_BASE}/explore`)
-    .then((response) => {
-      const shuffled = shuffleArray(response.data);
-      setBlogPosts(shuffled);
-    })
-    .catch((error) => {
-      console.error("Error fetching blogs:", error);
-      // Set an error state to display to users
-    })
-    .finally(() => setLoading(false));
-}, []);
+    fetchBlogs();
+  }, []);
 
   return (
     <>
       <Navbar />
-      <div className="explore">
-        <h1>Blogs</h1>
-
-        {/* Show Loading State */}
-        {loading && <p>Loading blogs...</p>}
-
-        {/* Show No Blogs Message */}
-        {!loading && blogPosts.length === 0 && <p>No blogs available</p>}
-
-        {/* Display Blogs */}
-        {!loading && blogPosts.map((post) => (
-          <div className="explore-container" key={post._id}>
-            <h2 className="blog-title">{post.title}</h2>
-{post.image && (
-  <img
-    src={
-      post.image.startsWith("/uploads/")
-        ? `${import.meta.env.VITE_API_BASE_URL}${post.image}`
-        : post.image
-    }
-    alt={post.title}
-    className="blog-image"
-  />
-)}
-
-
-            <div className="blog-meta">
-              <span>By Admin</span> | 
-              <span>{new Date(post.date).toLocaleDateString()}</span> | 
-              <span>{post.category || "General"}</span>
-            </div>
-
-            <p className="blog-content">
-              {post.content.length > 2000000 ? `${post.content.substring(0, 2000000)}...` : post.content}
-            </p>
-
-            {/* Keep your original links exactly as they were */}
-            {post.link ? (
-              <Link to={post.link} className="read-more-btn">Read More</Link>
-            ) : (
-              <a href="/Explore" className="read-more-btn">Love More</a>
-            )}
+      <div className="blog-page">
+        <div className="blog-hero">
+          <div className="hero-content">
+            <h1>Discover Pet Care Insights</h1>
+            <p>Expert advice, tips, and stories for pet lovers</p>
           </div>
-        ))}
+        </div>
+
+        <div className="blog-container">
+          {loading ? (
+            <div className="skeleton-grid">
+              {[...Array(3)].map((_, index) => (
+                <div className="blog-card skeleton" key={index}>
+                  <Skeleton variant="rectangular" height={200} />
+                  <Skeleton variant="text" width="80%" />
+                  <Skeleton variant="text" width="60%" />
+                  <Skeleton variant="text" width="100%" height={60} />
+                  <Skeleton variant="rectangular" width={120} height={40} />
+                </div>
+              ))}
+            </div>
+          ) : error ? (
+            <div className="error-message">
+              <p>{error}</p>
+              <button onClick={() => window.location.reload()}>Retry</button>
+            </div>
+          ) : blogPosts.length === 0 ? (
+            <div className="empty-state">
+              <img src="/img/no-blogs.svg" alt="No blogs found" />
+              <h3>No blogs available yet</h3>
+              <p>Check back later for new pet care articles</p>
+            </div>
+          ) : (
+            <div className="blog-grid">
+              {blogPosts.map((post) => (
+                <article className="blog-card" key={post._id}>
+                  <div className="card-image">
+                    {post.image && (
+                      <img
+                        src={
+                          post.image.startsWith("/uploads/")
+                            ? `${API_BASE}${post.image}`
+                            : post.image
+                        }
+                        alt={post.title}
+                        loading="lazy"
+                      />
+                    )}
+                  </div>
+                  <div className="card-content">
+                    <div className="blog-meta">
+                      <span><FaUser /> {post.author || "Admin"}</span>
+                      <span><FaCalendarAlt /> {new Date(post.date).toLocaleDateString()}</span>
+                      {post.category && (
+                        <span className="category-tag">
+                          <FaTags /> {post.category}
+                        </span>
+                      )}
+                    </div>
+                    <h2>{post.title}</h2>
+                    <p className="excerpt">
+                      {post.content.length > 200
+                        ? `${post.content.substring(0, 200)}...`
+                        : post.content}
+                    </p>
+                    <Link 
+                      to={post.link || `/blog/${post._id}`} 
+                      className="read-more"
+                    >
+                      Read More <FaArrowRight />
+                    </Link>
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </>
   );
