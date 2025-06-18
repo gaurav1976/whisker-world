@@ -29,6 +29,7 @@ const Food = () => {
 
    useEffect(() => {
   const fetchFoods = async () => {
+    console.log("API Base URL:", API_BASE);
     try {
       const response = await axios.get(`${API_BASE}/foods`);
       const shuffledData = shuffleArray(response.data);
