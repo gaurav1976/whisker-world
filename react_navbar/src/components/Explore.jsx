@@ -82,7 +82,7 @@ const Explore = () => {
                       <img
                         src={
                           post.image.startsWith("/uploads/")
-                            ? `${post.image}`
+                            ? `${API_BASE}${post.image}`
                             : post.image
                         }
                         alt={post.title}
