@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import Navbar from "./Navbar";
 import { FaCalendarAlt, FaUser, FaTags, FaArrowRight } from "react-icons/fa";
 import { Skeleton } from "@mui/material";
-import DOMPurify from "dompurify"; // For sanitizing HTML content
 
 // Shuffle helper function
 const shuffleArray = (array) => {
@@ -38,22 +37,6 @@ const Explore = () => {
 
     fetchBlogs();
   }, []);
-
-  // Sanitize and format blog content
-  const formatContent = (content) => {
-    if (!content) return "";
-    
-    // 1. Clean HTML tags
-    const cleanText = content.replace(/<[^>]*>/g, "");
-    
-    // 2. Handle special characters
-    const decodedText = new DOMParser().parseFromString(cleanText, "text/html").body.textContent || "";
-    
-    // 3. Truncate for excerpt
-    return decodedText.length > 200 
-      ? `${decodedText.substring(0, 200)}...` 
-      : decodedText;
-  };
 
   return (
     <>
@@ -95,24 +78,16 @@ const Explore = () => {
               {blogPosts.map((post) => (
                 <article className="blog-card" key={post._id}>
                   <div className="card-image">
-                    {post.image ? (
+                    {post.image && (
                       <img
                         src={
                           post.image.startsWith("/uploads/")
-                            ? `${API_BASE}${post.image}`
+                            ? `${post.image}`
                             : post.image
                         }
                         alt={post.title}
                         loading="lazy"
-                        onError={(e) => {
-                          e.target.src = "/fallback-blog.jpg";
-                          e.target.alt = "Image not available";
-                        }}
                       />
-                    ) : (
-                      <div className="image-placeholder">
-                        <span>No Image</span>
-                      </div>
                     )}
                   </div>
                   <div className="card-content">
@@ -125,9 +100,11 @@ const Explore = () => {
                         </span>
                       )}
                     </div>
-                    <h2>{post.title || "Untitled Blog Post"}</h2>
+                    <h2>{post.title}</h2>
                     <p className="excerpt">
-                      {formatContent(post.content)}
+                      {post.content.length > 200
+                        ? `${post.content.substring(0, 200)}...`
+                        : post.content}
                     </p>
                     <Link 
                       to={post.link || `/blog/${post._id}`} 
