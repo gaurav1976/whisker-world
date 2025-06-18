@@ -19,6 +19,7 @@ const Explore = () => {
   const [blogPosts, setBlogPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
   const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
