@@ -28,26 +28,20 @@ const Food = () => {
   };
 
    useEffect(() => {
-    const fetchFoods = async () => {
-      try {
-        const response = await axios.get(`${API_BASE}/foods`, {
-          withCredentials: true,
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-        });
-        const shuffledData = shuffleArray(response.data);
-        setProducts(shuffledData);
-        setFilteredProducts(shuffledData);
-      } catch (error) {
-        console.error("Full error:", error);
-        console.error("Error response:", error.response?.data);
-      }
-    };
+  const fetchFoods = async () => {
+    try {
+      const response = await axios.get(`${API_BASE}/foods`);
+      const shuffledData = shuffleArray(response.data);
+      setProducts(shuffledData);
+      setFilteredProducts(shuffledData);
+    } catch (error) {
+      console.error("Full error:", error);
+      console.error("Error response:", error.response?.data);
+    }
+  };
 
-    fetchFoods();
-  }, [API_BASE]);
+  fetchFoods();
+}, [API_BASE]);
 
   useEffect(() => {
     if (searchQuery.trim() === "") {
