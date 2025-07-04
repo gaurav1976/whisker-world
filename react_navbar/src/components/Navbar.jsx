@@ -64,7 +64,7 @@ const Navbar = () => {
           {/* Only visible when logged in */}
           {user && (
             <>
-              <li><Link to="/Explore">Explore</Link></li>
+              <li><Link to="/Explore">SHREYA</Link></li>
               <li><Link to="/Communities">Communities</Link></li>
               <li><Link to="/Food">Food</Link></li>
               <li><Link to="/ExpertsTips">Experts & Tips</Link></li>
