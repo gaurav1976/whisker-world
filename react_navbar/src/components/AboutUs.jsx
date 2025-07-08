@@ -19,7 +19,7 @@ const AboutUs = () => {
       }
     }
   };
-
+///////////////////////////////////////
   const item = {
     hidden: { opacity: 0, y: 20 },
     show: { opacity: 1, y: 0 }
@@ -48,7 +48,7 @@ const AboutUs = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 0.8 }}
           >
-            Where Dogs and Their Humans Thrive Together
+            Where Dogs and Their Humans Thrive Togetherrrrrrrrrrrrrrrrrrrrrr
           </motion.p>
           <div className="stats-container">
             <div className="stat-item">
