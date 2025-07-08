@@ -68,7 +68,7 @@ const Navbar = () => {
               <li><Link to="/Communities">Communities</Link></li>
               <li><Link to="/Food">Food</Link></li>
               <li><Link to="/ExpertsTips">Experts & Tips</Link></li>
-              <li><Link to="/InstagramClone">Social World</Link></li>
+              <li><Link to="/InstagramClone">Social Worldddddd</Link></li>
             </>
           )}
 
