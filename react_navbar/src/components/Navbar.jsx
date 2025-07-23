@@ -58,13 +58,13 @@ const Navbar = () => {
         {/* Navigation Menu */}
         <ul className="nav-menu">
           {/* Always visible (for everyone) */}
-          <li><Link to="/">Homeeee</Link></li>
+          <li><Link to="/">Home</Link></li>
           <li><Link to="/AboutUs">About Us</Link></li>
 
           {/* Only visible when logged in */}
           {user && (
             <>
-              <li><Link to="/Explore">Explore`</Link></li>
+              <li><Link to="/Explore">Explore</Link></li>
               <li><Link to="/Communities">Communities</Link></li>
               <li><Link to="/Food">Food</Link></li>
               <li><Link to="/ExpertsTips">Experts & Tips</Link></li>
