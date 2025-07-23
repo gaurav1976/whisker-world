@@ -19,8 +19,8 @@ const corsOptions = {
     const allowedOrigins = [
       "http://localhost:5173",
       "https://whisker-world-rhgh.vercel.app",  // ✅ Your Vercel frontend
-      "https://admin-panel-ten-dun.vercel.app"  // ✅ Your admin panel
-      
+      "https://admin-panel-ten-dun.vercel.app",  // ✅ Your admin panel
+      "https://whisker-world-adm.vercel.app/"
     ];
 
     const vercelPreviewRegex = /^https:\/\/admin-panel-[\w-]+\.vercel\.app$/;
