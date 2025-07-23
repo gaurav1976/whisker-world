@@ -53,7 +53,7 @@ const AdminPanel = () => {
     photo: ''
   });
 
-  const API_BASE = import.meta.env.VITE_API_BASE_URL;
+  // const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
   // Fetch data functions
   const fetchBlogs = useCallback(async () => {
