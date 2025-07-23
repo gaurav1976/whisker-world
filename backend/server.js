@@ -17,10 +17,11 @@ app.use(express.json());
 const corsOptions = {
   origin: (origin, callback) => {
     const allowedOrigins = [
-      "http://localhost:5173",
+      
       "https://whisker-world-rhgh.vercel.app",  // ✅ Your Vercel frontend
       "https://admin-panel-ten-dun.vercel.app",  // ✅ Your admin panel
-      "https://whisker-world-adm.vercel.app/"
+      "https://whisker-world-adm.vercel.app/",
+      "http://localhost:5173"
     ];
 
     const vercelPreviewRegex = /^https:\/\/admin-panel-[\w-]+\.vercel\.app$/;
