@@ -102,9 +102,10 @@ const Explore = () => {
                     </div>
                     <h2>{post.title}</h2>
                     <p className="excerpt">
-  {(post.content.replace(/const API_BASE = import\.meta\.env\.VITE_API_BASE_URL;/g, '')).slice(0, 200)}...
-</p>
-
+                      {post.content.length > 200
+                        ? `${post.content.substring(0, 200)}...`
+                        : post.content}
+                    </p>
                     <Link 
                       to={post.link || `/blog/${post._id}`} 
                       className="read-more"
