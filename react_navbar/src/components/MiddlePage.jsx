@@ -5,7 +5,7 @@ const MiddlePage = () => {
   return (
     <div className="middlepage">
       <div className="middlepage-img">
-        <img src="img/pet-health.webp" alt="PetCircle - Pet Community" />
+        <img src="img/mainpage.jpg" alt="PetCircle - Pet Community" />
         <div className="image-text">
           <h1>Welcome to Whisker World</h1>
           <h5>
