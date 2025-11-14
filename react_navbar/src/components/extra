@@ -1,0 +1,20 @@
+
+<!-- Backend command -->
+PS D:\Project\Gaurav\whisker-world\backend> node server.js
+🚀 Server running on port 5001
+✅ MongoDB Connected
+
+<!-- admin-panel command -->
+PS D:\Project\Gaurav\whisker-world\admin-panel\admin-panel> npm run dev   
+
+E-mail:- gauravdodiya760@gmail.com
+Password:- gauravdodiya760
+
+
+
+<!-- fronted command -->
+PS D:\Project\Gaurav\whisker-world> cd ./react_navbar/
+PS D:\Project\Gaurav\whisker-world\react_navbar> npm run dev   
+
+
+

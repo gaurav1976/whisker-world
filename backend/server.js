@@ -21,7 +21,8 @@ const corsOptions = {
       "https://whisker-world-rhgh.vercel.app",  // ✅ Your Vercel frontend
       "https://admin-panel-ten-dun.vercel.app",  // ✅ Your admin panel
       "https://whisker-world-adm.vercel.app/",
-      "http://localhost:5173"
+      "http://localhost:5173",
+      "http://localhost:5174"
     ];
 
     const vercelPreviewRegex = /^https:\/\/admin-panel-[\w-]+\.vercel\.app$/;
@@ -387,7 +388,7 @@ const petSchema = new mongoose.Schema({
   photo: String, // Store image path
   owner: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // Link pet to a user
 });
-app.post("/api/pets/create", upload.single("photo"), async (req, res) => {z
+app.post("/api/pets/create", upload.single("photo"), async (req, res) => {
   try {
     const { name, breed, age, weight, description, owner } = req.body;
     if (!name || !breed || !age || !weight || !owner) {
@@ -432,5 +433,5 @@ app.get("/api/pets/owner/:ownerId", async (req, res) => {
 
 
 // ✅ Start the Server
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
