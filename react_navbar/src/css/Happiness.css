@@ -45,3 +45,24 @@
     height: auto;
     border-radius: 10px;
 }
+
+@media (max-width: 768px) {
+    .happiness-container {
+        flex-direction: column;
+        gap: 24px;
+        min-height: auto;
+        padding: 40px 16px;
+    }
+
+    .text-content h1 {
+        font-size: 1.6rem;
+    }
+
+    .text-content p {
+        font-size: 1rem;
+    }
+
+    .mobile-img img {
+        max-width: 200px;
+    }
+}

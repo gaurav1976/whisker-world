@@ -1,11 +1,9 @@
 import "../css/Happiness.css";
 // import { Link } from "react-router-dom";
-import Navbar from "./Navbar";
 import Social from "./Social";
 const middlepage = () => {
   console.log("hii")
   return (<>
-    <Navbar/>
     <div className="happiness-container">
       
       <div className="text-content">

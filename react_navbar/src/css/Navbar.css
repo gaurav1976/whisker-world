@@ -1,7 +1,7 @@
 /* Navbar Container */
 header {
   width: 100%;
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
   z-index: 1000;
@@ -322,5 +322,78 @@ header {
   
   .notification-icon {
     display: none;
+  }
+}
+/* ===== Mobile menu ===== */
+.user-profile-icon {
+  font-size: 2.2rem;
+  color: #fff;
+}
+
+.menu-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: #333;
+  padding: 6px;
+  line-height: 1;
+}
+
+.right-menu > a,
+.cart-icon-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+@media (max-width: 992px) {
+  .menu-toggle {
+    display: flex;
+  }
+
+  .nav-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    gap: 0;
+    background: #ebaacc;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+    padding: 8px 0;
+  }
+
+  .nav-menu.open {
+    display: flex;
+  }
+
+  .nav-menu li a {
+    display: block;
+    padding: 12px 24px;
+    border-radius: 0;
+  }
+
+  .nav-menu li a::after {
+    display: none;
+  }
+}
+
+@media (max-width: 576px) {
+  .right-menu {
+    gap: 12px;
+  }
+
+  .logo img {
+    height: 42px;
+  }
+
+  .login-button {
+    padding: 7px 16px;
+  }
+
+  .dropdown-menu {
+    right: -40px;
   }
 }

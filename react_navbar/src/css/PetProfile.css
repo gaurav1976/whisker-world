@@ -1,15 +1,15 @@
 /* Profile container */
-.pet-profile {
+.profile-container .pet-profile {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: 40px auto;
   max-width: 800px;
   background: #fff;
-}
+}/* Profile card */
 
-/* Profile card */
-.pet-card {
+
+.profile-container .pet-card {
   
   width: 50%;
   max-width: 600px;
@@ -18,91 +18,91 @@
   padding: 30px;
   background-color: #ffffff;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-}
+}/* Profile image */
 
-/* Profile image */
-.pet-card img.pet-image {
+
+.profile-container .pet-card img.pet-image {
   width: 100px;
   height: 100px;
   border-radius: 50%;
   border: 3px solid #0056b3;
   object-fit: cover;
   margin-bottom: 10px;
-}
+}/* Profile username */
 
-/* Profile username */
-.pet-card h3 {
+
+.profile-container .pet-card h3 {
   text-align: center;
   margin: 10px 0;
   font-size: 22px;
   font-weight: bold;
   color: #333;
-}
+}/* Username with editable icon */
 
-/* Username with editable icon */
-.username-container {
+
+.profile-container .username-container {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.username-container span {
+.profile-container .username-container span {
   font-size: 14px;
   color: gray;
   margin-left: 5px;
   cursor: pointer;
-}
+}/* User details container */
 
-/* User details container */
-.user-details {
+
+.profile-container .user-details {
   margin-top: 10px;
   text-align: left;
   display: flex;
   flex-direction: column;
   gap: 10px;
-}
+}/* Each user detail row */
 
-/* Each user detail row */
-.user-details div {
+
+.profile-container .user-details div {
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #ddd;
   padding: 8px 0;
-}
+}/* Label styling */
 
-/* Label styling */
-.user-details strong {
+
+.profile-container .user-details strong {
   color: #333;
   font-weight: 600;
-}
+}/* Value styling */
 
-/* Value styling */
-.user-details span {
+
+.profile-container .user-details span {
   color: gray;
   flex: 1;
   text-align: right;
-}
+}/* Edit icon */
 
-/* Edit icon */
-.edit-icon {
+
+.profile-container .edit-icon {
   font-size: 14px;
   color: #007bff;
   cursor: pointer;
   margin-left: 5px;
 }
 
-.edit-icon:hover {
+.profile-container .edit-icon:hover {
   color: #0056b3;
-}
+}/* Buttons container */
 
-/* Buttons container */
-.button-container {
+
+.profile-container .button-container {
   margin-top: 15px;
-}
+}/* General button styling */
 
-/* General button styling */
-button {
+
+.profile-container button {
   padding: 8px 15px;
   margin: 5px;
   border: none;
@@ -110,34 +110,45 @@ button {
   cursor: pointer;
   font-weight: bold;
   transition: 0.3s ease-in-out;
-}
+}/* Edit button */
 
-/* Edit button */
-.edit-button {
+
+.profile-container .edit-button {
   background: #007bff;
   color: white;
 }
 
-.edit-button:hover {
+.profile-container .edit-button:hover {
   background: #0056b3;
-}
+}/* Save button */
 
-/* Save button */
-.save-button {
+
+.profile-container .save-button {
   background: #28a745;
   color: white;
 }
 
-.save-button:hover {
+.profile-container .save-button:hover {
   background: #218838;
-}
+}/* Delete button */
 
-/* Delete button */
-.delete-button {
+
+.profile-container .delete-button {
   background: #dc3545;
   color: white;
 }
 
-.delete-button:hover {
+.profile-container .delete-button:hover {
   background: #c82333;
+}
+
+.profile-container .edit-btn {
+  background: #d63384;
+  color: #fff;
+  padding: 8px 28px;
+  border-radius: 20px;
+}
+
+.profile-container .edit-btn:hover {
+  background: #b02a6b;
 }

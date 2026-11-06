@@ -109,7 +109,7 @@ const ExpertsTips = () => {
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
-                        <button>Search</button>
+                        <button className="search-button">Search</button>
                     </div>
                 </div>
             </section>

@@ -63,7 +63,7 @@ const userSchema = new mongoose.Schema({
   name: String,
   email: { type: String, unique: true },
   password: String,
-  role: { type: String, enum: ["user", "admin"], default: "user" }, // <-- Role field
+  role: { type: String, enum: ["user", "admin", "superadmin", "junioradmin"], default: "user" }, // <-- Role field
   createdAt: { type: Date, default: Date.now },
   isAdmin: { type: Boolean, default: false }
 });
@@ -196,7 +196,7 @@ app.post("/admin/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const admin = await User.findOne({ email, role: "admin" });
+    const admin = await User.findOne({ email, role: { $in: ["admin", "superadmin", "junioradmin"] } });
     if (!admin) {
       return res.status(400).json({ error: "Admin not found!" });
     }

@@ -15,10 +15,10 @@
     padding: 90PX 20px;
     background-color: var(--soft-white);
     line-height: 1.6;
-}
+}/* Hero Section */
 
-/* Hero Section */
-.hero-section {
+
+.experts-tips-page .hero-section {
     background: linear-gradient(135deg, var(--primary-pink) 0%, var(--primary-orange) 100%);
     padding: 5rem 2rem;
     border-radius: 20px;
@@ -28,21 +28,21 @@
     box-shadow: 0 10px 30px rgba(235, 170, 204, 0.3);
 }
 
-.hero-content h1 {
+.experts-tips-page .hero-content h1 {
     font-size: 2.8rem;
     margin-bottom: 1rem;
     font-weight: 700;
     text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
 }
 
-.hero-subtitle {
+.experts-tips-page .hero-subtitle {
     font-size: 1.2rem;
     max-width: 700px;
     margin: 0 auto 2rem;
     opacity: 0.9;
 }
 
-.search-barr {
+.experts-tips-page .search-barr {
     max-width: 600px;
     margin: 2rem auto 0;
     display: flex;
@@ -52,7 +52,7 @@
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
-.search-barr input {
+.experts-tips-page .search-barr input {
     flex: 1;
     padding: 15px 25px;
     border: none;
@@ -60,7 +60,7 @@
     outline: none;
 }
 
-.search-button {
+.experts-tips-page .search-button {
     padding: 0 25px;
     background: var(--primary-orange);
     color: white;
@@ -72,24 +72,24 @@
     justify-content: center;
 }
 
-.search-button:hover {
+.experts-tips-page .search-button:hover {
     background: #e67c35;
 }
 
-.search-button svg {
+.experts-tips-page .search-button svg {
     width: 20px;
     height: 20px;
-}
+}/* Tips Grid */
 
-/* Tips Grid */
-.tips-container {
+
+.experts-tips-page .tips-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
     gap: 30px;
     margin: 4rem 0;
 }
 
-.tip-card {
+.experts-tips-page .tip-card {
     background-size: cover;
     background-position: center;
     border-radius: 16px;
@@ -105,53 +105,53 @@
     box-shadow: 0 8px 25px rgba(0,0,0,0.1);
 }
 
-.tip-card:hover {
+.experts-tips-page .tip-card:hover {
     transform: translateY(-10px) scale(1.02);
     box-shadow: 0 15px 35px rgba(0,0,0,0.2);
 }
 
-.tip-card.expanded {
+.experts-tips-page .tip-card.expanded {
     min-height: 500px;
 }
 
-.card-content {
+.experts-tips-page .card-content {
     padding: 30px;
     background: linear-gradient(transparent, rgba(0,0,0,0.8));
     transition: all 0.3s;
 }
 
-.card-header {
+.experts-tips-page .card-header {
     display: flex;
     align-items: flex-start;
     margin-bottom: 15px;
 }
 
-.category-icon {
+.experts-tips-page .category-icon {
     font-size: 2rem;
     margin-right: 15px;
     margin-top: 5px;
 }
 
-.tip-card h2 {
+.experts-tips-page .tip-card h2 {
     font-size: 1.6rem;
     margin: 0 0 5px 0;
     font-weight: 600;
 }
 
-.expert-name {
+.experts-tips-page .expert-name {
     font-size: 0.95rem;
     opacity: 0.9;
     margin-bottom: 15px;
     font-style: italic;
 }
 
-.tip-description {
+.experts-tips-page .tip-description {
     margin-bottom: 20px;
     line-height: 1.5;
     font-size: 1.05rem;
 }
 
-.learn-more {
+.experts-tips-page .learn-more {
     display: inline-flex;
     align-items: center;
     padding: 10px 20px;
@@ -165,18 +165,18 @@
     font-size: 0.95rem;
 }
 
-.learn-more:hover {
+.experts-tips-page .learn-more:hover {
     background: white;
     color: #e67c35;
     transform: translateY(-2px);
 }
 
-.arrow-icon {
+.experts-tips-page .arrow-icon {
     margin-left: 8px;
     font-size: 1.1rem;
 }
 
-.expanded-content {
+.experts-tips-page .expanded-content {
     margin-top: 25px;
     padding-top: 25px;
     border-top: 1px solid rgba(255,255,255,0.3);
@@ -188,32 +188,32 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
-.expanded-content h3 {
+.experts-tips-page .expanded-content h3 {
     font-size: 1.3rem;
     margin-bottom: 15px;
     font-weight: 500;
 }
 
-.expanded-content ul {
+.experts-tips-page .expanded-content ul {
     margin-left: 5px;
     margin-bottom: 20px;
 }
 
-.expanded-content li {
+.experts-tips-page .expanded-content li {
     margin-bottom: 10px;
     position: relative;
     padding-left: 25px;
     font-size: 1rem;
 }
 
-.bullet-icon {
+.experts-tips-page .bullet-icon {
     position: absolute;
     left: 0;
     color: var(--primary-pink);
     font-weight: bold;
 }
 
-.expert-bio {
+.experts-tips-page .expert-bio {
     background: rgba(255,255,255,0.1);
     padding: 20px;
     border-radius: 12px;
@@ -221,19 +221,19 @@
     backdrop-filter: blur(5px);
 }
 
-.expert-bio h4 {
+.experts-tips-page .expert-bio h4 {
     margin-bottom: 8px;
     font-size: 1.1rem;
     color: var(--primary-pink);
 }
 
-.expert-bio p {
+.experts-tips-page .expert-bio p {
     font-size: 0.95rem;
     line-height: 1.5;
-}
+}/* Ask the Expert Section */
 
-/* Ask the Expert Section */
-.ask-expert-section {
+
+.experts-tips-page .ask-expert-section {
     background: linear-gradient(135deg, #f8f8f8 0%, #ffffff 100%);
     padding: 4rem 2rem;
     border-radius: 20px;
@@ -241,24 +241,24 @@
     box-shadow: 0 5px 25px rgba(0,0,0,0.05);
 }
 
-.section-header {
+.experts-tips-page .section-header {
     text-align: center;
     max-width: 700px;
     margin: 0 auto 3rem;
 }
 
-.section-header h2 {
+.experts-tips-page .section-header h2 {
     font-size: 2.2rem;
     color: var(--primary-orange);
     margin-bottom: 1rem;
 }
 
-.section-header p {
+.experts-tips-page .section-header p {
     font-size: 1.1rem;
     color: var(--light-text);
 }
 
-.ask-expert-container {
+.experts-tips-page .ask-expert-container {
     max-width: 1000px;
     margin: 0 auto;
     display: grid;
@@ -266,18 +266,18 @@
     gap: 40px;
 }
 
-.question-form {
+.experts-tips-page .question-form {
     display: flex;
     flex-direction: column;
 }
 
-.question-form label {
+.experts-tips-page .question-form label {
     font-weight: 500;
     margin-bottom: 10px;
     color: var(--dark-text);
 }
 
-.question-form textarea {
+.experts-tips-page .question-form textarea {
     height: 180px;
     padding: 20px;
     border-radius: 15px;
@@ -288,13 +288,13 @@
     transition: all 0.3s;
 }
 
-.question-form textarea:focus {
+.experts-tips-page .question-form textarea:focus {
     border-color: var(--primary-pink);
     outline: none;
     box-shadow: 0 0 0 3px rgba(235, 170, 204, 0.2);
 }
 
-.submit-button {
+.experts-tips-page .submit-button {
     padding: 15px 30px;
     background: var(--primary-orange);
     color: white;
@@ -310,25 +310,25 @@
     align-self: flex-start;
 }
 
-.submit-button:hover {
+.experts-tips-page .submit-button:hover {
     background: #e67c35;
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(255, 145, 77, 0.3);
 }
 
-.button-icon {
+.experts-tips-page .button-icon {
     margin-left: 10px;
     font-size: 1.1rem;
 }
 
-.questions-list {
+.experts-tips-page .questions-list {
     background: white;
     padding: 25px;
     border-radius: 15px;
     box-shadow: 0 5px 20px rgba(0,0,0,0.05);
 }
 
-.questions-list h3 {
+.experts-tips-page .questions-list h3 {
     font-size: 1.3rem;
     color: var(--primary-orange);
     margin-bottom: 20px;
@@ -336,31 +336,31 @@
     border-bottom: 2px solid #f0f0f0;
 }
 
-.question-item {
+.experts-tips-page .question-item {
     margin-bottom: 25px;
     padding-bottom: 25px;
     border-bottom: 1px solid #f5f5f5;
 }
 
-.question-item:last-child {
+.experts-tips-page .question-item:last-child {
     border-bottom: none;
     margin-bottom: 0;
     padding-bottom: 0;
 }
 
-.question-date {
+.experts-tips-page .question-date {
     font-size: 0.85rem;
     color: #888;
     margin-bottom: 8px;
 }
 
-.question-text {
+.experts-tips-page .question-text {
     margin: 10px 0;
     font-size: 1rem;
     color: var(--dark-text);
 }
 
-.answer-text {
+.experts-tips-page .answer-text {
     color: var(--primary-pink);
     font-style: italic;
     font-weight: 500;
@@ -369,7 +369,7 @@
     position: relative;
 }
 
-.answer-text::before {
+.experts-tips-page .answer-text::before {
     content: "";
     position: absolute;
     left: 0;
@@ -377,10 +377,10 @@
     width: 10px;
     height: 2px;
     background: var(--primary-pink);
-}
+}/* Newsletter Section */
 
-/* Newsletter Section */
-.newsletter-section {
+
+.experts-tips-page .newsletter-section {
     background: linear-gradient(135deg, var(--primary-pink) 0%, var(--primary-orange) 100%);
     padding: 5rem 2rem;
     border-radius: 20px;
@@ -390,23 +390,23 @@
     box-shadow: 0 10px 30px rgba(235, 170, 204, 0.4);
 }
 
-.newsletter-content {
+.experts-tips-page .newsletter-content {
     max-width: 700px;
     margin: 0 auto;
 }
 
-.newsletter-section h2 {
+.experts-tips-page .newsletter-section h2 {
     font-size: 2.2rem;
     margin-bottom: 1rem;
 }
 
-.newsletter-section p {
+.experts-tips-page .newsletter-section p {
     font-size: 1.1rem;
     opacity: 0.9;
     margin-bottom: 2rem;
 }
 
-.newsletter-form {
+.experts-tips-page .newsletter-form {
     max-width: 500px;
     margin: 0 auto;
     display: flex;
@@ -416,7 +416,7 @@
     box-shadow: 0 5px 20px rgba(0,0,0,0.1);
 }
 
-.newsletter-form input {
+.experts-tips-page .newsletter-form input {
     flex: 1;
     padding: 15px 25px;
     border: none;
@@ -424,7 +424,7 @@
     outline: none;
 }
 
-.subscribe-button {
+.experts-tips-page .subscribe-button {
     padding: 0 30px;
     background: var(--dark-text);
     color: white;
@@ -436,11 +436,11 @@
     align-items: center;
 }
 
-.subscribe-button:hover {
+.experts-tips-page .subscribe-button:hover {
     background: #222;
 }
 
-.subscription-success {
+.experts-tips-page .subscription-success {
     background: white;
     padding: 15px 25px;
     border-radius: 50px;
@@ -449,54 +449,50 @@
     color: var(--primary-orange);
     font-weight: 600;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
+}/* Responsive Design */
 
-/* Responsive Design */
+
 @media (max-width: 992px) {
-    .ask-expert-container {
+    .experts-tips-page .ask-expert-container {
         grid-template-columns: 1fr;
         gap: 30px;
     }
     
-    .questions-list {
+    .experts-tips-page .questions-list {
         margin-top: 30px;
     }
 }
 
 @media (max-width: 768px) {
-    .hero-content h1 {
+    .experts-tips-page .hero-content h1 {
         font-size: 2.2rem;
     }
     
-    .hero-section,
-    .newsletter-section {
+    .experts-tips-page .hero-section, .experts-tips-page .newsletter-section {
         padding: 4rem 1.5rem;
     }
     
-    .tips-container {
+    .experts-tips-page .tips-container {
         grid-template-columns: 1fr;
     }
     
-    .section-header h2 {
+    .experts-tips-page .section-header h2 {
         font-size: 1.8rem;
     }
     
-    .search-barr,
-    .newsletter-form {
+    .experts-tips-page .search-barr, .experts-tips-page .newsletter-form {
         flex-direction: column;
         background: transparent;
         box-shadow: none;
     }
     
-    .search-barr input,
-    .newsletter-form input {
+    .experts-tips-page .search-barr input, .experts-tips-page .newsletter-form input {
         width: 100%;
         border-radius: 50px;
         margin-bottom: 10px;
     }
     
-    .search-button,
-    .subscribe-button {
+    .experts-tips-page .search-button, .experts-tips-page .subscribe-button {
         width: 100%;
         border-radius: 50px;
         padding: 15px;
@@ -504,20 +500,23 @@
 }
 
 @media (max-width: 480px) {
-    .hero-content h1 {
+    .experts-tips-page .hero-content h1 {
         font-size: 1.8rem;
     }
     
-    .hero-subtitle,
-    .newsletter-section p {
+    .experts-tips-page .hero-subtitle, .experts-tips-page .newsletter-section p {
         font-size: 1rem;
     }
     
-    .tip-card {
+    .experts-tips-page .tip-card {
         min-height: 320px;
     }
     
-    .card-content {
+    .experts-tips-page .card-content {
         padding: 20px;
     }
+}
+.experts-tips-page .tip-card .card-header h2 {
+    color: #fff;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
 }

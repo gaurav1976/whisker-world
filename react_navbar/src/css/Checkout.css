@@ -437,7 +437,7 @@
     align-items: center;
     min-height: 70vh;
     padding: var(--space-xl);
-    margin-top: 100px;
+    margin-top: 24px;
   }
   
   .success-card {

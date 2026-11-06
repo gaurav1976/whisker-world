@@ -70,16 +70,16 @@ const Slider = () => {
         <h1 className="our-shop-header">Our Best Sellers</h1>
         <div className="shop-container">
           {[
-            { src: "./img/montego.jpg", title: "montego", price: "₹199.99" },
-            { src: "./img/optinum chicken.jpg", title: "optinum chicken", price: "₹399.99" },
-            { src: "./img/Energy food 3.jpg", title: "Energy Bar", price: "₹99.99" },
-            { src: "./img/Energy food 4.jpg", title: "Multigrain Chocos", price: "₹149.99" },
-            { src: "./img/Energy food 5.jpg", title: "Meal Replacement EnergyBar", price: "₹159.99" },
-            { src: "./img/Energy food 6.jpg", title: "Energy Bar", price: "₹149.99" },
-            { src: "./img/Energy food 7.jpg", title: "Energy Drink", price: "₹89.99" },
-            { src: "./img/pedigree.webp", title: "Pedigree", price: "₹499.99" },
-            { src: "./img/chunks.jpeg", title: "Chunks in Gravy", price: "₹299.99" },
-            { src: "./img/fidele.webp", title: "Fidele", price: "₹249.99" },
+            { src: "/img/montego.jpg", title: "montego", price: "₹199.99" },
+            { src: "/img/optinum chicken.jpg", title: "optinum chicken", price: "₹399.99" },
+            { src: "/img/Energy food 3.jpg", title: "Energy Bar", price: "₹99.99" },
+            { src: "/img/Energy food 4.jpg", title: "Multigrain Chocos", price: "₹149.99" },
+            { src: "/img/Energy food 5.jpg", title: "Meal Replacement EnergyBar", price: "₹159.99" },
+            { src: "/img/Energy food 6.jpg", title: "Energy Bar", price: "₹149.99" },
+            { src: "/img/Energy food 7.jpg", title: "Energy Drink", price: "₹89.99" },
+            { src: "/img/pedigree.webp", title: "Pedigree", price: "₹499.99" },
+            { src: "/img/chunks.jpeg", title: "Chunks in Gravy", price: "₹299.99" },
+            { src: "/img/fidele.webp", title: "Fidele", price: "₹249.99" },
           ].map((item, index) => (
             <div key={index} className="shop-item text-center">
               <div className="shop-card border-100 bg-light mb-2">

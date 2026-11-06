@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import Navbar from "./Navbar";
 import { FaCalendarAlt, FaUser, FaTags, FaArrowRight } from "react-icons/fa";
 import { Skeleton } from "@mui/material";
+import "../css/Explore.css";
 
 // Shuffle helper function
 const shuffleArray = (array) => {
@@ -19,12 +19,13 @@ const Explore = () => {
   const [blogPosts, setBlogPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [expanded, setExpanded] = useState({});
   const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await axios.get(`${API_BASE}/explore`);
+        const response = await axios.get(`${API_BASE}/blogs`);
         const shuffled = shuffleArray(response.data);
         setBlogPosts(shuffled);
       } catch (err) {
@@ -40,7 +41,6 @@ const Explore = () => {
 
   return (
     <>
-      <Navbar />
       <div className="blog-page">
         <div className="blog-hero">
           <div className="hero-content">
@@ -102,16 +102,21 @@ const Explore = () => {
                     </div>
                     <h2>{post.title}</h2>
                     <p className="excerpt">
-                      {post.content.length > 200
-                        ? `${post.content.substring(0, 200)}...`
-                        : post.content}
+                      {expanded[post._id] || (post.content || "").length <= 200
+                        ? post.content
+                        : `${post.content.substring(0, 200)}...`}
                     </p>
-                    <Link 
-                      to={post.link || `/blog/${post._id}`} 
-                      className="read-more"
-                    >
-                      Read More <FaArrowRight />
-                    </Link>
+                    {(post.content || "").length > 200 && (
+                      <button
+                        type="button"
+                        className="read-more"
+                        onClick={() =>
+                          setExpanded((e) => ({ ...e, [post._id]: !e[post._id] }))
+                        }
+                      >
+                        {expanded[post._id] ? "Show Less" : "Read More"} <FaArrowRight />
+                      </button>
+                    )}
                   </div>
                 </article>
               ))}

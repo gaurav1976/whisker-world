@@ -1,26 +1,26 @@
-.login-container{
+.login-container {
     width: 100%;
     position: relative;
    
-}
-/* Mobile Frame - More Realistic Phone */
-.mobile-frame {
-    width: 280px;  /* Adjusted width */
-    height: 480px; /* Adjusted height */
+}/* Mobile Frame - More Realistic Phone */
+
+.login-container .mobile-frame {/* Adjusted width *//* Adjusted height *//* Changed from absolute *//* Centers the mobile frame */
+    width: 280px;  
+    height: 480px; 
     background: #000;
     border-radius: 40px;
     box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.5);
-    position: relative; /* Changed from absolute */
-    margin: 80px auto;  /* Centers the mobile frame */
+    position: relative; 
+    margin: 80px auto;  
     display: flex;
     align-items: center;
     justify-content: center;
     border: 2px solid #222;
     overflow: hidden;
     
-}
-/* Screen - Properly Centered and Bigger */
-.mobile-screen {
+}/* Screen - Properly Centered and Bigger */
+
+.login-container .mobile-screen {
     width: 95%;
     height: 95%;
     background: white;
@@ -31,9 +31,9 @@
     align-items: center;
     padding: 20px;
     box-shadow: inset 0px 0px 8px rgba(0, 0, 0, 0.3);
-}
-/* Speaker - More Realistic */
-.speaker {
+}/* Speaker - More Realistic */
+
+.login-container .speaker {
     width: 80px;
     height: 6px;
     background: #444;
@@ -43,10 +43,10 @@
     left: 50%;
     transform: translateX(-50%);
     box-shadow: inset 0px 2px 3px rgba(0, 0, 0, 0.5);
-}
+}/* Home Button - Smoother */
 
-/* Home Button - Smoother */
-.home-button {
+
+.login-container .home-button {
     width: 40px;
     height: 40px;
     background: radial-gradient(circle, #555, #222);
@@ -56,29 +56,29 @@
     left: 50%;
     transform: translateX(-50%);
     box-shadow: inset 0px 4px 4px rgba(255, 255, 255, 0.2), 0px 3px 5px rgba(0, 0, 0, 0.4);
-}
+}/* Login Form - Bigger & More Readable */
 
-/* Login Form - Bigger & More Readable */
-.form-box {
+
+.login-container .form-box {
     width: 100%;
     text-align: center;
-}
+}/* Input Fields - Bigger & More Modern */
 
-/* Input Fields - Bigger & More Modern */
-.form-group {
+
+.login-container .form-group {
     width: 100%;
     margin-bottom: 15px;
     text-align: left;
 }
 
-.form-group label {
+.login-container .form-group label {
     font-size: 16px;
     color: #444;
     margin-bottom: 5px;
     display: block;
 }
 
-.form-group input {
+.login-container .form-group input {
     width: 100%;
     padding: 4px;
     border: 2px solid #ddd;
@@ -88,12 +88,12 @@
     transition: border-color 0.3s;
 }
 
-.form-group input:focus {
+.login-container .form-group input:focus {
     border-color: #000;
-}
+}/* Login Button - More Stylish */
 
-/* Login Button - More Stylish */
-button {
+
+.login-container button {
     width: 80%;
     background: #000;
     color: white;
@@ -105,11 +105,11 @@ button {
     transition: all 0.4s, transform 0.2s;
 }
 
-button:hover {
+.login-container button:hover {
     background: #333;
     transform: scale(1.02);
 }
-h6 {
+.login-container h6 {
     font-size: 10px !important;
     display: flex;
     flex-direction: column;

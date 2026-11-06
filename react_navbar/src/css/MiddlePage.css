@@ -43,3 +43,47 @@
     color: #ffffff;
     
 }
+
+@media (max-width: 992px) {
+    .middlepage {
+        height: auto;
+        padding: 24px 16px 30px;
+    }
+
+    .image-text {
+        left: 50%;
+        width: 90%;
+        padding: 10px;
+    }
+
+    .image-text h1 {
+        font-size: 1.6rem;
+        margin: 0 0 8px;
+    }
+
+    .image-text h5 {
+        font-size: 0.85rem;
+        margin: 0;
+    }
+}
+
+@media (max-width: 576px) {
+    .image-text h1 {
+        font-size: 1.2rem;
+    }
+
+    .image-text h5 {
+        display: none;
+    }
+}
+
+@media (min-width: 993px) {
+    .middlepage {
+        height: auto;
+        padding: 30px 5%;
+    }
+
+    .image-text {
+        left: 25%;
+    }
+}

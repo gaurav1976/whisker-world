@@ -18,29 +18,29 @@
   margin: 50px auto 0;
   padding: 0 20px;
   overflow-x: hidden;
-}
+}/* Hero Banner */
 
-/* Hero Banner */ 
-.hero-banner {
+ 
+.about-us .hero-banner {
   text-align: center;
   margin: 60px 0 80px;
   position: relative;
 }
 
-.hero-content h1 {
+.about-us .hero-content h1 {
   font-size: 3.2rem;
   margin-bottom: 15px;
   font-weight: 700;
   line-height: 1.2;
 }
 
-.hero-content h1 span {
+.about-us .hero-content h1 span {
   color: var(--primary);
   position: relative;
   display: inline-block;
 }
 
-.hero-content h1 span::after {
+.about-us .hero-content h1 span::after {
   content: '';
   position: absolute;
   bottom: 5px;
@@ -52,7 +52,7 @@
   border-radius: 4px;
 }
 
-.subtitle {
+.about-us .subtitle {
   font-size: 1.5rem;
   color: var(--medium);
   margin-bottom: 40px;
@@ -61,7 +61,7 @@
   margin-right: auto;
 }
 
-.stats-container {
+.about-us .stats-container {
   display: flex;
   justify-content: center;
   gap: 40px;
@@ -69,7 +69,7 @@
   flex-wrap: wrap;
 }
 
-.stat-item {
+.about-us .stat-item {
   background: var(--white);
   padding: 20px 30px;
   border-radius: 12px;
@@ -77,14 +77,14 @@
   min-width: 180px;
 }
 
-.stat-icon {
+.about-us .stat-icon {
   font-size: 2rem;
   color: var(--primary);
   margin-bottom: 10px;
   display: block;
 }
 
-.stat-number {
+.about-us .stat-number {
   font-size: 2rem;
   font-weight: 700;
   color: var(--dark);
@@ -93,22 +93,22 @@
   margin-bottom: 5px;
 }
 
-.stat-label {
+.about-us .stat-label {
   font-size: 0.9rem;
   color: var(--medium);
 }
 
-.hero-image {
+.about-us .hero-image {
   width: 100%;
   max-height: 600px;
   object-fit: cover;
   border-radius: 16px;
   box-shadow: 0 20px 40px rgba(0,0,0,0.1);
   margin-top: 30px;
-}
+}/* Our Story */
 
-/* Our Story */
-.our-story {
+
+.about-us .our-story {
   display: flex;
   align-items: center;
   gap: 60px;
@@ -116,19 +116,19 @@
   flex-wrap: wrap;
 }
 
-.story-content {
+.about-us .story-content {
   flex: 1;
   min-width: 300px;
 }
 
-.story-content h2 {
+.about-us .story-content h2 {
   font-size: 2.5rem;
   margin-bottom: 30px;
   color: var(--dark);
   position: relative;
 }
 
-.story-content h2::after {
+.about-us .story-content h2::after {
   content: '';
   position: absolute;
   bottom: -10px;
@@ -139,44 +139,44 @@
   border-radius: 2px;
 }
 
-.story-content p {
+.about-us .story-content p {
   font-size: 1.1rem;
   margin-bottom: 20px;
   color: var(--medium);
   line-height: 1.8;
 }
 
-.story-image {
+.about-us .story-image {
   flex: 1;
   min-width: 300px;
   position: relative;
 }
 
-.story-image img {
+.about-us .story-image img {
   width: 100%;
   border-radius: 16px;
   box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-}
+}/* Core Features */
 
-/* Core Features */
-.core-features-section {
+
+.about-us .core-features-section {
   margin: 120px 0;
 }
 
-.core-features-section h2 {
+.about-us .core-features-section h2 {
   text-align: center;
   font-size: 2.5rem;
   margin-bottom: 60px;
   color: var(--dark);
 }
 
-.core-features {
+.about-us .core-features {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
   gap: 40px;
 }
 
-.feature-card {
+.about-us .feature-card {
   background: var(--white);
   border-radius: 16px;
   padding: 40px 30px;
@@ -186,12 +186,12 @@
   border-top: 4px solid var(--accent-color);
 }
 
-.feature-card:hover {
+.about-us .feature-card:hover {
   transform: translateY(-10px);
   box-shadow: 0 15px 40px rgba(0,0,0,0.1);
 }
 
-.feature-icon {
+.about-us .feature-icon {
   font-size: 2.8rem;
   color: var(--accent-color);
   margin-bottom: 25px;
@@ -204,59 +204,59 @@
   border-radius: 50%;
 }
 
-.feature-card h3 {
+.about-us .feature-card h3 {
   font-size: 1.6rem;
   margin-bottom: 20px;
   color: var(--dark);
 }
 
-.feature-card p {
+.about-us .feature-card p {
   color: var(--medium);
   margin-bottom: 30px;
   font-size: 1.05rem;
   line-height: 1.8;
 }
 
-.feature-image {
+.about-us .feature-image {
   width: 100%;
   height: 220px;
   border-radius: 8px;
   overflow: hidden;
 }
 
-.feature-image img {
+.about-us .feature-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.5s ease;
 }
 
-.feature-card:hover .feature-image img {
+.about-us .feature-card:hover .feature-image img {
   transform: scale(1.05);
-}
+}/* Profile System */
 
-/* Profile System */
-.profile-system {
+
+.about-us .profile-system {
   background: var(--light);
   padding: 100px 0;
   margin: 100px 0;
   border-radius: 16px;
 }
 
-.profile-content {
+.about-us .profile-content {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
-.profile-content h2 {
+.about-us .profile-content h2 {
   text-align: center;
   font-size: 2.5rem;
   margin-bottom: 20px;
   color: var(--dark);
 }
 
-.profile-subtitle {
+.about-us .profile-subtitle {
   text-align: center;
   font-size: 1.2rem;
   color: var(--medium);
@@ -264,7 +264,7 @@
   margin: 0 auto 60px;
 }
 
-.profile-types {
+.about-us .profile-types {
   display: flex;
   justify-content: center;
   gap: 30px;
@@ -272,7 +272,7 @@
   flex-wrap: wrap;
 }
 
-.profile-card {
+.about-us .profile-card {
   background: var(--white);
   padding: 40px 30px;
   border-radius: 12px;
@@ -282,11 +282,11 @@
   transition: all 0.3s ease;
 }
 
-.profile-card:hover {
+.about-us .profile-card:hover {
   box-shadow: 0 15px 40px rgba(0,0,0,0.1);
 }
 
-.profile-icon {
+.about-us .profile-icon {
   font-size: 2.8rem;
   color: var(--primary);
   margin-bottom: 20px;
@@ -299,19 +299,19 @@
   border-radius: 50%;
 }
 
-.profile-card h4 {
+.about-us .profile-card h4 {
   font-size: 1.4rem;
   margin-bottom: 15px;
   color: var(--dark);
 }
 
-.profile-card p {
+.about-us .profile-card p {
   color: var(--medium);
   font-size: 1rem;
   line-height: 1.7;
 }
 
-.profile-showcase {
+.about-us .profile-showcase {
   width: 100%;
   max-height: 500px;
   border-radius: 16px;
@@ -319,33 +319,33 @@
   box-shadow: 0 20px 40px rgba(0,0,0,0.1);
 }
 
-.profile-showcase img {
+.about-us .profile-showcase img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
+}/* Testimonials */
 
-/* Testimonials */
-.testimonials-section {
+
+.about-us .testimonials-section {
   margin: 120px 0;
 }
 
-.testimonials-section h2 {
+.about-us .testimonials-section h2 {
   text-align: center;
   font-size: 2.5rem;
   margin-bottom: 60px;
   color: var(--dark);
 }
 
-.testimonial-grid {
+.about-us .testimonial-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(350px, 100%), 1fr));
   gap: 40px;
   max-width: 1200px;
   margin: 0 auto;
 }
 
-.testimonial-card {
+.about-us .testimonial-card {
   background: var(--white);
   padding: 40px 30px;
   border-radius: 16px;
@@ -353,14 +353,14 @@
   position: relative;
 }
 
-.quote-icon {
+.about-us .quote-icon {
   font-size: 2rem;
   color: var(--primary);
   margin-bottom: 25px;
   opacity: 0.2;
 }
 
-.testimonial-card blockquote {
+.about-us .testimonial-card blockquote {
   font-style: italic;
   margin-bottom: 30px;
   font-size: 1.1rem;
@@ -370,7 +370,7 @@
   padding-left: 20px;
 }
 
-.testimonial-card blockquote::before {
+.about-us .testimonial-card blockquote::before {
   content: '"';
   position: absolute;
   left: 0;
@@ -381,12 +381,12 @@
   line-height: 1;
 }
 
-.user-info {
+.about-us .user-info {
   display: flex;
   align-items: center;
 }
 
-.user-info img {
+.about-us .user-info img {
   width: 60px;
   height: 60px;
   border-radius: 50%;
@@ -395,38 +395,38 @@
   border: 3px solid var(--primary);
 }
 
-.user-name {
+.about-us .user-name {
   font-weight: 600;
   display: block;
   margin-bottom: 5px;
 }
 
-.user-role {
+.about-us .user-role {
   font-size: 0.9rem;
   color: var(--medium);
-}
+}/* Team Section */
 
-/* Team Section */
-.team-section {
+
+.about-us .team-section {
   margin: 120px 0;
 }
 
-.team-section h2 {
+.about-us .team-section h2 {
   text-align: center;
   font-size: 2.5rem;
   margin-bottom: 60px;
   color: var(--dark);
 }
 
-.team-grid {
+.about-us .team-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
   gap: 40px;
   max-width: 1200px;
   margin: 0 auto;
 }
 
-.team-card {
+.about-us .team-card {
   background: var(--white);
   border-radius: 16px;
   padding: 30px;
@@ -434,7 +434,7 @@
   text-align: center;
 }
 
-.team-image {
+.about-us .team-image {
   width: 150px;
   height: 150px;
   border-radius: 50%;
@@ -445,13 +445,13 @@
   box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
-.team-image img {
+.about-us .team-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.dog-badge {
+.about-us .dog-badge {
   position: absolute;
   bottom: -15px;
   left: 50%;
@@ -465,17 +465,17 @@
   box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
-.dog-badge svg {
+.about-us .dog-badge svg {
   margin-right: 5px;
 }
 
-.team-card h3 {
+.about-us .team-card h3 {
   font-size: 1.4rem;
   margin-bottom: 5px;
   color: var(--dark);
 }
 
-.team-role {
+.about-us .team-role {
   display: block;
   color: var(--primary);
   font-weight: 600;
@@ -483,14 +483,14 @@
   font-size: 0.9rem;
 }
 
-.team-card p {
+.about-us .team-card p {
   color: var(--medium);
   font-size: 0.95rem;
   line-height: 1.7;
-}
+}/* Call to Action */
 
-/* Call to Action */
-.cta-section {
+
+.about-us .cta-section {
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   color: var(--white);
   padding: 100px 20px;
@@ -501,14 +501,14 @@
   overflow: hidden;
 }
 
-.cta-content {
+.about-us .cta-content {
   position: relative;
   z-index: 2;
   max-width: 800px;
   margin: 0 auto;
 }
 
-.cta-icon {
+.about-us .cta-icon {
   font-size: 6rem;
   opacity: 0.1;
   position: absolute;
@@ -518,20 +518,20 @@
   z-index: 1;
 }
 
-.cta-section h2 {
+.about-us .cta-section h2 {
   font-size: 2.8rem;
   margin-bottom: 20px;
   color: var(--white);
 }
 
-.cta-section p {
+.about-us .cta-section p {
   font-size: 1.2rem;
   margin-bottom: 40px;
   line-height: 1.8;
   opacity: 0.9;
 }
 
-.cta-buttons {
+.about-us .cta-buttons {
   display: flex;
   justify-content: center;
   gap: 20px;
@@ -539,7 +539,7 @@
   margin-bottom: 40px;
 }
 
-.cta-button {
+.about-us .cta-button {
   padding: 16px 40px;
   font-size: 1.1rem;
   font-weight: 600;
@@ -549,29 +549,29 @@
   border: none;
 }
 
-.cta-button.primary {
+.about-us .cta-button.primary {
   background: var(--white);
   color: var(--primary);
 }
 
-.cta-button.primary:hover {
+.about-us .cta-button.primary:hover {
   transform: translateY(-3px);
   box-shadow: 0 10px 20px rgba(0,0,0,0.2);
 }
 
-.cta-button.secondary {
+.about-us .cta-button.secondary {
   background: transparent;
   color: var(--white);
   border: 2px solid rgba(255,255,255,0.3);
 }
 
-.cta-button.secondary:hover {
+.about-us .cta-button.secondary:hover {
   background: rgba(255,255,255,0.1);
   border-color: var(--white);
   transform: translateY(-3px);
 }
 
-.trust-badges {
+.about-us .trust-badges {
   display: flex;
   justify-content: center;
   gap: 30px;
@@ -580,78 +580,78 @@
   opacity: 0.8;
 }
 
-.trust-badges span {
+.about-us .trust-badges span {
   display: flex;
   align-items: center;
 }
 
-.trust-badges span::before {
+.about-us .trust-badges span::before {
   content: '✓';
   margin-right: 5px;
   color: var(--white);
-}
+}/* Responsive Design */
 
-/* Responsive Design */
+
 @media (max-width: 992px) {
-  .hero-content h1 {
+  .about-us .hero-content h1 {
     font-size: 2.8rem;
   }
   
-  .our-story {
+  .about-us .our-story {
     gap: 40px;
   }
 }
 
 @media (max-width: 768px) {
-  .hero-content h1 {
+  .about-us .hero-content h1 {
     font-size: 2.4rem;
   }
   
-  .subtitle {
+  .about-us .subtitle {
     font-size: 1.2rem;
   }
   
-  .stats-container {
+  .about-us .stats-container {
     gap: 20px;
   }
   
-  .stat-item {
+  .about-us .stat-item {
     min-width: 140px;
     padding: 15px 20px;
   }
   
-  .stat-number {
+  .about-us .stat-number {
     font-size: 1.6rem;
   }
   
-  .feature-card, .profile-card, .team-card {
+  .about-us .feature-card, .about-us .profile-card, .about-us .team-card {
     width: 100%;
     max-width: 400px;
     margin: 0 auto;
   }
   
-  .cta-buttons {
+  .about-us .cta-buttons {
     flex-direction: column;
     align-items: center;
   }
   
-  .cta-button {
+  .about-us .cta-button {
     width: 100%;
     max-width: 300px;
   }
 }
 
 @media (max-width: 576px) {
-  .hero-content h1 {
+  .about-us .hero-content h1 {
     font-size: 2rem;
   }
   
-  .profile-types {
+  .about-us .profile-types {
     flex-direction: column;
     align-items: center;
   }
   
-  .trust-badges {
+  .about-us .trust-badges {
     flex-direction: column;
     gap: 10px;
     align-items: center;

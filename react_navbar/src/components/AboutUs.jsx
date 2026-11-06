@@ -68,7 +68,7 @@ const AboutUs = () => {
             </div>
           </div>
           <img 
-            src="/public/img/6963167.jpg" 
+            src="/img/6963167.jpg" 
             alt="Diverse group of happy dogs and owners in a park" 
             className="hero-image" 
             loading="lazy"
@@ -99,7 +99,7 @@ const AboutUs = () => {
         </motion.div>
         <motion.div className="story-image" variants={item}>
           <img 
-            src="/public/img/6963167.jpg" 
+            src="/img/6963167.jpg" 
             alt="Whisker World founders with their dogs" 
             loading="lazy"
           />
@@ -123,21 +123,21 @@ const AboutUs = () => {
               icon: <FaUsers />,
               title: "Community Hub",
               desc: "Connect with thousands of verified dog owners to share experiences, arrange playdates, and get breed-specific advice.",
-              img: "/public/img/donation-community-service-volunteer-support.jpg",
+              img: "/img/donation-community-service-volunteer-support.jpg",
               color: "#FF7E5F"
             },
             {
               icon: <FaBook />,
               title: "Expert Resources",
               desc: "Vetted articles on training, health, and nutrition curated by certified veterinarians and professional trainers.",
-              img: "/public/img/expert.jpg",
+              img: "/img/expert.jpg",
               color: "#4E9FCC"
             },
             {
               icon: <GiDogBowl />,
               title: "Trusted Marketplace",
               desc: "Community-rated products with honest reviews from real dog owners. We test everything with our own pups first!",
-              img: "/public/img/6963167.jpg",
+              img: "/img/6963167.jpg",
               color: "#8A6FDF"
             }
           ].map((feature, index) => (
@@ -208,7 +208,7 @@ const AboutUs = () => {
           
           <div className="profile-showcase">
             <img 
-              src="/public/img/dog-lover.jpg" 
+              src="/img/dog-lover.jpg" 
               alt="Example of a Whisker World profile page showing dog and owner information" 
               loading="lazy"
             />
@@ -233,19 +233,19 @@ const AboutUs = () => {
               quote: "Found the perfect trainer for my rescue through Whisker World! The community recommendations saved us months of trial and error.",
               name: "Sarah K.",
               role: "Rescue Dog Mom",
-              img: "/public/img/istockphoto-1399565382-612x612.jpg"
+              img: "/img/istockphoto-1399565382-612x612.jpg"
             },
             {
               quote: "The nutrition guides helped me find food that finally worked for my picky eater. He's healthier and happier than ever!",
               name: "Michael T.",
               role: "French Bulldog Owner",
-              img: "/public/img/smart-looking-teacher.jpg"
+              img: "/img/smart-looking-teacher.jpg"
             },
             {
               quote: "Moving to a new city was scary, but through Whisker World I found an amazing dog park and made friends for me and my pup!",
               name: "Jessica L.",
               role: "Labrador Lover",
-              img: "/public/img/jesika.jpeg"
+              img: "/img/jesika.jpeg"
             }
           ].map((testimonial, index) => (
             <motion.div 
@@ -287,21 +287,21 @@ const AboutUs = () => {
               name: "Dr. Emma Rodriguez",
               role: "Head Veterinarian",
               bio: "Certified veterinary behaviorist with 15 years of experience in canine nutrition and wellness.",
-              img: "/public/img/drface.jpg",
+              img: "/img/drface.jpg",
               dog: "Buddy (Golden Retriever)"
             },
             {
               name: "James Chen",
               role: "Community Director",
               bio: "Professional dog trainer specializing in positive reinforcement methods for all breeds.",
-              img: "/public/img/smiling.avif",
+              img: "/img/smiling.avif",
               dog: "Luna & Max (Border Collies)"
             },
             {
               name: "Sophia Patel",
               role: "Product Curator",
               bio: "Former shelter manager who tests every product with her rescue dogs before approval.",
-              img: "/public/img/sophia.jpeg",
+              img: "/img/sophia.jpeg",
               dog: "Roxy (Pitbull Mix)"
             }
           ].map((member, index) => (

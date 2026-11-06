@@ -1,7 +1,6 @@
 import { useContext, useState, useEffect } from "react";
 import { Link } from "react-router-dom"; // Import Link
 import "../css/Cart.css";
-import Navbar from "./Navbar";
 import { CartContext } from "../CartContext"; // Import context
 
 const Cart = () => {
@@ -54,7 +53,6 @@ const Cart = () => {
 
     return (
         <>
-            <Navbar />
             <button className="cart-toggle-btn" onClick={() => setIsCartOpen(!isCartOpen)}>
                 🛒 Cart ({cart.length})
             </button>

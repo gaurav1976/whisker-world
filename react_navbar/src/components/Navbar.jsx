@@ -1,12 +1,15 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect, useRef, useContext } from "react";
-import { FaSearch, FaBell, FaUser, FaShoppingCart } from "react-icons/fa";
+import { FaSearch, FaBell, FaShoppingCart, FaBars, FaTimes, FaUserCircle } from "react-icons/fa";
 import useAuth from "../hooks/useAuth";
 import { CartContext } from "../CartContext";
 import "../css/Navbar.css";
 const Navbar = () => {
   const { user, logout } = useAuth();
   const [profileOpen, setProfileOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
+  useEffect(() => setMenuOpen(false), [location.pathname]);
   const [updatedUser, setUpdatedUser] = useState(user);
   const profileRef = useRef(null);
   const { cart } = useContext(CartContext);
@@ -56,9 +59,9 @@ const Navbar = () => {
         </div>
 
         {/* Navigation Menu */}
-        <ul className="nav-menu">
+        <ul className={`nav-menu ${menuOpen ? "open" : ""}`}>
           {/* Always visible (for everyone) */}
-          <li><Link to="/">Homee</Link></li>
+          <li><Link to="/">Home</Link></li>
           <li><Link to="/AboutUs">About Us</Link></li>
 
           {/* Only visible when logged in */}
@@ -109,18 +112,11 @@ const Navbar = () => {
                   setProfileOpen((prev) => !prev);
                 }}
               >
-                <img
-                  src={updatedUser?.image && updatedUser.image.trim() !== "" ? updatedUser.image : "#"}
-                  alt="Profile"
-                  className="user-profile-pic"
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    borderRadius: "50%",
-                    objectFit: "cover"
-                  }}
-                  onError={(e) => e.target.src = "#"}
-                />
+                {updatedUser?.image && updatedUser.image.trim() !== "" ? (
+                  <img src={updatedUser.image} alt="Profile" className="user-profile-pic" />
+                ) : (
+                  <FaUserCircle className="user-profile-icon" />
+                )}
                 <span className="user-name">{user?.name || "User"}</span>
               </div>
 
@@ -152,6 +148,14 @@ const Navbar = () => {
               <button className="login-button">Login</button>
             </Link>
           )}
+
+          <button
+            className="menu-toggle"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            onClick={() => setMenuOpen((o) => !o)}
+          >
+            {menuOpen ? <FaTimes /> : <FaBars />}
+          </button>
         </div>
       </nav>
     </header>

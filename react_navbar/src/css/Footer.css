@@ -12,7 +12,8 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    width: 1230px;
+    width: 100%;
+    max-width: 1230px;
     margin: 0 auto;
     
 }
@@ -88,3 +89,30 @@
     }
 }
 
+
+.footer-column label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.subscribe-button {
+    text-align: center;
+    font-weight: 600;
+}
+
+.subscribe-thanks {
+    color: #1b7a3a !important;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .footer-column {
+        min-width: 0;
+        margin: 10px 0;
+    }
+
+    .social-icons {
+        justify-content: center;
+    }
+}

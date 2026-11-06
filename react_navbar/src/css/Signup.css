@@ -1,58 +1,44 @@
-.signup-container {
-    max-width: 400px; /* Increased width */
+.signup-container {/* Increased width *//* Reduced margin *//* Reduced padding */
+    max-width: 400px; 
     width: 100%;
-    margin: 60px auto; /* Reduced margin */
-    padding: 30px; /* Reduced padding */
+    margin: 60px auto; 
+    padding: 30px; 
     background: #f8f9fa;
     border-radius: 8px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
 
-body {
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-width: 320px;
-    min-height: 100vh;
-    
-    /* ✅ Corrected Background Image Path */
-    /* background-image: url("/img/dog-and-cat.jpg"); */
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
 
 
 
-h2 {
-    margin-bottom: 15px; /* Slightly reduced */
+.signup-container h2 {/* Slightly reduced */
+    margin-bottom: 15px; 
     color: #333;
 }
 
-.form-group {
-    margin-bottom: 12px; /* Adjusted spacing */
+.signup-container .form-group {/* Adjusted spacing */
+    margin-bottom: 12px; 
     text-align: left;
 }
 
-label {
+.signup-container label {
     display: block;
     font-weight: bold; 
     margin-bottom: 4px;
 }
 
-input {
+.signup-container input {/* Reduced height */
     width: 100%;
-    padding: 8px; /* Reduced height */
+    padding: 8px; 
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
 }
 
-button {
+.signup-container button {/* Reduced button height */
     width: 100%;
-    padding: 8px; /* Reduced button height */
+    padding: 8px; 
     background-color: #007bff;
     color: white;
     border: none;
@@ -62,17 +48,17 @@ button {
     transition: 0.3s ease-in-out;
 }
 
-button:hover {
+.signup-container button:hover {
     background-color: #0056b3;
 }
 
-.error {
+.signup-container .error {
     color: red;
     font-size: 14px;
     margin-bottom: 8px;
-}
+}/* Responsive adjustments */
 
-/* Responsive adjustments */
+
 @media (max-width: 480px) {
     .signup-container {
         max-width: 90%;

@@ -10,7 +10,7 @@ const Social = () => {
                 
                 {/* Video Section */}
                 <div className="video-container">
-                <video width="900" controls loop autoPlay muted>
+                <video controls loop autoPlay muted playsInline>
                         <source src="/videos/1video.mp4" type="video/mp4" />
                         
                     </video>

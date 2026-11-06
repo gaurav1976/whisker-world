@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from "react";
 import "../css/Food.css";
-import Navbar from "./Navbar";
 import { CartContext } from "../CartContext";
 import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +16,13 @@ const Food = () => {
 
   const API_BASE = import.meta.env.VITE_API_BASE_URL;
   console.log("API Base URL:", API_BASE);
+
+  const imgUrl = (image) => {
+    if (!image) return "/img/no-blogs.svg";
+    const path = image.replace(/\\/g, "/");
+    if (path.startsWith("/uploads/")) return `${API_BASE}${path}`;
+    return path;
+  };
 
   const shuffleArray = (array) => {
     const shuffled = [...array];
@@ -116,7 +122,6 @@ const Food = () => {
 
   return (
     <>
-      <Navbar />
       <section className="product">
         <div className="container py-5">
           <div className="row py-5">
@@ -138,17 +143,15 @@ const Food = () => {
             </div>
           </div>
 
-          <div className="row">
+          <div className="food-grid">
             {visibleProducts.length > 0 ? (
               visibleProducts.map((product) => (
-                <div key={product._id} className="col-lg-3 text-center">
+                <div key={product._id} className="food-item">
                   <div className="card border-100 bg-light mb-2">
                     <div className="card-body">
                       <img
                         src={
-                          product.image?.startsWith("/uploads/")
-                            ? `${API_BASE}${product.image}`
-                            : product.image || "/fallback.jpg"
+                          imgUrl(product.image)
                         }
                         className="img-fluid"
                         alt={product.name}
@@ -156,7 +159,8 @@ const Food = () => {
                     </div>
                   </div>
                   <h6 className="productname">{product.name}</h6>
-                  <p>₹{product.price}</p>
+                  <p className="food-price">₹{product.price}</p>
+                  <div className="food-actions">
                   <button
                     className="food-btn"
                     onClick={() =>
@@ -165,9 +169,7 @@ const Food = () => {
                         name: product.name,
                         price: parseFloat(product.price),
                         img:
-                          product.image?.startsWith("/uploads/")
-                            ? `${API_BASE}${product.image}`
-                            : product.image || "/fallback.jpg",
+                          imgUrl(product.image),
                         quantity: 1,
                       })
                     }
@@ -182,9 +184,7 @@ const Food = () => {
                         name: product.name,
                         price: parseFloat(product.price),
                         img:
-                          product.image?.startsWith("/uploads/")
-                            ? `${API_BASE}${product.image}`
-                            : product.image || "/fallback.jpg",
+                          imgUrl(product.image),
                         quantity: 1,
                       });
                       navigate("/Checkout");
@@ -192,10 +192,11 @@ const Food = () => {
                   >
                     Buy Now
                   </button>
+                  </div>
                 </div>
               ))
             ) : (
-              <div className="col-12 text-center">
+              <div className="food-empty">
                 <p>No products found matching your search.</p>
                 {searchQuery && (
                   <button className="btn btn-link" onClick={() => setSearchQuery("")}>

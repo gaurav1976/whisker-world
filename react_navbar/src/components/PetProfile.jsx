@@ -49,7 +49,7 @@ const PetProfile = ({ userId }) => {
     <div className="profile-container">
       <div className="profile-box">
         <label htmlFor="imageUpload" className="profile-image-container">
-          <img src={image} alt="Pet" className="profile-image" />
+          <img src={image || "/img/no-blogs.svg"} alt="Pet" className="profile-image" onError={(e) => { e.currentTarget.src = "/img/no-blogs.svg"; }} />
           <input type="file" id="imageUpload" accept="image/*" onChange={handleImageUpload} hidden />
         </label>
         <h2>{pet.name || "Pet Name"}</h2>
