@@ -20,12 +20,12 @@ const corsOptions = {
       
       "https://whisker-world-rhgh.vercel.app",  // ✅ Your Vercel frontend
       "https://admin-panel-ten-dun.vercel.app",  // ✅ Your admin panel
-      "https://whisker-world-adm.vercel.app/",
+      "https://whisker-world-adm.vercel.app",
       "http://localhost:5173",
       "http://localhost:5174"
     ];
 
-    const vercelPreviewRegex = /^https:\/\/admin-panel-[\w-]+\.vercel\.app$/;
+    const vercelPreviewRegex = /^https:\/\/(admin-panel|whisker-world)-[\w-]+\.vercel\.app$/;
 
     if (!origin || allowedOrigins.includes(origin) || vercelPreviewRegex.test(origin)) {
       callback(null, true);
@@ -294,16 +294,6 @@ app.delete("/foods/:id", async (req, res) => {
   }
 });
 
-//  GET ALL FOOD ITEMS
-
-app.get("/foods", async (req, res) => {
-  try {
-    const foods = await Food.find();
-    res.json(foods);
-  } catch (error) {
-    res.status(500).json({ error: "Error fetching foods items", details: error.message });
-  }
-});
 
 
 

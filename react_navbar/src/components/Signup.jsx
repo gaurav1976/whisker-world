@@ -42,7 +42,7 @@ const Signup = () => {
     }
 
     try {
-    const response = await fetch('https://whisker-world-qlpf.onrender.com/register', {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/register`, {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
